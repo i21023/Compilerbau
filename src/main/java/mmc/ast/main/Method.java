@@ -1,6 +1,7 @@
 package mmc.ast.main;
 
 import mmc.ast.statements.Statement;
+import mmc.ast.Type;
 
 import java.util.List;
 
