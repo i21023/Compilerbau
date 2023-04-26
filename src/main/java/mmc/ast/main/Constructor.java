@@ -1,18 +1,15 @@
 package mmc.ast.main;
 
 import mmc.ast.statements.Statement;
-import mmc.ast.Type;
 import org.objectweb.asm.ClassWriter;
 
 import java.util.List;
 
-public class Method {
-    Type type;
-    String name;
+public class Constructor {
     List<Parameter> parameters;
     Statement statement;
 
-    public void codeGen(ClassWriter cw) {
+    public void codeGen(ClassWriter cw){
 
     }
 }
