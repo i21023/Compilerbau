@@ -1,6 +1,6 @@
 package mmc.ast.expressions;
 
 public class InstVar extends Expression{
-    String name;
-    Expression expression;
+    public String name;
+    public Expression expression;
 }

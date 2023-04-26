@@ -7,5 +7,5 @@ import mmc.ast.expressions.Expression;
 import java.util.List;
 
 public class New extends StatementExpression{
-    List<Expression> expressions;
+    public List<Expression> expressions;
 }

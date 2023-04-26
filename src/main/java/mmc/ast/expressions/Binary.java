@@ -3,7 +3,7 @@ package mmc.ast.expressions;
 import mmc.ast.Operator;
 
 public class Binary extends Expression{
-    Operator operator;
-    Expression expression1;
-    Expression expression2;
+    public Operator operator;
+    public Expression expression1;
+    public Expression expression2;
 }

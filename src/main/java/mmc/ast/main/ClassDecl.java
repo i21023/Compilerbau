@@ -7,11 +7,11 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
 public class ClassDecl{
-    String name;
-    Type type;
-    List<Field> fields;
-    List<Method> methods;
-    List<Constructor> constructors;
+    public String name;
+    public Type type;
+    public List<Field> fields;
+    public List<Method> methods;
+    public List<Constructor> constructors;
 
     //SemantikCheck
 

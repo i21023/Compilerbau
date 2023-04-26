@@ -6,8 +6,8 @@ import org.objectweb.asm.ClassWriter;
 import java.util.List;
 
 public class Constructor {
-    List<Parameter> parameters;
-    Statement statement;
+    public List<Parameter> parameters;
+    public Statement statement;
 
     public void codeGen(ClassWriter cw){
 

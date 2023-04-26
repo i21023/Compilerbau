@@ -1,5 +1,5 @@
 package mmc.ast.expressions;
 
 public class LocalOrFieldVar extends Expression{
-    String name;
+    public String name;
 }

@@ -7,10 +7,10 @@ import org.objectweb.asm.ClassWriter;
 import java.util.List;
 
 public class Method {
-    Type type;
-    String name;
-    List<Parameter> parameters;
-    Statement statement;
+    public Type type;
+    public String name;
+    public List<Parameter> parameters;
+    public Statement statement;
 
     public void codeGen(ClassWriter cw) {
 
