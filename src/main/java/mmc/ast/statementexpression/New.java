@@ -6,6 +6,6 @@ import mmc.ast.expressions.Expression;
 
 import java.util.List;
 
-public class New {
+public class New extends StatementExpression{
     List<Expression> expressions;
 }
