@@ -7,6 +7,5 @@ import mmc.ast.expressions.Expression;
 import java.util.List;
 
 public class New {
-    Type type;
     List<Expression> expressions;
 }
