@@ -4,5 +4,6 @@ public class ClassMethod {
     public void testMethod()
     {
 
+
     }
 }
