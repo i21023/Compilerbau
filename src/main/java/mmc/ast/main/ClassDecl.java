@@ -13,6 +13,15 @@ public class ClassDecl{
     public List<Method> methods;
     public List<Constructor> constructors;
 
+    public ClassDecl(String pName, Type pType, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors)
+    {
+        name=pName;
+        type=pType;
+        fields=pFiedls;
+        methods=pMethods;
+        constructors=pConstructors;
+    }
+
     //SemantikCheck
 
     public void codeGen(){

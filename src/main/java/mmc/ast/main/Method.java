@@ -12,6 +12,14 @@ public class Method {
     public List<Parameter> parameters;
     public Statement statement;
 
+    public Method(Type pType, String pName, List<Parameter> pParameters, Statement pStatement)
+    {
+        type=pType;
+        name=pName;
+        parameters=pParameters;
+        statement=pStatement;
+    }
+
     public void codeGen(ClassWriter cw) {
 
     }

@@ -8,4 +8,8 @@ import java.util.List;
 
 public class New extends StatementExpression{
     public List<Expression> expressions;
+    public New(List<Expression> pExpressions)
+    {
+        expressions=pExpressions;
+    }
 }
