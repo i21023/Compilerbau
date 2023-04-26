@@ -4,6 +4,7 @@ import mmc.ast.Operator;
 import mmc.ast.expressions.Expression;
 
 public class Assign extends StatementExpression {
-    Operator operator;
-    Expression expression;
+    public Expression leftExpr;
+    public Operator operator;
+    public Expression rightExpr;
 }

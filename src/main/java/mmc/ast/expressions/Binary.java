@@ -2,8 +2,8 @@ package mmc.ast.expressions;
 
 import mmc.ast.Operator;
 
-public class Binary {
-    Operator operator;
-    Expression expression1;
-    Expression expression2;
+public class Binary extends Expression{
+    public Operator operator;
+    public Expression expression1;
+    public Expression expression2;
 }
