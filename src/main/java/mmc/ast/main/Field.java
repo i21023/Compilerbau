@@ -1,7 +1,13 @@
 package mmc.ast.main;
 
 import mmc.ast.Type;
-public class Field {
+import org.objectweb.asm.ClassWriter;
+
+public class Field  {
     Type type;
     String name;
+
+    public void codeGen(ClassWriter cw) {
+
+    }
 }

@@ -19,5 +19,5 @@ public enum Operator {
     INCPRE,
     INCSUF,
     DECPRE,
-    DECSUF;
+    DECSUF
 }
