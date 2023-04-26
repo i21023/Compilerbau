@@ -1,4 +1,4 @@
-// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/parser\Parser.g4 by ANTLR 4.12.0
+// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/parser\MiniJava.g4 by ANTLR 4.12.0
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -72,7 +72,7 @@ public class ParserParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Parser.g4"; }
+	public String getGrammarFileName() { return "MiniJava.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

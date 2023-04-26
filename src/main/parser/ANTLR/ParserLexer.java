@@ -1,4 +1,4 @@
-// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/parser\Parser.g4 by ANTLR 4.12.0
+// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/parser\MiniJava.g4 by ANTLR 4.12.0
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -84,7 +84,7 @@ public class ParserLexer extends Lexer {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Parser.g4"; }
+	public String getGrammarFileName() { return "MiniJava.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

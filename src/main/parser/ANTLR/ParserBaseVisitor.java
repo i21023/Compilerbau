@@ -1,4 +1,4 @@
-// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/parser\Parser.g4 by ANTLR 4.12.0
+// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/parser\MiniJava.g4 by ANTLR 4.12.0
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
