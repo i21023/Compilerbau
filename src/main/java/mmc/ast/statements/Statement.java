@@ -1,5 +1,7 @@
 package mmc.ast.statements;
 
-public class Statement {
+import mmc.ast.Type;
 
+public class Statement {
+    Type type;
 }
