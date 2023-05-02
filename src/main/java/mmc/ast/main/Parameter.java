@@ -1,6 +1,12 @@
 package mmc.ast.main;
+import mmc.Visitable;
 import mmc.ast.Type;
-public class Parameter {
+import mmc.semantikcheck.SemanticVisitor;
+import mmc.semantikcheck.TypeCheckResult;
+
+import java.beans.Visibility;
+
+public class Parameter implements Visitable {
     public Type type;
     public String name;
 
@@ -10,4 +16,9 @@ public class Parameter {
         name=pName;
     }
 
+
+ @Override
+    public TypeCheckResult accept(SemanticVisitor visitor) {
+        return visitor.typeCheck(this);
+    }
 }

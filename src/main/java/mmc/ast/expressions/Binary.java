@@ -1,16 +1,29 @@
 package mmc.ast.expressions;
 
 import mmc.ast.Operator;
+import mmc.ast.Type;
+import mmc.semantikcheck.SemanticVisitor;
+import mmc.semantikcheck.TypeCheckResult;
 
-public class Binary extends Expression{
+public class Binary implements IExpression{
     public Operator operator;
-    public Expression expression1;
-    public Expression expression2;
+    public IExpression expression1;
+    public IExpression expression2;
 
-    public Binary(Operator pOperator, Expression pExpression1, Expression pExpression2)
+    public Binary(Operator pOperator, IExpression pExpression1, IExpression pExpression2)
     {
         operator=pOperator;
         expression1=pExpression1;
         expression2=pExpression2;
+    }
+
+ @Override
+    public TypeCheckResult accept(SemanticVisitor visitor) {
+        return visitor.typeCheck(this);
+    }
+
+    @Override
+    public Type getType() {
+        return null;
     }
 }

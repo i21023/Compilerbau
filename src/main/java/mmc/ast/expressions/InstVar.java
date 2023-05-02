@@ -1,12 +1,26 @@
 package mmc.ast.expressions;
 
-public class InstVar extends Expression{
-    public String name;
-    public Expression expression;
+import mmc.ast.Type;
+import mmc.semantikcheck.SemanticVisitor;
+import mmc.semantikcheck.TypeCheckResult;
 
-    public InstVar(String pName, Expression pExpression)
+public class InstVar implements IExpression{
+    public String name;
+    public IExpression expression;
+
+    public InstVar(String pName, IExpression pExpression)
     {
         name=pName;
         expression=pExpression;
+    }
+
+ @Override
+    public TypeCheckResult accept(SemanticVisitor visitor) {
+        return visitor.typeCheck(this);
+    }
+
+    @Override
+    public Type getType() {
+        return null;
     }
 }

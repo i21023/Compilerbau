@@ -1,7 +1,10 @@
 package mmc.ast.statements;
 
 import mmc.ast.Type;
+import mmc.semantikcheck.SemanticVisitor;
+import mmc.semantikcheck.TypeCheckResult;
 
 public class Statement {
-    public Type type;
+    Type type;
+
 }

@@ -2,11 +2,14 @@ package mmc.ast.main;
 
 import java.util.List;
 
+import mmc.Visitable;
 import mmc.ast.Type;
+import mmc.semantikcheck.SemanticVisitor;
+import mmc.semantikcheck.TypeCheckResult;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 
-public class ClassDecl{
+public class ClassDecl implements Visitable {
     public String name;
     public Type type;
     public List<Field> fields;
@@ -32,5 +35,10 @@ public class ClassDecl{
         fields.forEach(f -> f.codeGen(cw));
         constructors.forEach(c -> c.codeGen(cw));
         methods.forEach(m -> m.codeGen(cw));
+    }
+
+ @Override
+    public TypeCheckResult accept(SemanticVisitor visitor) {
+        return visitor.typeCheck(this);
     }
 }
