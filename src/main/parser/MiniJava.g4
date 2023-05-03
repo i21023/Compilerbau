@@ -3,7 +3,7 @@ grammar MiniJava;
 //Declarations
 program: class_decl*;
 //Class
-class_decl: ACCES_MOD? 'class' ID LEFT_BRACE method_decl* field_decl*  RIGHT_BRACE ;
+class_decl: ACCES_MOD? 'class' ID LEFT_BRACE (constructor_decl | method_decl | field_decl)*  RIGHT_BRACE;
 ///Class objects
 method_decl: ACCES_MOD? STATIC? method_type ID LEFT_BRACKET (parameter_list? | main?) RIGHT_BRACKET statement_block;
 field_decl: ACCES_MOD? STATIC? type ID (COMMA ID)* (ASSIGN expr)? SEMICOLON;
