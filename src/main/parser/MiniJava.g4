@@ -44,7 +44,7 @@ basic_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr
 cre_expression: cre_op (ID | INT | inst_var ) | (ID | INT | inst_var ) cre_op; //example a++; ++a
 logical_expr: basic_expr (logical_op expr)*;
 // (a +b ) == c; c == (a+b)
-calculate_expr: calculate_expr add_sub_op mul_div_expr;
+calculate_expr: basic_expr add_sub_op mul_div_expr; //todo
 mul_div_expr:;
 
 //
