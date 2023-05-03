@@ -2,7 +2,6 @@ package mmc.ast.statementexpression;
 
 
 import mmc.ast.Type;
-import mmc.ast.expressions.Expression;
 import mmc.ast.expressions.IExpression;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;

@@ -3,6 +3,7 @@ package mmc.ast.main;
 import java.util.List;
 
 import mmc.Visitable;
+import mmc.ast.AccessModifier;
 import mmc.ast.Type;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
@@ -14,15 +15,17 @@ public class ClassDecl implements Visitable {
     public Type type;
     public List<Field> fields;
     public List<Method> methods;
+    public AccessModifier accessModifier;
     public List<Constructor> constructors;
 
-    public ClassDecl(String pName, Type pType, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors)
+    public ClassDecl(String pName, Type pType, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier)
     {
         name=pName;
         type=pType;
         fields=pFiedls;
         methods=pMethods;
         constructors=pConstructors;
+        accessModifier=pAccessModifier;
     }
 
     //SemantikCheck
