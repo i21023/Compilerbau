@@ -11,33 +11,36 @@ import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 import org.objectweb.asm.ClassWriter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Constructor implements Visitable {
     public List<Parameter> parameters;
-    public IStatement statement;
+    public Block statement;
     public Type type;
     public AccessModifier accessModifier;
 
-    public Constructor(IStatement pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier, Block pBlock)
+    public Constructor(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier, Block pBlock)
     {
         statement=pStatement;
         parameters=pParameters;
         accessModifier=pAccessModifier;
-        type = BasicType.VOID;
+        //type = BasicType.VOID;
     }
 
     public Constructor()
     {
         accessModifier=AccessModifier.PUBLIC;
-        type = BasicType.VOID;
+        parameters = new ArrayList<Parameter>();
+        statement = new Block();
+        //type = BasicType.VOID;
     }
 
-    public void codeGen(ClassWriter cw){
-
+    public Type getType() {
+        return type;
     }
 
- @Override
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

@@ -23,11 +23,11 @@ public class Field implements Visitable {
         accessModifier = pAccessModifier;
     }
 
-    public void codeGen(ClassWriter cw) {
-
+    public Type getType() {
+        return type;
     }
 
- @Override
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

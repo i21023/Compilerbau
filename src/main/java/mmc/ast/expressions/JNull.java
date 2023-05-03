@@ -6,6 +6,7 @@ import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
 public class JNull implements IExpression{
+    public Type type;
     public JNull(){}
 
  @Override
@@ -15,7 +16,7 @@ public class JNull implements IExpression{
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

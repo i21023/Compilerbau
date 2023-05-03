@@ -1,18 +1,24 @@
 package mmc.ast.expressions;
 
+import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class This implements IExpression{
+public class StringExpr implements IExpression{
 
-    public Type type;
-    public This(){}
+    private String string;
+    private Type type;
+
+    public StringExpr(String pString){
+        string = pString;
+        type = new ReferenceType("java/lang/String");
+    }
 
     @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
-        return visitor.typeCheck(this);
+        return null;
     }
 
     @Override
@@ -20,8 +26,8 @@ public class This implements IExpression{
         return type;
     }
 
-    @Override
+    /*@Override
     public void accept(IMethodCodeVisitor visitor) {
         visitor.visit(this);
-    }
+    }*/
 }

@@ -11,8 +11,10 @@ import java.util.List;
 
 public class New implements IStatementExpression {
     public List<IExpression> expressions;
-    public New(List<IExpression> pExpressions)
+    public Type type;
+    public New(List<IExpression> pExpressions, Type pType)
     {
+        type = pType;
         expressions=pExpressions;
     }
 
@@ -23,7 +25,7 @@ public class New implements IStatementExpression {
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

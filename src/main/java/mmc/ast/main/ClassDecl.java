@@ -13,16 +13,14 @@ import org.objectweb.asm.Opcodes;
 
 public class ClassDecl implements Visitable {
     public String name;
-    public Type type;
     public List<Field> fields;
     public List<Method> methods;
     public AccessModifier accessModifier;
     public List<Constructor> constructors;
 
-    public ClassDecl(String pName, Type pType, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier)
+    public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier)
     {
         name=pName;
-        type=pType;
         fields=pFiedls;
         methods=pMethods;
         constructors=pConstructors;

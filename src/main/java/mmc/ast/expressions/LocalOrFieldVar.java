@@ -7,6 +7,7 @@ import mmc.semantikcheck.TypeCheckResult;
 
 public class LocalOrFieldVar implements IExpression{
     public String name;
+    public Type type;
 
     public LocalOrFieldVar(String pName)
     {
@@ -20,7 +21,7 @@ public class LocalOrFieldVar implements IExpression{
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

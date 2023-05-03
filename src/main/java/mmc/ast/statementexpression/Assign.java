@@ -11,12 +11,14 @@ public class Assign implements IStatementExpression {
     public IExpression leftExpr;
     public Operator operator;
     public IExpression rightExpr;
+    public Type type;
 
-    public Assign(IExpression pLeftExpr, Operator pOperator, IExpression pRightExpr)
+    public Assign(IExpression pLeftExpr, Operator pOperator, IExpression pRightExpr, Type pType)
     {
         leftExpr=pLeftExpr;
         operator=pOperator;
         rightExpr=pRightExpr;
+        type = pType;
     }
 
  @Override
@@ -26,7 +28,7 @@ public class Assign implements IStatementExpression {
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

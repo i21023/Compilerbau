@@ -9,6 +9,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class Unary implements IExpression{
     public Operator operator;
     public IExpression expression;
+    public Type type;
 
     public Unary(Operator pOperator, IExpression pExpression)
     {
@@ -23,7 +24,7 @@ public class Unary implements IExpression{
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

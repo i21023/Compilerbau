@@ -22,7 +22,7 @@ public class IntExpr implements IExpression{
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

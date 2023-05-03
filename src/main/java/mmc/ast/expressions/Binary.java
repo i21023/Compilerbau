@@ -27,6 +27,7 @@ public class Binary implements IExpression{
 
     @Override
     public Type getType() {
+
         return type;
     }
 

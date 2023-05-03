@@ -27,8 +27,8 @@ public class Method implements Visitable {
         accessModifier=pAccessModifier;
     }
 
-    public void codeGen(ClassWriter cw) {
-
+    public Type getType() {
+        return type;
     }
 
  @Override
@@ -39,5 +39,20 @@ public class Method implements Visitable {
     @Override
     public void accept(IMethodCodeVisitor visitor) {
         visitor.visit(this);
+    }
+
+    public boolean isSameDeclaration(Method methodDecl) {
+
+        if (!this.name.equals(methodDecl.name) || !this.getType().equals(methodDecl.getType())
+                || this.parameters.size() != methodDecl.parameters.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < this.parameters.size(); i++) {
+            if (!this.parameters.get(i).getType().equals(methodDecl.parameters.get(i).getType())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

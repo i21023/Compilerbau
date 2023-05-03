@@ -8,6 +8,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class InstVar implements IExpression{
     public String name;
     public IExpression expression;
+    public Type type;
 
     public InstVar(String pName, IExpression pExpression)
     {
@@ -22,7 +23,7 @@ public class InstVar implements IExpression{
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

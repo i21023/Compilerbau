@@ -10,15 +10,17 @@ import mmc.semantikcheck.TypeCheckResult;
 import java.util.List;
 
 public class MethodCall implements IStatementExpression  {
-    public IExpression expression;
+    public IExpression receiver;
     public String name;
-    public List<IExpression> expressions;
+    public List<IExpression> arguments;
+    public Type type;
 
-    public MethodCall(IExpression pExpression, String pName, List<IExpression> pExpressions)
+    public MethodCall(IExpression pExpression, String pName, List<IExpression> pExpressions, Type pType)
     {
-        expression=pExpression;
+        receiver=pExpression;
         name=pName;
-        expressions=pExpressions;
+        arguments=pExpressions;
+        type=pType;
     }
 
  @Override
@@ -28,7 +30,7 @@ public class MethodCall implements IStatementExpression  {
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override
