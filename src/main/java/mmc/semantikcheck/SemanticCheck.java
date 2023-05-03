@@ -1,15 +1,12 @@
 package mmc.semantikcheck;
 
-import mmc.Visitable;
 import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
-import mmc.ast.statementexpression.StatementExpression;
 import mmc.ast.statements.*;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
 

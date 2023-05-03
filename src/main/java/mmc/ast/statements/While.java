@@ -1,6 +1,5 @@
 package mmc.ast.statements;
 
-import mmc.ast.expressions.Expression;
 import mmc.ast.expressions.IExpression;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
