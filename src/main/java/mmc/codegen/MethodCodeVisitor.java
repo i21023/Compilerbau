@@ -29,7 +29,6 @@ public interface MethodCodeVisitor {
     void visit(IntExpr intExpr);
     void visit(JNull jNull);
     void visit(LocalOrFieldVar localOrFieldVar);
-    void visit(StmtExpExp stmtExpExp);
     void visit(This thisExpr);
 
     //StatementExpression
