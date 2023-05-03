@@ -15,9 +15,6 @@ public class Program implements Visitable {
         classes = pClasses;
     }
 
-    public void codeGen(){
-        classes.stream().forEach(ClassDecl::codeGen);
-    }
 
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {

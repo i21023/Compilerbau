@@ -1,13 +1,17 @@
 package mmc.ast.expressions;
 
+import mmc.ast.BasicType;
 import mmc.ast.Type;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
 public class BoolExpr implements IExpression{
     public boolean value;
+    public Type type;
+
     public BoolExpr(boolean pValue)
     {
+        type = BasicType.BOOL;
         value=pValue;
     }
 
