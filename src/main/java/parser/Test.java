@@ -1,10 +1,12 @@
-public class MyClass {
+package parser;
+
+public class Test {
     private int myField;
 
-    public MyClass() {
+    public Test() {
     }
 
-    public MyClass(int value) {
+    public Test(int value) {
         myField = value;
     }
 
@@ -13,7 +15,7 @@ public class MyClass {
     }
 
     public static void main(String[] args) {
-        MyClass myObject = new MyClass(42);
+        Test myObject = new Test(42);
         System.out.println(myObject.getMyField());
     }
 }

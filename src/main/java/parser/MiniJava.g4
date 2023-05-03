@@ -3,11 +3,11 @@ grammar MiniJava;
 //Declarations
 program: class_decl*;
 //Class
-class_decl: ACCES_MOD? 'class' ID LEFT_BRACE (constructor_decl | method_decl | field_decl)*  RIGHT_BRACE;
+class_decl: ACCES_MOD? 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
 ///Class objects
+const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
 method_decl: ACCES_MOD? STATIC? method_type ID LEFT_BRACKET (parameter_list? | main?) RIGHT_BRACKET statement_block;
 field_decl: ACCES_MOD? STATIC? type ID (COMMA ID)* (ASSIGN expr)? SEMICOLON;
-constructor_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
 
 //methode
 parameter_list: type ID (COMMA type ID)*;
