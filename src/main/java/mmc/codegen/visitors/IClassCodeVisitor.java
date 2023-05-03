@@ -1,9 +1,9 @@
-package mmc.codegen;
+package mmc.codegen.visitors;
 
 import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Field;
 
-public interface ClassCodeVisitor {
+public interface IClassCodeVisitor {
     void visit(ClassDecl classDecl);
     void visit(Field fields);
 }

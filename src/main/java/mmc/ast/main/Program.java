@@ -1,6 +1,7 @@
 package mmc.ast.main;
 
 import mmc.Visitable;
+import mmc.codegen.visitors.IProgramCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 import org.objectweb.asm.ClassWriter;
@@ -16,8 +17,13 @@ public class Program implements Visitable {
     }
 
 
- @Override
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
+    }
+
+    @Override
+    public void accept (IProgramCodeVisitor visitor){
+        visitor.visit(this);
     }
 }

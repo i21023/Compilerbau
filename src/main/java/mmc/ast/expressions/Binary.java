@@ -2,6 +2,7 @@ package mmc.ast.expressions;
 
 import mmc.ast.Operator;
 import mmc.ast.Type;
+import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
@@ -27,5 +28,10 @@ public class Binary implements IExpression{
     @Override
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public void accept(IMethodCodeVisitor visitor) {
+        visitor.visit(this);
     }
 }

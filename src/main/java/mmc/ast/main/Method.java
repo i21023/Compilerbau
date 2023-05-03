@@ -4,6 +4,7 @@ import mmc.Visitable;
 import mmc.ast.AccessModifier;
 import mmc.ast.Type;
 import mmc.ast.statements.IStatement;
+import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 import org.objectweb.asm.ClassWriter;
@@ -33,5 +34,10 @@ public class Method implements Visitable {
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
+    }
+
+    @Override
+    public void accept(IMethodCodeVisitor visitor) {
+        visitor.visit(this);
     }
 }

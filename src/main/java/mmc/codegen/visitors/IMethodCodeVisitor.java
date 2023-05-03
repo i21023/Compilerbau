@@ -1,4 +1,4 @@
-package mmc.codegen;
+package mmc.codegen.visitors;
 
 import mmc.ast.expressions.*;
 import mmc.ast.main.Constructor;
@@ -8,7 +8,7 @@ import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 
-public interface MethodCodeVisitor {
+public interface IMethodCodeVisitor {
 
     void visit(Method method);
     void visit(Constructor constructor);

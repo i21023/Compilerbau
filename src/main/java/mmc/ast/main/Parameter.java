@@ -1,6 +1,7 @@
 package mmc.ast.main;
 import mmc.Visitable;
 import mmc.ast.Type;
+import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
@@ -21,4 +22,5 @@ public class Parameter implements Visitable {
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }
+
 }

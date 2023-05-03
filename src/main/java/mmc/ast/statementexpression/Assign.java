@@ -3,6 +3,7 @@ package mmc.ast.statementexpression;
 import mmc.ast.Operator;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
+import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
@@ -26,5 +27,10 @@ public class Assign implements IStatementExpression {
     @Override
     public Type getType() {
         return null;
+    }
+
+    @Override
+    public void accept(IMethodCodeVisitor visitor) {
+        visitor.visit(this);
     }
 }
