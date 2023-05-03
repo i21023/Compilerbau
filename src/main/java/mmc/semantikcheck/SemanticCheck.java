@@ -9,12 +9,13 @@ import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Vector;
 
 public class SemanticCheck implements SemanticVisitor {
 
+    private ClassDecl getClass;
+    private String fileName;
     public ArrayList<Exception> errors = new ArrayList<>();
     private ArrayList<String> getFields = new ArrayList<>();
 
@@ -44,29 +45,49 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(Program toCheck) {
         //Nur auf Programm konzentrieren
-        for(var classes : toCheck.classes){ //Geht durch alle Klassen und checkt sie
+        for (var classes : toCheck.classes) { //Geht durch alle Klassen und checkt sie
             classes.accept(this);
-        } return null;
+        }
+        return null;
     }
 
     @Override
     public TypeCheckResult typeCheck(ClassDecl toCheck) {
-        var valid = true;
-        for(var fields : toCheck.fields){
-            var result = fields.accept(this);
-            valid = valid && result.isValid();
-            return new TypeCheckResult(valid, null);
+        this.getClass = toCheck; // For the Class-Context
+        if (fileName == null) {
+            this.fileName = toCheck.name + ".java";
         }
-        for(var method : toCheck.methods){
-            method.accept(this);
-        } return null;
+        ArrayList<String> identifiers = new ArrayList<>();
+        var valid = true;
+        getFields.clear();
+        for (Field field : toCheck.fields) {
+            var result = field.accept(this);
+            valid = valid && result.isValid();
+            if (valid) {
+                identifiers.add(field.name);
+            }
+        }
+
+        if (toCheck.constructors.isEmpty()) {
+            new Constructor().accept(this);
+        } else {
+            for (Constructor constructorDecl : toCheck.constructors) {
+                valid = constructorDecl.accept(this).isValid() && valid;
+            }
+        }
+        for (Method methodDecl : toCheck.methods) {
+            valid = methodDecl.accept(this).isValid() && valid;
+        }
+
+        return new TypeCheckResult(valid, null);
     }
+
 
     @Override
     public TypeCheckResult typeCheck(Field toCheck) {
         var valid = true;
         if (getFields.contains(toCheck.name)) { //Schaut ob der Feldname schon existiert
-            errors.add(new Exception("Field " + toCheck.name + " is already defined in class " ));
+            errors.add(new Exception("Field " + toCheck.name + " is already defined in class "));
             valid = false;
         } else {
             getFields.add(toCheck.name); //Wenn nein fügt er in zur Liste
@@ -80,7 +101,7 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(Constructor toCheck) { //TypeCheck(Parameter) { Expression }
         boolean valid = true;
-        for(var parameters : toCheck.parameters){
+        for (var parameters : toCheck.parameters) {
 
         }
         return null;
@@ -96,7 +117,7 @@ public class SemanticCheck implements SemanticVisitor {
         var leftExpr = toCheck.leftExpr.accept(this);
         var rightExpr = toCheck.rightExpr.accept(this);
         boolean valid = leftExpr.isValid() && rightExpr.isValid();
-        valid = valid && Objects.equals(leftExpr, rightExpr) ;
+        valid = valid && Objects.equals(leftExpr, rightExpr);
         return new TypeCheckResult(valid, null);
     }
 

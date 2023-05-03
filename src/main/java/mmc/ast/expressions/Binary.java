@@ -9,6 +9,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class Binary implements IExpression{
     public Operator operator;
     public IExpression expression1;
+    public Type type;
     public IExpression expression2;
 
     public Binary(Operator pOperator, IExpression pExpression1, IExpression pExpression2)
@@ -20,12 +21,13 @@ public class Binary implements IExpression{
 
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
+
         return visitor.typeCheck(this);
     }
 
     @Override
     public Type getType() {
-        return null;
+        return type;
     }
 
     @Override

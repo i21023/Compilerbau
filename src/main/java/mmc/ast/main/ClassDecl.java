@@ -29,17 +29,6 @@ public class ClassDecl implements Visitable {
         accessModifier=pAccessModifier;
     }
 
-    //SemantikCheck
-
-    public void codeGen(){
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-        cw.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null,
-                "java/lang/Object", null);
-
-        fields.forEach(f -> f.codeGen(cw));
-        constructors.forEach(c -> c.codeGen(cw));
-        methods.forEach(m -> m.codeGen(cw));
-    }
 
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
