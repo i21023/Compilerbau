@@ -38,7 +38,7 @@ public class AstTests {
     public void ClassConstructorTest() throws IOException {
         CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassConstructor.java");
         //aufruf Compiler
-
+        ClassDecl classDecl = new ClassDecl("EmptyClass", )
 
 
     }
