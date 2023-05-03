@@ -24,7 +24,7 @@ return_statement: RETURN expr? SEMICOLON;
 
 ///Statement expression
 statement_expr: method_call_statement | new_statement | assign_statement | cre_expr; // example MyClass obj = new MyClass(42);
-method_call_statement: inst_var ID LEFT_BRACKET ( expr (COMMA expr)* )? RIGHT_BRACKET; // methode1 ( expr , expr );
+method_call_statement: (inst_var | ID) LEFT_BRACKET ( expr (COMMA expr)* )? RIGHT_BRACKET; // methode1 ( expr , expr );
 new_statement: NEW ID LEFT_BRACKET expr RIGHT_BRACKET;
 assign_statement: (inst_var | ID) ASSIGN expr; // example this.a = c + 3;
 cre_expr: cre_op (ID | INT | inst_var ) | (ID | INT | inst_var ) cre_op; //example a++; ++a
@@ -57,19 +57,8 @@ add_sub_op: '+' | '-';
 mul_div_op: '*' | '/';
 cre_op: '++' | '--';
 
-//Identifier
-ID: [a-zA-Z][a-zA-Z0-9]*;
-
-// values
-literal: INT | BOOLEAN | CHAR | STRING | NULL;
-INT: [0-9]+;
-BOOLEAN: 'true' | 'false';
-CHAR: '\'' . '\''; //example 'a'
-STRING: '"' ~[\r\n]* '"' ;
-NULL: 'null';
-
 //Datatypes
-type: 'int' | 'boolean' | 'char';
+type: 'int' | 'boolean' | 'char' | ID ;
 
 //Declaration parameter
 ACCES_MOD: 'private' | 'public' | 'protected';
@@ -97,4 +86,17 @@ ELSE: 'else';
 WHILE: 'while';
 RETURN: 'return';
 
+// values
+literal: INT | BOOLEAN | CHAR | STRING | NULL;
+INT: [0-9]+;
+BOOLEAN: 'true' | 'false';
+CHAR: '\'' . '\''; //example 'a'
+STRING: '"' ~[\r\n]* '"' ;
+NULL: 'null';
+
+//Identifier
+ID: [a-zA-Z][a-zA-Z0-9]*;
+
 WS : [ \t\r\n] -> skip;
+InlineComment:'//' ~[\r\n]* -> skip;
+MultilineComment: '/' .? '*/' -> skip;
