@@ -1,5 +1,6 @@
 package mmc.ast.statements;
 
+import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
@@ -11,5 +12,10 @@ public class Block implements IStatement{
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
+    }
+
+    @Override
+    public void accept(IMethodCodeVisitor visitor) {
+        visitor.visit(this);
     }
 }

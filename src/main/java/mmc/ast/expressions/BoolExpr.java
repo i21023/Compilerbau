@@ -1,6 +1,7 @@
 package mmc.ast.expressions;
 
 import mmc.ast.Type;
+import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
@@ -19,5 +20,10 @@ public class BoolExpr implements IExpression{
     @Override
     public Type getType() {
         return null;
+    }
+
+    @Override
+    public void accept(IMethodCodeVisitor visitor) {
+        visitor.visit(this);
     }
 }
