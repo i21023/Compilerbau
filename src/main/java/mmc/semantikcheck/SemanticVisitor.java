@@ -8,7 +8,6 @@ import mmc.ast.statements.*;
 public interface SemanticVisitor {
     TypeCheckResult typeCheck(Program toCheck);
 
-
     TypeCheckResult typeCheck(ClassDecl toCheck);
 
     TypeCheckResult typeCheck(Field toCheck);
@@ -52,8 +51,5 @@ public interface SemanticVisitor {
     TypeCheckResult typeCheck(BoolExpr boolExpr);
 
     TypeCheckResult typeCheck(Binary binary);
-    TypeCheckResult typeCheck(StmtExpExp toCheck);
 
-    TypeCheckResult typeCheck(Super superExpr);
-    TypeCheckResult typeCheck (StmtExprStmt toCheck);
 }
