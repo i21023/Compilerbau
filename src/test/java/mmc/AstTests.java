@@ -25,7 +25,7 @@ public class AstTests {
 
         //Program ast = Compiler.getAst(file);
         //List<Constructor> constructors = new List<Constructor>(1);
-        ClassDecl classDecl = new ClassDecl("EmptyClass",null,new ArrayList<Field>(),
+        ClassDecl classDecl = new ClassDecl("EmptyClass",new ArrayList<Field>(),
                 new ArrayList<Method>(),new ArrayList<Constructor>(),  AccessModifier.PUBLIC);
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
@@ -38,7 +38,7 @@ public class AstTests {
     public void ClassConstructorTest() throws IOException {
         CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassConstructor.java");
         //aufruf Compiler
-        ClassDecl classDecl = new ClassDecl("EmptyClass", )
+        //ClassDecl classDecl = new ClassDecl("EmptyClass", )
 
 
     }
