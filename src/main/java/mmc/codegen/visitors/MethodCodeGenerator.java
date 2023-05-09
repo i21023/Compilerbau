@@ -37,6 +37,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                 "<init>", GeneratorHelpFunctions.getDescriptor(parameterTypes, constructor.type), null, null);
 
         methodVisitor.visitCode();
+        methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
         methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 
         //TODO: Call Visitor for each element of Constructor Block
