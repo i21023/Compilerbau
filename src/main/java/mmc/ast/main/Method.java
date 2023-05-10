@@ -17,14 +17,16 @@ public class Method implements Visitable {
     public List<Parameter> parameters;
     public IStatement statement;
     public AccessModifier accessModifier;
+    public boolean isStatic;
 
-    public Method(Type pType, String pName, List<Parameter> pParameters, IStatement pStatement, AccessModifier pAccessModifier)
+    public Method(Type pType, String pName, List<Parameter> pParameters, IStatement pStatement, AccessModifier pAccessModifier, boolean pIsStatic)
     {
         type=pType;
         name=pName;
         parameters=pParameters;
         statement=pStatement;
         accessModifier=pAccessModifier;
+        isStatic = pIsStatic;
     }
 
     public Type getType() {

@@ -15,12 +15,14 @@ public class Field implements Visitable {
     public Type type;
     public String name;
     public AccessModifier accessModifier;
+    public boolean isStatic;
 
-    public Field(Type pType, String pName,AccessModifier pAccessModifier)
+    public Field(Type pType, String pName,AccessModifier pAccessModifier, boolean pisStatic)
     {
         type=pType;
         name=pName;
         accessModifier = pAccessModifier;
+        isStatic = pisStatic;
     }
 
     public Type getType() {
