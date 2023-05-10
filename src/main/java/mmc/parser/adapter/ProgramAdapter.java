@@ -2,7 +2,7 @@ package mmc.parser.adapter;
 
 import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Program;
-import mmc.parser.ANTLR.MiniJavaParser;
+import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;
 import java.util.List;
