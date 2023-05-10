@@ -1,5 +1,6 @@
 package mmc.ast.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mmc.Visitable;
@@ -13,12 +14,12 @@ import org.objectweb.asm.Opcodes;
 
 public class ClassDecl implements Visitable {
     public String name;
-    public List<Field> fields;
+    public ArrayList<Field> fields;
     public List<Method> methods;
     public AccessModifier accessModifier;
     public List<Constructor> constructors;
 
-    public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier)
+    public ClassDecl(String pName, ArrayList<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier)
     {
         name=pName;
         fields=pFiedls;
