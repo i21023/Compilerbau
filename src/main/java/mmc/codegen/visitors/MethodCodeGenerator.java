@@ -1,5 +1,6 @@
 package mmc.codegen.visitors;
 
+import mmc.ast.BasicType;
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
 import mmc.ast.main.Constructor;
@@ -38,9 +39,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         methodVisitor.visitCode();
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "V()", false);
 
-        //TODO: Call Visitor for each element of Constructor Block
+        //Generate Code of Constructor Block
+        constructor.statement.accept(this);
 
         methodVisitor.visitInsn(Opcodes.RETURN);
         methodVisitor.visitMaxs(0,0);
@@ -52,12 +54,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Block block) {
-
+        block.statements.forEach(statement -> statement.accept(this));
     }
 
     @Override
     public void visit(If ifStmt) {
-
+        
     }
 
     @Override

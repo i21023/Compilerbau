@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
-        Program program = new Program(new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("Test", new ArrayList<Field>(){}, new ArrayList<Method>(){}, new ArrayList<Constructor>(){}, AccessModifier.PUBLIC))));
+        Program program = new Program(new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(), new ArrayList<Constructor>(), AccessModifier.PUBLIC))));
 
         ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = programVisitor.getBytecode(program);
@@ -28,5 +28,4 @@ public class Main {
             e.printStackTrace();
         }
     }
-    //test
 }
