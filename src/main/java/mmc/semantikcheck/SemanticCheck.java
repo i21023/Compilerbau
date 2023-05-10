@@ -11,10 +11,7 @@ import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 import static mmc.ast.BasicType.*;
 
@@ -27,7 +24,7 @@ public class SemanticCheck implements SemanticVisitor {
     public ArrayList<Exception> errors = new ArrayList<>();
     public ArrayList<String> getFields = new ArrayList<>();
 
-    public ArrayList<Field> classContainField = new ArrayList<>();
+    public List<Field> classContainField = new ArrayList<>();
     public ArrayList<ClassDecl> getClasses = new ArrayList<>();
     private InScope isInScope;
 
@@ -71,7 +68,7 @@ public class SemanticCheck implements SemanticVisitor {
         if (fileName == null) {
             this.fileName = toCheck.name + ".java";
         }
-        ArrayList<String> identifiers = new ArrayList<>();
+        List<String> identifiers = new ArrayList<>();
         var valid = true;
         getFields.clear();
         classContainField = toCheck.fields;
