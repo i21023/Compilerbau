@@ -1,5 +1,6 @@
 package mmc.codegen.visitors;
 
+import mmc.ast.BasicType;
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
 import mmc.ast.main.Constructor;
@@ -26,7 +27,16 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Method method) {
+        List<Type> parameterTypes = method.parameters.stream().map(parameter -> parameter.type).collect(Collectors.toList());
 
+        methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(method.accessModifier, false),
+                method.name, GeneratorHelpFunctions.getDescriptor(parameterTypes, method.type), null, null);
+
+        methodVisitor.visitCode();
+        method.statement.accept(this);
+        //TODO: Check ob void zurückkommt
+        methodVisitor.visitMaxs(0,0);
+        methodVisitor.visitEnd();
     }
 
     @Override
@@ -38,31 +48,30 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         methodVisitor.visitCode();
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "V()", false);
 
-        //TODO: Call Visitor for each element of Constructor Block
+        //Generate Code of Constructor Block
+        constructor.statement.accept(this);
 
         methodVisitor.visitInsn(Opcodes.RETURN);
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
 
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-
     }
 
     @Override
     public void visit(Block block) {
-
+        block.statements.forEach(statement -> statement.accept(this));
     }
 
     @Override
     public void visit(If ifStmt) {
-
     }
 
     @Override
     public void visit(LocalVarDecl localVarDecl) {
-
+        methodVisitor.visitInsn(Opcodes.ICONST_0);
     }
 
     @Override

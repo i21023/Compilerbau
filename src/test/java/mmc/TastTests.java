@@ -20,7 +20,7 @@ public class TastTests {
 
         //Program tast = Compiler.getAst(file);
         //List<Constructor> constructors = new List<Constructor>(1);
-        ClassDecl classDecl = new ClassDecl("EmptyClass", BasicType.VOID,new ArrayList<Field>(),
+        ClassDecl classDecl = new ClassDecl("EmptyClass", new ArrayList<Field>(),
                 new ArrayList<Method>(),new ArrayList<Constructor>(),  AccessModifier.PUBLIC);
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
