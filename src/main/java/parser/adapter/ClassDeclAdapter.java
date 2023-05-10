@@ -13,7 +13,6 @@ public class ClassDeclAdapter {
     public static ClassDecl adapt(MiniJavaParser.Class_declContext classdeclContext) {
         List<Constructor> constructorDecls = new ArrayList<>();
 
-
         AccessModifier accessModifier = AccessModifier.PRIVATE;
         if (classdeclContext.ACCES_MOD() != null) {
             switch (classdeclContext.ACCES_MOD().getText()) {
