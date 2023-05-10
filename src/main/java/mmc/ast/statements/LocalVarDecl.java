@@ -8,9 +8,11 @@ import mmc.semantikcheck.TypeCheckResult;
 public class LocalVarDecl implements IStatement{
     public String name;
     public Type type;
+    public IExpression expression;
 
-    public LocalVarDecl(String pName) {
+    public LocalVarDecl(String pName, IExpression pExpression) {
         name = pName;
+        expression = pExpression;
     }
 
 
