@@ -5,7 +5,6 @@ import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.Type;
 import mmc.ast.statements.Block;
-import mmc.ast.statements.IStatement;
 import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
@@ -25,7 +24,7 @@ public class Constructor implements Visitable {
         statement=pStatement;
         parameters=pParameters;
         accessModifier=pAccessModifier;
-        //type = BasicType.VOID;
+        type = BasicType.VOID;
     }
 
     public Constructor()
@@ -33,7 +32,7 @@ public class Constructor implements Visitable {
         accessModifier=AccessModifier.PUBLIC;
         parameters = new ArrayList<Parameter>();
         statement = new Block();
-        //type = BasicType.VOID;
+        type = BasicType.VOID;
     }
 
     public Type getType() {
