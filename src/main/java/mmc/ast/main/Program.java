@@ -7,12 +7,13 @@ import mmc.semantikcheck.TypeCheckResult;
 import org.objectweb.asm.ClassWriter;
 
 import java.beans.Visibility;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Program implements Visitable {
-    public List<ClassDecl> classes;
+    public ArrayList<ClassDecl> classes;
 
-    public Program(List<ClassDecl> pClasses){
+    public Program(ArrayList<ClassDecl> pClasses){
         classes = pClasses;
     }
 

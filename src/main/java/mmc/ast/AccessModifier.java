@@ -3,5 +3,7 @@ package mmc.ast;
 public enum AccessModifier {
         PUBLIC,
         PRIVATE,
-        PROTECTED
+        PROTECTED,
+        PUBLIC_STATIC,
+        PRIVATE_STATIC
 }

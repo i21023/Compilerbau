@@ -10,16 +10,11 @@ public class LocalVarDecl implements IStatement{
     public Type type;
     public IExpression expression;
 
-    public LocalVarDecl(String pName, Type pType, IExpression pExpression) {
-        type = pType;
+    public LocalVarDecl(String pName, IExpression pExpression) {
         name = pName;
         expression = pExpression;
     }
 
-    public LocalVarDecl(String pName, Type pType) {
-        type = pType;
-        name = pName;
-    }
 
     public Type getType() {
         return type;
