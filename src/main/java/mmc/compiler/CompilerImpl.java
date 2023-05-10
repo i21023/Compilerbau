@@ -18,6 +18,17 @@ public class CompilerImpl implements Compiler {
         // get the filename without the extension
         File file = new File(fileName);
 
+        if (outDir.equals("")) {
+            outDir = "compile";
+            File outDirectory = new File(outDir);
+            if (!outDirectory.exists()) {
+                outDirectory.mkdir();
+            } else {
+                outDirectory.delete();
+                outDirectory.mkdir();
+            }
+        }
+
         if (file.exists()) {
             try {
                 InputStream inputStream = new FileInputStream(file);
@@ -28,9 +39,11 @@ public class CompilerImpl implements Compiler {
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
                 HashMap<String, byte[]> code = programVisitor.getBytecode(program);
 
-                code.forEach((x,y) -> {
+
+                String finalOutDir = outDir;
+                code.forEach((x, y) -> {
                     try {
-                        FileOutputStream fos = new FileOutputStream(outDir + x + ".class");
+                        FileOutputStream fos = new FileOutputStream(finalOutDir + File.separator +".class");
                         fos.write(code.get("Test"));
                         fos.close();
                     } catch (IOException e) {
