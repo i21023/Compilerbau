@@ -21,14 +21,24 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
 
     @Override
     public void visit(ClassDecl classDecl) {
+        //Generate Program Bytecode
         classWriter.visit(Opcodes.V1_5, GeneratorHelpFunctions.getAccessModifier(classDecl.accessModifier, false),
                 classDecl.name, null, "java/lang/Object", null);
 
+        //Generate Field Bytecode
         classDecl.fields.forEach(field -> field.accept(this));
 
+        //Generate Constructor Bytecode
         if(classDecl.constructors.isEmpty()){
             new Constructor().accept(new MethodCodeGenerator(classWriter));
         }
+        else{
+            classDecl.constructors.forEach(constructor -> constructor.accept(new MethodCodeGenerator(classWriter)));
+        }
+
+        //Generate Method ByteCode
+        classDecl.methods.forEach(method -> method.accept(new MethodCodeGenerator(classWriter)));
+
     }
 
     @Override
