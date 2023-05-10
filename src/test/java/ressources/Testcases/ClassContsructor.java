@@ -1,8 +1,8 @@
-package ressources.testcases;
+package ressources.Testcases;
 
 public class ClassContsructor {
     public ClassContsructor()
     {
-
+        int a = 5;
     }
 }

@@ -2,9 +2,11 @@ package mmc;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
+import mmc.ast.expressions.IntExpr;
 import mmc.ast.main.*;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;
+import mmc.ast.statements.LocalVarDecl;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,6 +46,25 @@ public class ByteCodeTest {
 
         //(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier, Block pBlock)
        Program test = new Program(Arrays.asList(new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
+                new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(new ArrayList<IStatement>()),
+                        new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT,"x"))),
+                        AccessModifier.PUBLIC,new Block(new ArrayList<IStatement>())))), AccessModifier.PUBLIC)));
+    }
+
+    @Test
+    @DisplayName("Constructor with Parameter")
+    public void ContructorWithVarTest(){
+        ArrayList<Constructor> con = new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(new ArrayList<IStatement>(Arrays.asList(
+                new LocalVarDecl("x", BasicType.INT, new IntExpr(5))))),
+                new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT,"x"))),
+                AccessModifier.PUBLIC,new Block(new ArrayList<IStatement>()))));
+
+        ClassDecl classDecl = new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
+                con, AccessModifier.PUBLIC);
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        //(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier, Block pBlock)
+        Program test = new Program(Arrays.asList(new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
                 new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(new ArrayList<IStatement>()),
                         new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT,"x"))),
                         AccessModifier.PUBLIC,new Block(new ArrayList<IStatement>())))), AccessModifier.PUBLIC)));
