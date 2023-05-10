@@ -11,22 +11,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import mmc.compiler.Compiler;
+import mmc.compiler.CompilerImpl;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        Program program = new Program(new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("Test", new ArrayList<Field>(){}, new ArrayList<Method>(){}, new ArrayList<Constructor>(){}, AccessModifier.PUBLIC))));
 
-        ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
-        HashMap<String, byte[]> code = programVisitor.getBytecode(program);
-
-        try {
-            FileOutputStream fos = new FileOutputStream("src/main/java/mmc/codegen/visitors/Test.class");
-            fos.write(code.get("Test"));
-            fos.close();
-            System.out.println("Bytes written to file successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (args.length == 0) {
+            System.out.println("Bitte Datei eingeben.");
+            return;
+        }
+        if (args.length == 1 && args[0].endsWith(".java")) {
+            Compiler compiler = new CompilerImpl();
+            compiler.compile(args[0], ".");
+        }
+        else {
+            System.out.println("Bitte nur eine Java-Datei eingeben.");
         }
     }
-    //test
 }

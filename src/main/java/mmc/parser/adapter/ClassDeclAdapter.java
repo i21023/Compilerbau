@@ -1,9 +1,9 @@
-package parser.adapter;
+package mmc.parser.adapter;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Constructor;
-import parser.ANTLR.MiniJavaParser;
+import mmc.parser.ANTLR.MiniJavaParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import java.util.List;
 public class ClassDeclAdapter {
 
     public static ClassDecl adapt(MiniJavaParser.Class_declContext classdeclContext) {
-        List<Constructor> constructorDecls = new ArrayList<>();
 
+        List<Constructor> constructorDecls = new ArrayList<>();
 
         AccessModifier accessModifier = AccessModifier.PRIVATE;
         if (classdeclContext.ACCES_MOD() != null) {
@@ -32,6 +32,6 @@ public class ClassDeclAdapter {
             }
         }
 
-        return new ClassDecl(classdeclContext.ID().getText(), null, null, constructorDecls, accessModifier);
+        return new ClassDecl(classdeclContext.ID().getText(), new ArrayList<>(), new ArrayList<>(), constructorDecls, accessModifier);
     }
 }

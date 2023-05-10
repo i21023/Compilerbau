@@ -1,4 +1,4 @@
-package parser;
+package mmc.parser;
 
 public class Test {
     private int myField;
