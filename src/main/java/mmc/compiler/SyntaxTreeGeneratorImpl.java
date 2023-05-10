@@ -1,8 +1,8 @@
 package mmc.compiler;
 
 import mmc.ast.main.Program;
-import mmc.parser.ANTLR.MiniJavaLexer;
-import mmc.parser.ANTLR.MiniJavaParser;
+import mmc.parser.antlr.MiniJavaLexer;
+import mmc.parser.antlr.MiniJavaParser;
 import mmc.parser.adapter.ProgramAdapter;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;

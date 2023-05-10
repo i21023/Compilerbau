@@ -27,7 +27,16 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Method method) {
+        List<Type> parameterTypes = method.parameters.stream().map(parameter -> parameter.type).collect(Collectors.toList());
 
+        methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(method.accessModifier, false),
+                method.name, GeneratorHelpFunctions.getDescriptor(parameterTypes, method.type), null, null);
+
+        methodVisitor.visitCode();
+        //TODO: Check ob void zurückkommt
+        method.statement.accept(this);
+        methodVisitor.visitMaxs(0,0);
+        methodVisitor.visitEnd();
     }
 
     @Override
@@ -59,12 +68,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(If ifStmt) {
-        
     }
 
     @Override
     public void visit(LocalVarDecl localVarDecl) {
-
+        methodVisitor.visitInsn(Opcodes.ICONST_0);
     }
 
     @Override

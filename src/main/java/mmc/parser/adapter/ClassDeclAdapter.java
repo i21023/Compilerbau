@@ -3,7 +3,7 @@ package mmc.parser.adapter;
 import mmc.ast.AccessModifier;
 import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Constructor;
-import mmc.parser.ANTLR.MiniJavaParser;
+import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;
 import java.util.List;

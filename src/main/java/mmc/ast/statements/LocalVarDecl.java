@@ -13,7 +13,6 @@ public class LocalVarDecl implements IStatement{
         name = pName;
     }
 
-
     public Type getType() {
         return type;
     }

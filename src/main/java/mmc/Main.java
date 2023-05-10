@@ -16,7 +16,6 @@ import mmc.compiler.CompilerImpl;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
         Program program = new Program(new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("Test", new ArrayList<Field>(){}, new ArrayList<Method>(){}, new ArrayList<Constructor>(){}, AccessModifier.PUBLIC))));
 
         if (args.length == 0) {
@@ -30,5 +29,7 @@ public class Main {
         else {
             System.out.println("Bitte nur eine Java-Datei eingeben.");
         }
+
+
     }
 }
