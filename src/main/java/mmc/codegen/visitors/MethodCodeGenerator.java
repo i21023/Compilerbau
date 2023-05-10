@@ -14,6 +14,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class MethodCodeGenerator implements IMethodCodeVisitor{
@@ -21,16 +22,23 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     private final ClassWriter classWriter;
     private MethodVisitor methodVisitor;
 
+    int stacksize;
+
     public MethodCodeGenerator(ClassWriter cw){
         this.classWriter = cw;
+        stacksize = 0;
     }
 
     @Override
     public void visit(Method method) {
+
         List<Type> parameterTypes = method.parameters.stream().map(parameter -> parameter.type).collect(Collectors.toList());
 
         methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(method.accessModifier, false),
                 method.name, GeneratorHelpFunctions.getDescriptor(parameterTypes, method.type), null, null);
+
+        stacksize++;
+        stacksize += method.parameters.size();
 
         methodVisitor.visitCode();
         method.statement.accept(this);
@@ -45,6 +53,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(constructor.accessModifier, false),
                 "<init>", GeneratorHelpFunctions.getDescriptor(parameterTypes, constructor.type), null, null);
+
+        stacksize++;
+        stacksize += constructor.parameters.size();
 
         methodVisitor.visitCode();
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
@@ -71,7 +82,16 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(LocalVarDecl localVarDecl) {
-        methodVisitor.visitInsn(Opcodes.ICONST_0);
+        if(localVarDecl.expression == null){
+            return;
+        }
+        localVarDecl.expression.accept(this);
+        if(localVarDecl.type instanceof BasicType){
+            methodVisitor.visitVarInsn(Opcodes.ISTORE, ++stacksize);
+        }
+        else{
+            methodVisitor.visitVarInsn(Opcodes.ASTORE, ++stacksize);
+        }
     }
 
     @Override
@@ -96,7 +116,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(BoolExpr boolExpr) {
-
+        if(boolExpr.value){
+            methodVisitor.visitInsn(Opcodes.ICONST_1);
+        }
+        else{
+            methodVisitor.visitInsn(Opcodes.ICONST_0);
+        }
     }
 
     @Override
@@ -111,7 +136,25 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(IntExpr intExpr) {
-
+        if(intExpr.value >= -1 && intExpr.value <= 5){
+            switch (intExpr.value){
+                case -1 -> methodVisitor.visitInsn(Opcodes.ICONST_M1);
+                case 0 -> methodVisitor.visitInsn(Opcodes.ICONST_0);
+                case 1 -> methodVisitor.visitInsn(Opcodes.ICONST_1);
+                case 2 -> methodVisitor.visitInsn(Opcodes.ICONST_2);
+                case 3 -> methodVisitor.visitInsn(Opcodes.ICONST_3);
+                case 4 -> methodVisitor.visitInsn(Opcodes.ICONST_4);
+                case 5 -> methodVisitor.visitInsn(Opcodes.ICONST_5);
+            }
+        }
+        else if(intExpr.value >= -128 && intExpr.value <= 127){
+            methodVisitor.visitIntInsn(Opcodes.BIPUSH, intExpr.value);
+        } else if (intExpr.value >= -32768 && intExpr.value <= 32767) {
+            methodVisitor.visitIntInsn(Opcodes.SIPUSH, intExpr.value);
+        }
+        else {
+            methodVisitor.visitLdcInsn(Integer.valueOf(intExpr.value));
+        }
     }
 
     @Override
