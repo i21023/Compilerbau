@@ -33,8 +33,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                 method.name, GeneratorHelpFunctions.getDescriptor(parameterTypes, method.type), null, null);
 
         methodVisitor.visitCode();
-        //TODO: Check ob void zurückkommt
         method.statement.accept(this);
+        //TODO: Check ob void zurückkommt
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
     }
@@ -58,7 +58,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         methodVisitor.visitEnd();
 
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-
     }
 
     @Override

@@ -50,7 +50,7 @@ public class CompilerImpl implements Compiler {
                         throw new RuntimeException(e);
                     }
                 });
-
+                System.out.println(file.getAbsolutePath());
                 System.out.println("Bytes written to file successfully.");
 
             } catch (FileNotFoundException e) {
