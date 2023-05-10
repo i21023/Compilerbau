@@ -18,6 +18,8 @@ public class GeneratorHelpFunctions {
             case PUBLIC -> Opcodes.ACC_PUBLIC;
             case PRIVATE -> Opcodes.ACC_PRIVATE;
             case PROTECTED -> Opcodes.ACC_PROTECTED;
+            case PUBLIC_STATIC -> 0;
+            case PRIVATE_STATIC -> 0;
         };
     }
 

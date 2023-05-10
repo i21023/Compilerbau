@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Program implements Visitable {
-    public ArrayList<ClassDecl> classes;
+    public List<ClassDecl> classes;
 
-    public Program(ArrayList<ClassDecl> pClasses){
+    public Program(List<ClassDecl> pClasses){
         classes = pClasses;
     }
 

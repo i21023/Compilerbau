@@ -2,12 +2,19 @@ package mmc.parser.adapter;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.Type;
+import mmc.ast.expressions.IExpression;
 import mmc.ast.main.Field;
+import mmc.ast.main.Parameter;
 import mmc.parser.antlr.MiniJavaParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FieldDeclAdapter {
-    public static Field adapt(MiniJavaParser.Field_declContext fieldDeclContext) {
-        AccessModifier accessModifier = AccessModifier.PUBLIC;
+
+    public static List<Field> adapt(MiniJavaParser.Field_declContext fieldDeclContext) {
+
+        AccessModifier accessModifier = AccessModifier.PRIVATE;
         if (fieldDeclContext.ACCES_MOD() != null) {
             switch (fieldDeclContext.ACCES_MOD().getText()) {
                 case "public":
@@ -20,7 +27,7 @@ public class FieldDeclAdapter {
                     accessModifier = AccessModifier.PROTECTED;
                     break;
                 default:
-                    accessModifier = AccessModifier.PUBLIC;
+                    accessModifier = AccessModifier.PRIVATE;
                     break;
             }
         }
@@ -30,14 +37,35 @@ public class FieldDeclAdapter {
             staticFlag = true;
         }
 
-
-
         Type type = TypeAdapter.adapt(fieldDeclContext.type());
 
-        String name = fieldDeclContext.ID().toString();
+        if (fieldDeclContext.COMMA() != null) {
+            List<Field> fieldDecls = new ArrayList<>();
+            for (int i = 0; i < fieldDeclContext.COMMA().size(); i++) {
 
+                String name = fieldDeclContext.ID(i).getText();
 
+                IExpression expression = null;
+                if (fieldDeclContext.ASSIGN() != null) {
+                    expression = ExpressionAdapter.adapt(fieldDeclContext.expr(i));
+                }
 
+                fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag));
+
+            }
+            return fieldDecls;
+        } else {
+
+            String name = fieldDeclContext.ID(0).getText();
+
+            IExpression expression = null;
+            if (fieldDeclContext.ASSIGN() != null) {
+                expression = ExpressionAdapter.adapt(fieldDeclContext.expr(0));
+            }
+
+            return List.of(new Field(type, name, accessModifier, expression, staticFlag));
+
+        }
 
     }
 }

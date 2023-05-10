@@ -25,7 +25,7 @@ public class SemanticCheck implements SemanticVisitor {
     public ArrayList<String> getFields = new ArrayList<>();
 
     public List<Field> classContainField = new ArrayList<>();
-    public ArrayList<ClassDecl> getClasses = new ArrayList<>();
+    public List<ClassDecl> getClasses = new ArrayList<>();
     private InScope isInScope;
 
     /*public static void main(String[] args) {
