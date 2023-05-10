@@ -31,13 +31,11 @@ public class FieldDeclAdapter {
         }
 
 
-
         Type type = TypeAdapter.adapt(fieldDeclContext.type());
 
         String name = fieldDeclContext.ID().toString();
 
 
-
-
+        return null;
     }
 }

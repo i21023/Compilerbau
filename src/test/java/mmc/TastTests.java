@@ -47,7 +47,7 @@ public class TastTests {
         Block ElseBlock = new Block(new ArrayList<IStatement>(Arrays.asList(new Return(new BoolExpr(false)))));
         Block IfBlock = new Block(new ArrayList<IStatement>(Arrays.asList(new Return(new BoolExpr(true)))));
         Binary IfExpression = new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b"));
-        Block Rumpf = new Block(new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a", BasicType.INT), new LocalVarDecl("b", BasicType.INT), new If(IfBlock, ElseBlock, IfExpression))));
+        Block Rumpf = new Block(new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a"), new LocalVarDecl("b"), new If(IfBlock, ElseBlock, IfExpression))));
         ArrayList<Method> method = new ArrayList<Method>(Arrays.asList(new Method(null, "add", new ArrayList<Parameter>(), Rumpf, AccessModifier.PUBLIC, false)));
         ArrayList<ClassDecl> Testclass = new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), method, new ArrayList<Constructor>(), AccessModifier.PUBLIC)));
         Program prog = new Program(Testclass);
