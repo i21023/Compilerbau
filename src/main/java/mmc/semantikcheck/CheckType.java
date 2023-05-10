@@ -5,6 +5,8 @@ import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Field;
+import mmc.ast.main.Method;
+import mmc.ast.statementexpression.MethodCall;
 
 public class CheckType {
     public static Field getFieldInType(String identifier, Type type, ClassDecl currentClass) {

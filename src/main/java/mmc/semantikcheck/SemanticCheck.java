@@ -31,12 +31,12 @@ public class SemanticCheck implements SemanticVisitor {
     public ArrayList<ClassDecl> getClasses = new ArrayList<>();
     private InScope isInScope;
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         ArrayList<ClassDecl> classDeclList = new ArrayList<>();
         var program = new Program(classDeclList);
         SemanticCheck semanticVisitor = new SemanticCheck();
         TypeCheckResult typeCheck = program.accept(semanticVisitor); //TypeCheckResult als rückgabe
-    }
+    }*/
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
         SemanticCheck semanticCheck = new SemanticCheck();
@@ -345,7 +345,7 @@ public class SemanticCheck implements SemanticVisitor {
     }
 
     @Override
-    public TypeCheckResult typeCheck(New toCheck) {
+    public TypeCheckResult typeCheck(New toCheck) { //Nochmal schauen
 
         var valid = true;
 
@@ -384,18 +384,21 @@ public class SemanticCheck implements SemanticVisitor {
             var parameterResult = parameter.accept(this);
             valid = valid && parameterResult.isValid();
         }
+
+
+        //Hier schauen ob es die Methode überhaupt gibt, receiver hat Typ und in klasse schauen wo dieser drin is
+        for(var clas : getClasses){
+            for(var metho : clas.methods){
+                if(metho.name != toCheck.name){
+                    errors.add(new Exception("Methode: " + metho.name + " is unknown"));
+                    valid = false;
+                }
+            }
+        }
+
+        //schauen ob Methode aufgerufen werden kann
+
         return null;
-        /*try {
-            var method = TypeHelper.getMethodInType(toCheck, toCheck.receiver.getType(), context,
-                    this.currentClass);
-            var returnType = method.getType();
-            methodCall.setType(returnType);
-            return new TypeCheckResult(valid, null);
-        } catch (TypeMismatchException e) {
-            errors.add(new SemanticError(e.getMessage() + TypeHelper.generateLocationString(methodCall.line,
-                    methodCall.column, fileName)));
-            return new TypeCheckResult(false, null);
-        }*/
     }
 
     @Override
@@ -442,7 +445,7 @@ public class SemanticCheck implements SemanticVisitor {
     }
 
     @Override
-    public TypeCheckResult typeCheck(This toCheck) {
+    public TypeCheckResult typeCheck(This toCheck) { //nochmal schauen
         //toCheck.type = (Type)getClass.name;
         return new TypeCheckResult(true, toCheck.getType());
     }
@@ -483,10 +486,6 @@ public class SemanticCheck implements SemanticVisitor {
         }
     }
 
-    @Override
-    public TypeCheckResult typeCheck(IntExpr toCheck) {
-        return new TypeCheckResult(true, toCheck.getType());
-    }
 
     @Override
     public TypeCheckResult typeCheck(InstVar instVar) {
@@ -518,6 +517,12 @@ public class SemanticCheck implements SemanticVisitor {
             errors.add(new Exception(e.getMessage()));
             return new TypeCheckResult(false, null);
         }
+    }
+
+    @Override
+    public TypeCheckResult typeCheck(IntExpr toCheck) {
+
+        return new TypeCheckResult(true, toCheck.getType());
     }
 
     @Override
