@@ -24,6 +24,9 @@ public class GeneratorHelpFunctions {
     }
 
     public static String getDescriptor(List<Type> parameterTypes, Type returnValue){
+        if(parameterTypes == null){
+            return getType(returnValue).toString();
+        }
         StringBuilder descriptor = new StringBuilder();
         descriptor.append("(");
         parameterTypes.forEach(parameter -> descriptor.append(getType(parameter)));
@@ -42,8 +45,11 @@ public class GeneratorHelpFunctions {
                 case BOOL -> "Z";
             };
         }
-        else {
+        else if (type instanceof ReferenceType){
             return ((ReferenceType) type).type;
+        }
+        else{
+            return "";
         }
 
     }

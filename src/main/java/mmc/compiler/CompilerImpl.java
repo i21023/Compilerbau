@@ -1,6 +1,14 @@
 package mmc.compiler;
 
-import mmc.ast.main.Program;
+import mmc.ast.AccessModifier;
+import mmc.ast.BasicType;
+import mmc.ast.Operator;
+import mmc.ast.expressions.IntExpr;
+import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.ast.main.*;
+import mmc.ast.statementexpression.Assign;
+import mmc.ast.statements.Block;
+import mmc.ast.statements.LocalVarDecl;
 import mmc.codegen.visitors.ProgramCodeGenerator;
 import org.antlr.v4.runtime.CharStreams;
 
@@ -10,6 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class CompilerImpl implements Compiler {
@@ -36,6 +47,18 @@ public class CompilerImpl implements Compiler {
 
                 Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
+                program = new Program(new ArrayList<>(Arrays.asList(
+                        new ClassDecl("Test",
+                                new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "i", AccessModifier.PUBLIC, null, false))),
+                                new ArrayList<Method>(),
+                                new ArrayList<Constructor>(Arrays.asList(
+                                        new Constructor(
+                                                new Block(
+                                                        new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("i"), Operator.EQUAL, new IntExpr(5), null)))),
+                                                new ArrayList<>(Arrays.asList(new Parameter(BasicType.CHAR, "param"))),
+                                                AccessModifier.PUBLIC))),
+                                AccessModifier.PUBLIC))));
+
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
                 HashMap<String, byte[]> code = programVisitor.getBytecode(program);
 
@@ -43,7 +66,7 @@ public class CompilerImpl implements Compiler {
                 String finalOutDir = outDir;
                 code.forEach((x, y) -> {
                     try {
-                        FileOutputStream fos = new FileOutputStream(finalOutDir + File.separator +".class");
+                        FileOutputStream fos = new FileOutputStream(finalOutDir + File.separator + file.getName().replace(".java", ".class"));
                         fos.write(code.get("Test"));
                         fos.close();
                     } catch (IOException e) {

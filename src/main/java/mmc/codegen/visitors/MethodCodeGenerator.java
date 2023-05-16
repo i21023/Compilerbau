@@ -13,7 +13,9 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -21,12 +23,18 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     private final ClassWriter classWriter;
     private MethodVisitor methodVisitor;
+    String className;
 
-    int stacksize;
+    private Map<String, Type> fieldVars;
+    private Stack<String> localVars;
 
-    public MethodCodeGenerator(ClassWriter cw){
+    public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String className){
         this.classWriter = cw;
-        stacksize = 0;
+        this.fieldVars = fieldVars;
+        this.className = className;
+        localVars = new Stack<>();
+        localVars.push("this");
+
     }
 
     @Override
@@ -37,14 +45,15 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(method.accessModifier, false),
                 method.name, GeneratorHelpFunctions.getDescriptor(parameterTypes, method.type), null, null);
 
-        stacksize++;
-        stacksize += method.parameters.size();
+        //Add parameters to localVars
+        method.parameters.forEach(parameter -> localVars.add(parameter.name));
 
         methodVisitor.visitCode();
         method.statement.accept(this);
-        //TODO: Check ob void zurückkommt
+        //TODO: Check if void comes back
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
+
     }
 
     @Override
@@ -54,12 +63,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(constructor.accessModifier, false),
                 "<init>", GeneratorHelpFunctions.getDescriptor(parameterTypes, constructor.type), null, null);
 
-        stacksize++;
-        stacksize += constructor.parameters.size();
+        //Add parameters to localVars
+        constructor.parameters.forEach(parameter -> localVars.add(parameter.name));
 
         methodVisitor.visitCode();
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "V()", false);
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
 
         //Generate Code of Constructor Block
         constructor.statement.accept(this);
@@ -68,7 +77,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
 
-        methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+
     }
 
     @Override
@@ -83,14 +92,16 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     @Override
     public void visit(LocalVarDecl localVarDecl) {
         if(localVarDecl.expression == null){
-            return;
+            localVars.push(localVarDecl.name);
         }
         localVarDecl.expression.accept(this);
         if(localVarDecl.type instanceof BasicType){
-            methodVisitor.visitVarInsn(Opcodes.ISTORE, ++stacksize);
+            methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.size());
+            localVars.push(localVarDecl.name);
         }
         else{
-            methodVisitor.visitVarInsn(Opcodes.ASTORE, ++stacksize);
+            methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.size());
+            localVars.push(localVarDecl.name);
         }
     }
 
@@ -126,7 +137,15 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(CharExpr charExpr) {
-
+        if(charExpr.value <= 127){
+            methodVisitor.visitVarInsn(Opcodes.BIPUSH, charExpr.value);
+        }
+        else if(charExpr.value <= 32767) {
+            methodVisitor.visitVarInsn(Opcodes.SIPUSH, charExpr.value);
+        }
+        else{
+            methodVisitor.visitLdcInsn(charExpr.value);
+        }
     }
 
     @Override
@@ -164,7 +183,14 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(LocalOrFieldVar localOrFieldVar) {
-
+        if(localVars.contains(localOrFieldVar.name)){
+            methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(localOrFieldVar));
+        }
+        else if(fieldVars.containsKey(localOrFieldVar.name)){
+            methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, className, localOrFieldVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
+        }
     }
 
     @Override
@@ -174,6 +200,21 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Assign assign) {
+
+        if(assign.leftExpr instanceof LocalOrFieldVar){
+            LocalOrFieldVar leftExpr = (LocalOrFieldVar) assign.leftExpr;
+            if(localVars.contains(leftExpr.name)){
+                assign.rightExpr.accept(this);
+                methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(leftExpr.name));
+            }
+            else if(fieldVars.containsKey(leftExpr.name)){
+                methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+                assign.rightExpr.accept(this);
+                methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, className, leftExpr.name,
+                        GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+            }
+
+        }
 
     }
 
