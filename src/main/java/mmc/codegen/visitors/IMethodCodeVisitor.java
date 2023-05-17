@@ -29,6 +29,8 @@ public interface IMethodCodeVisitor {
 
     public void visit(While whileStmt);
 
+    public void visit(For forStmt);
+
     public void visit(Unary unary);
 
     public void visit(Binary binary);
