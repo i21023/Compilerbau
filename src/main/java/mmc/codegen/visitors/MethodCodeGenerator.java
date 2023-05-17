@@ -204,7 +204,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     @Override
     public void visit(LocalOrFieldVar localOrFieldVar) {
         if(localVars.contains(localOrFieldVar.name)){
-            methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(localOrFieldVar));
+            methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(localOrFieldVar) + 1);
         }
         else if(fieldVars.containsKey(localOrFieldVar.name)){
             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
