@@ -117,6 +117,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     }
 
     @Override
+    public void visit(For forStmt) {
+
+    }
+
+    @Override
     public void visit(Unary unary) {
 
     }

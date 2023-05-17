@@ -3,7 +3,9 @@ package mmc;
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.expressions.IntExpr;
+import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.main.*;
+import mmc.ast.statementexpression.Assign;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;
 import mmc.ast.statements.LocalVarDecl;
@@ -97,6 +99,29 @@ public class ByteCodeTest {
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
         Classwriter.WriteClassFile("FieldVarClass", "C:/Users/Micha/Documents/GitHub/Tests", code);
+
+    }
+
+    @Test
+    @DisplayName("Class with FieldVars and Method")
+    public void FieldVarClassMutableTest() {
+
+        Method method = new Method(BasicType.VOID, "changeX", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new Assign(new LocalOrFieldVar("x"),
+                                new IntExpr(30), null)))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        Classwriter.WriteClassFile("FieldVarClassMutable", "C:/Users/Micha/Documents/GitHub/Tests", code);
 
     }
 }
