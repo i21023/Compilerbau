@@ -22,6 +22,8 @@ public interface SemanticVisitor {
 
     TypeCheckResult typeCheck(While whileStmt);
 
+    TypeCheckResult typeCheck(For forStmt);
+
     TypeCheckResult typeCheck(Return returnStmt);
 
     TypeCheckResult typeCheck(LocalVarDecl localVarDecl);
