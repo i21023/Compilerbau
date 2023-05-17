@@ -145,7 +145,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Micha/Documents/GitHub/Tests", code);
+        Classwriter.WriteClassFile("LocalVarGet", "/Users/julian/IdeaProjects/Compilerbau/Compilerbau/src/test/java/mmc", code);
     }
 }
 
