@@ -14,7 +14,7 @@ public class StatementBlockAdapter {
 
         if(statementBlock.statement()!= null){
             statementBlock.statement().forEach(statement -> {
-                statementList.add(StatementAdapter.adapt(statement));
+                statementList.addAll(StatementAdapter.adapt(statement));
             });
         }
 

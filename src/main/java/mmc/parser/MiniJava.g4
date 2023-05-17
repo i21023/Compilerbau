@@ -16,8 +16,8 @@ method_type: VOID | type;
 
 //statements
 statement_block: LEFT_BRACE statement* RIGHT_BRACE; //Block
-statement: statement_block | local_var_decl | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
-local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)* SEMICOLON; // example a = 3; a = b; a = a + b; a = ( a - b )
+statement: statement_block | local_var_decl SEMICOLON | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
+local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement_block else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement_block; // example else { statement }
 while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block; // example while ( expr ) { statement }
@@ -38,10 +38,10 @@ inst_var: THIS DOT ID? | (THIS DOT)? (ID DOT)+ ID; // example this.a
 expr: binary_expr | basic_expr;
 binary_expr: logical_expr | calculate_expr; //example a + b; 3 + 3 - a
 basic_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr RIGHT_BRACKET | add_sub_op INT | literal;
-logical_expr: basic_expr (logical_op expr)*;// (a +b ) == c; c == (a+b)
+logical_expr: basic_expr logical_op expr;// (a +b ) == c; c == (a+b)
 calculate_expr: calculate_expr add_sub_op mul_div_expr | mul_div_expr;
-value_calculate_expr: INT | ID | inst_var | method_call_statement | LEFT_BRACKET calculate_expr RIGHT_BRACKET | cre_expr;
 mul_div_expr: mul_div_expr mul_div_op value_calculate_expr | value_calculate_expr;
+value_calculate_expr: INT | ID | inst_var | method_call_statement | LEFT_BRACKET calculate_expr RIGHT_BRACKET | cre_expr;
 // example  b =  a == 5 * 3 + 7 + 6 / 2;
 
 /* example
