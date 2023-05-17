@@ -9,6 +9,7 @@ import mmc.ast.statementexpression.Assign;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;
 import mmc.ast.statements.LocalVarDecl;
+import mmc.ast.statements.Return;
 import mmc.codegen.visitors.ProgramCodeGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
 public class ByteCodeTest {
 
@@ -123,6 +126,26 @@ public class ByteCodeTest {
 
         Classwriter.WriteClassFile("FieldVarClassMutable", "C:/Users/Micha/Documents/GitHub/Tests", code);
 
+    }
+
+    @Test
+    @DisplayName("Class with FieldVars and Method")
+    public void LocalVarGetTest() {
+        Method method = new Method(BasicType.VOID, "getY", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new LocalVarDecl("y",
+                                BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Micha/Documents/GitHub/Tests", code);
     }
 }
 

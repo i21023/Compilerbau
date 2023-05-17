@@ -10,6 +10,10 @@ public class Return implements IStatement {
     public IExpression expression;
     public Type type;
 
+    public Return(Type pType,IExpression pExpression) {
+        expression = pExpression;
+        type = pType;
+    }
     public Return(IExpression pExpression) {
         expression = pExpression;
     }

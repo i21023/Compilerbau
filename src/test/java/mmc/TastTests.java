@@ -65,14 +65,13 @@ public class TastTests {
     @DisplayName("Class with FieldVars and Method")
     public void FieldVarClassMutableTest() {
 
-        Method method = new Method(BasicType.VOID, "changeX", new ArrayList<Parameter>(),
+        Method method = new Method(BasicType.VOID, "getY", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(
-                        Arrays.asList(new Assign(new LocalOrFieldVar("x"),
-                                new IntExpr(30), null)))), AccessModifier.PUBLIC, false);
+                        Arrays.asList(new LocalVarDecl("y",
+                                BasicType.INT,new IntExpr(30)),new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
 
 
-        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
-                "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
+        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>(), AccessModifier.PUBLIC);
 
         Program prog = new Program(Arrays.asList(classDecl));
