@@ -215,6 +215,11 @@ public class SemanticCheck implements SemanticVisitor {
     }
 
     @Override
+    public TypeCheckResult typeCheck(For forStmt) {
+        return null;
+    }
+
+    @Override
     public TypeCheckResult typeCheck(Return toCheck) {
         TypeCheckResult returnExpression;
 
@@ -257,7 +262,7 @@ public class SemanticCheck implements SemanticVisitor {
         try {
             isInScope.addLocalVar(toCheck);
         } catch (java.lang.Exception e) {
-            errors.add(new Exception(e.getMessage() +  fileName));
+            errors.add(new Exception(e.getMessage() + fileName));
             valid = false;
         }
         return new TypeCheckResult(valid, null);
@@ -384,9 +389,9 @@ public class SemanticCheck implements SemanticVisitor {
 
 
         //Hier schauen ob es die Methode überhaupt gibt, receiver hat Typ und in klasse schauen wo dieser drin is
-        for(var clas : getClasses){
-            for(var metho : clas.methods){
-                if(metho.name != toCheck.name){
+        for (var clas : getClasses) {
+            for (var metho : clas.methods) {
+                if (metho.name != toCheck.name) {
                     errors.add(new Exception("Methode: " + metho.name + " is unknown"));
                     valid = false;
                 }
@@ -464,8 +469,7 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(LocalOrFieldVar toCheck) {
 
         // check if the variable is declared in the current class
-        if(!classContainField.contains(toCheck.name))
-        {
+        if (!classContainField.contains(toCheck.name)) {
             var thrownError = new Exception("The Field: " + toCheck.name
                     + " is not defined in class");
         }
@@ -476,7 +480,7 @@ public class SemanticCheck implements SemanticVisitor {
         if (localVar != null) {
             toCheck.type = localVar;
             return new TypeCheckResult(true, localVar);
-        }else {
+        } else {
             errors.add(new Exception(
                     "Variable: " + toCheck.name + " is not declared in this scope"));
             return new TypeCheckResult(false, null);
