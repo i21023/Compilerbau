@@ -1,4 +1,4 @@
-// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/java/mmc/parser\MiniJava.g4 by ANTLR 4.12.0
+// Generated from java-escape by ANTLR 4.11.1
 package mmc.parser.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -137,6 +137,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitWhile_statement(MiniJavaParser.While_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#for_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_statement(MiniJavaParser.For_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#for_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_statement(MiniJavaParser.For_statementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#return_statement}.
 	 * @param ctx the parse tree

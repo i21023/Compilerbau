@@ -1,4 +1,4 @@
-// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/java/mmc/parser\MiniJava.g4 by ANTLR 4.12.0
+// Generated from java-escape by ANTLR 4.11.1
 package mmc.parser.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -88,6 +88,12 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitWhile_statement(MiniJavaParser.While_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#for_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_statement(MiniJavaParser.For_statementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#return_statement}.
 	 * @param ctx the parse tree
