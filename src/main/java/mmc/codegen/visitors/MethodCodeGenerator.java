@@ -50,6 +50,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         methodVisitor.visitCode();
         method.statement.accept(this);
+        methodVisitor.visitInsn(Opcodes.RETURN);
         //TODO: Check if void comes back
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
