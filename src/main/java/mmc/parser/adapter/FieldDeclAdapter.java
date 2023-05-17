@@ -4,7 +4,6 @@ import mmc.ast.AccessModifier;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.main.Field;
-import mmc.ast.main.Parameter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class FieldDeclAdapter {
 
         Type type = TypeAdapter.adapt(fieldDeclContext.type());
 
-        if (fieldDeclContext.COMMA() != null) {
+        if (fieldDeclContext.COMMA() != null && fieldDeclContext.COMMA().size() > 0) {
             List<Field> fieldDecls = new ArrayList<>();
             for (int i = 0; i < fieldDeclContext.COMMA().size(); i++) {
 
@@ -64,8 +63,6 @@ public class FieldDeclAdapter {
             }
 
             return List.of(new Field(type, name, accessModifier, expression, staticFlag));
-
         }
-
     }
 }
