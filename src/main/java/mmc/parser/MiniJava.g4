@@ -21,7 +21,7 @@ local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)* SEMICOLON; // 
 if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement_block else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement_block; // example else { statement }
 while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block; // example while ( expr ) { statement }
-for_statement: FOR LEFT_BRACKET (statement_expr | local_var_decl) SEMICOLON logical_expr SEMICOLON statement_expr RIGHT_BRACKET statement_block;
+for_statement: FOR LEFT_BRACKET (statement_expr | local_var_decl)? SEMICOLON logical_expr? SEMICOLON statement_expr? RIGHT_BRACKET statement_block;
 return_statement: RETURN expr? SEMICOLON;
 
 ///Statement expression
