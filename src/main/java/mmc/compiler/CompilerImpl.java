@@ -54,7 +54,7 @@ public class CompilerImpl implements Compiler {
                                 new ArrayList<Constructor>(Arrays.asList(
                                         new Constructor(
                                                 new Block(
-                                                        new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("i"), Operator.EQUAL, new IntExpr(5), null)))),
+                                                        new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("i"), new IntExpr(5), null)))),
                                                 new ArrayList<>(Arrays.asList(new Parameter(BasicType.CHAR, "param"))),
                                                 AccessModifier.PUBLIC))),
                                 AccessModifier.PUBLIC))));
