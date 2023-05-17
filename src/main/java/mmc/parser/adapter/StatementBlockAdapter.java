@@ -1,11 +1,23 @@
 package mmc.parser.adapter;
 
 import mmc.ast.statements.Block;
+import mmc.ast.statements.IStatement;
 import mmc.parser.antlr.MiniJavaParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatementBlockAdapter {
     public static Block adapt(MiniJavaParser.Statement_blockContext statementBlock) {
 
-        return new Block();
+        List<IStatement> statementList = new ArrayList<>();
+
+        if(statementBlock.statement()!= null){
+            statementBlock.statement().forEach(statement -> {
+                statementList.add(StatementAdapter.adapt(statement));
+            });
+        }
+
+        return new Block(statementList);
     }
 }

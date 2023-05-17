@@ -12,7 +12,7 @@ public class Block implements IStatement {
     public List<IStatement> statements;
     public Type type;
 
-    public Block(ArrayList<IStatement> statements) {
+    public Block(List<IStatement> statements) {
         this.statements = statements;
     }
 

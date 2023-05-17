@@ -6,18 +6,22 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class Return implements IStatement{
+public class Return implements IStatement {
     public IExpression expression;
     public Type type;
 
-    public Return(IExpression pExpression){
+    public Return(IExpression pExpression) {
         expression = pExpression;
     }
+
+    public Return() {
+    }
+
     public Type getType() {
         return type;
     }
 
- @Override
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }
