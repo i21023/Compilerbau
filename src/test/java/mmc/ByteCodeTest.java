@@ -83,5 +83,21 @@ public class ByteCodeTest {
                         new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT,"x"))),
                         AccessModifier.PUBLIC))), AccessModifier.PUBLIC)));*/
     }
+
+    @Test
+    @DisplayName("Class with FieldVars")
+    public void FieldVarClassTest() {
+        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(5), false))), new ArrayList<Method>(),
+                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        Classwriter.WriteClassFile("FieldVarClass", "C:/Users/Micha/Documents/GitHub/Tests", code);
+
+    }
 }
 
