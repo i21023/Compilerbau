@@ -43,7 +43,7 @@ public class MethodDeclAdapter {
         List<Parameter> parameterList = new ArrayList<>();
 
         if (methodDeclContext.parameter_list() != null) {
-            if (methodDeclContext.parameter_list().COMMA() != null) {
+            if (methodDeclContext.parameter_list().COMMA() != null && methodDeclContext.parameter_list().COMMA().size() > 0) {
                 for (int i = 0; i < methodDeclContext.parameter_list().COMMA().size(); i++) {
                     Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(i)),
                             methodDeclContext.parameter_list().ID(i).getText());
