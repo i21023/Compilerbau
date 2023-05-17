@@ -50,7 +50,7 @@ public class AstTests {
     public void ClassConstructorTest() throws IOException {
         ArrayList<Constructor> con = new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(new ArrayList<IStatement>()),
                 new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "x"))),
-                AccessModifier.PUBLIC, new Block(new ArrayList<IStatement>()))));
+                AccessModifier.PUBLIC)));
 
         ClassDecl classDecl = new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
                 con, AccessModifier.PUBLIC);

@@ -1,7 +1,7 @@
 grammar MiniJava;
 
 //Declarations
-program: class_decl*;
+program: ('package' ID ('.' ID )* SEMICOLON)* class_decl*;
 //Class
 class_decl: ACCES_MOD? 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
 ///Class objects
