@@ -1,6 +1,7 @@
 package mmc.codegen.visitors;
 
 import mmc.ast.BasicType;
+import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
 import mmc.ast.main.Constructor;
@@ -13,6 +14,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +36,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         this.className = className;
         localVars = new Stack<>();
         localVars.push("this");
-
     }
 
     @Override
@@ -109,10 +110,28 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     @Override
     public void visit(Return returnStmt) {
 
+        returnStmt.expression.accept(this);
+
+        if(returnStmt.type instanceof BasicType){
+
+            switch((BasicType) returnStmt.type){
+                case VOID -> methodVisitor.visitInsn(Opcodes.RETURN);
+                case INT, BOOL, CHAR -> methodVisitor.visitInsn(Opcodes.IRETURN);
+            }
+        }
+        else if (returnStmt.type instanceof ReferenceType) {
+            methodVisitor.visitInsn(Opcodes.ARETURN);
+        }
+
     }
 
     @Override
     public void visit(While whileStmt) {
+
+    }
+
+    @Override
+    public void visit(For forStmt) {
 
     }
 
