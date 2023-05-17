@@ -112,6 +112,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         returnStmt.expression.accept(this);
 
+
         if(returnStmt.type instanceof BasicType){
 
             switch((BasicType) returnStmt.type){
@@ -204,7 +205,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     @Override
     public void visit(LocalOrFieldVar localOrFieldVar) {
         if(localVars.contains(localOrFieldVar.name)){
-            methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(localOrFieldVar.name));
+            methodVisitor.visitVarInsn(Opcodes.ILOAD, localVars.indexOf(localOrFieldVar.name));
         }
         else if(fieldVars.containsKey(localOrFieldVar.name)){
             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
