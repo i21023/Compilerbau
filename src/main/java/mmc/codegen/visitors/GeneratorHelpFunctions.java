@@ -18,10 +18,15 @@ public class GeneratorHelpFunctions {
             case PUBLIC -> Opcodes.ACC_PUBLIC;
             case PRIVATE -> Opcodes.ACC_PRIVATE;
             case PROTECTED -> Opcodes.ACC_PROTECTED;
+            case PUBLIC_STATIC -> 0;
+            case PRIVATE_STATIC -> 0;
         };
     }
 
     public static String getDescriptor(List<Type> parameterTypes, Type returnValue){
+        if(parameterTypes == null){
+            return getType(returnValue).toString();
+        }
         StringBuilder descriptor = new StringBuilder();
         descriptor.append("(");
         parameterTypes.forEach(parameter -> descriptor.append(getType(parameter)));
@@ -40,8 +45,11 @@ public class GeneratorHelpFunctions {
                 case BOOL -> "Z";
             };
         }
-        else {
+        else if (type instanceof ReferenceType){
             return ((ReferenceType) type).type;
+        }
+        else{
+            return "";
         }
 
     }

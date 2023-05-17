@@ -1,4 +1,4 @@
-// Generated from java-escape by ANTLR 4.11.1
+// Generated from C:/Users/nina-/Documents/Programmieren/viertes-Semester/src/main/java/mmc/parser\MiniJava.g4 by ANTLR 4.12.0
 package mmc.parser.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

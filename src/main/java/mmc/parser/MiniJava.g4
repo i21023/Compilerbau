@@ -7,7 +7,8 @@ class_decl: ACCES_MOD? 'class' ID LEFT_BRACE (const_decl | method_decl | field_d
 ///Class objects
 const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
 method_decl: ACCES_MOD? STATIC? method_type ID LEFT_BRACKET (parameter_list? | main?) RIGHT_BRACKET statement_block;
-field_decl: ACCES_MOD? STATIC? type ID (COMMA ID)* (ASSIGN expr)? SEMICOLON;
+field_decl: ACCES_MOD? STATIC? type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)* SEMICOLON;
+//example int a = 5, b = 6, c;
 
 //methode
 parameter_list: type ID (COMMA type ID)*;

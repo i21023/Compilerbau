@@ -22,7 +22,7 @@ public class ClassDeclAdapter {
         classdeclContext.const_decl().forEach(constDecl -> constructorDecls
                 .add(ConstDeclAdapter.adapt(constDecl)));
         classdeclContext.field_decl()
-                .forEach(fieldDecl -> fieldDecls.add(FieldDeclAdapter.adapt(fieldDecl)));
+                .forEach(fieldDecl -> fieldDecls.addAll(FieldDeclAdapter.adapt(fieldDecl)));
         classdeclContext.method_decl().forEach(
                 methodDecl -> methodDecls.add(MethodDeclAdapter.adapt(methodDecl)));
 
