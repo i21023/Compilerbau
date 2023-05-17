@@ -9,16 +9,20 @@ import mmc.ast.expressions.BoolExpr;
 import mmc.ast.expressions.IntExpr;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.main.*;
+import mmc.ast.statementexpression.Assign;
 import mmc.ast.statements.*;
+import mmc.codegen.visitors.ProgramCodeGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ressources.helpers.Classwriter;
 import ressources.helpers.Resources;
 
 import java.beans.Statement;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
@@ -55,5 +59,25 @@ public class TastTests {
         Program tast = generateTypedast(prog);
         Type typ = tast.classes.get(0).methods.get(0).type;
         assertEquals(BasicType.BOOL, typ);
+    }
+
+    @Test
+    @DisplayName("Class with FieldVars and Method")
+    public void FieldVarClassMutableTest() {
+
+        Method method = new Method(BasicType.VOID, "changeX", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new Assign(new LocalOrFieldVar("x"),
+                                new IntExpr(30), null)))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        Program tast = generateTypedast(prog);
+
     }
 }
