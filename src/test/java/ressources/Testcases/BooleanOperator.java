@@ -1,4 +1,4 @@
-package ressources.testcases;
+package ressources.Testcases;
 
 public class BooleanOperator {
     boolean bool1=true;

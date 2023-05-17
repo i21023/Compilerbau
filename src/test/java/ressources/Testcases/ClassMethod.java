@@ -1,9 +1,7 @@
-package ressources.testcases;
+package ressources.Testcases;
 
 public class ClassMethod {
     public void testMethod()
     {
-
-
     }
 }

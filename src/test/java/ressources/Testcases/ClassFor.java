@@ -1,4 +1,4 @@
-package ressources.testcases;
+package ressources.Testcases;
 
 public class ClassFor {
 public int testFor(int a, int b)

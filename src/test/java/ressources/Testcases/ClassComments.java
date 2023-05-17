@@ -1,4 +1,4 @@
-package ressources.testcases;
+package ressources.Testcases;
 
 public class ClassComments {
     //This is a comment

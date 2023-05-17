@@ -1,4 +1,4 @@
-package ressources.testcases;
+package ressources.Testcases;
 
 public class ClassWithMultipleMethods {
     public void method1(){}
