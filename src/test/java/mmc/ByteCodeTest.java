@@ -131,7 +131,7 @@ public class ByteCodeTest {
     @Test
     @DisplayName("Class with FieldVars and Method")
     public void LocalVarGetTest() {
-        Method method = new Method(BasicType.VOID, "getY", new ArrayList<Parameter>(),
+        Method method = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(
                         Arrays.asList(new LocalVarDecl("y",
                                 BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
