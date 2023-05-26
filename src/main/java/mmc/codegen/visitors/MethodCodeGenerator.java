@@ -1,21 +1,22 @@
 package mmc.codegen.visitors;
 
 import mmc.ast.BasicType;
+import mmc.ast.Operator;
 import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
 import mmc.ast.main.Constructor;
 import mmc.ast.main.Method;
+import mmc.ast.main.Parameter;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -78,16 +79,51 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
 
-
     }
 
     @Override
     public void visit(Block block) {
+        int stackSizeBefore = localVars.size();
         block.statements.forEach(statement -> statement.accept(this));
+
+        int stackSizeAfter = localVars.size();
+        //remove all localVars from Stack that have been initialized in the Block
+        for(int i = stackSizeBefore; i < stackSizeAfter; i++){
+            localVars.pop();
+        }
     }
 
     @Override
     public void visit(If ifStmt) {
+        Label notEQ = new Label();
+        Label end = new Label();
+
+        ifStmt.expression.accept(this);
+        methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+        if(ifStmt.blockElse == null){
+            methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+
+            ifStmt.blockIf.accept(this);
+
+            methodVisitor.visitLabel(notEQ);
+        }
+
+        else{
+            methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+
+            //If Block
+            ifStmt.blockIf.accept(this);
+            methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+            //Else Block
+            methodVisitor.visitLabel(notEQ);
+            ifStmt.blockElse.accept(this);
+
+            methodVisitor.visitLabel(end);
+
+        }
+
     }
 
     @Override
@@ -142,6 +178,132 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Binary binary) {
+        if(binary.operator != Operator.AND && binary.operator != Operator.OR)
+        {
+
+            binary.expression1.accept(this);
+            binary.expression2.accept(this);
+
+            switch (binary.operator){
+                case PLUS -> {
+                    methodVisitor.visitInsn(Opcodes.IADD);
+                }
+                case MINUS -> {
+                    methodVisitor.visitInsn(Opcodes.ISUB);
+                }
+                case MULT -> {
+                    methodVisitor.visitInsn(Opcodes.IMUL);
+                }
+                case DIV -> {
+                    methodVisitor.visitInsn(Opcodes.IDIV);
+                }
+                case MOD -> {
+                    methodVisitor.visitInsn(Opcodes.IREM);
+                }
+                case EQUAL -> {
+                    Label notEQ = new Label();
+                    Label end = new Label();
+                    //compare values on the Stack
+                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+
+                    //if equal evaluates true
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    //if equal evaluates false
+                    methodVisitor.visitLabel(notEQ);
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+
+                    methodVisitor.visitLabel(end);
+                }
+                case NOTEQUAL -> {
+                    Label notEQ = new Label();
+                    Label end = new Label();
+                    //compare values on the Stack
+                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+
+                    //if equal evaluates true
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    //if equal evaluates false
+                    methodVisitor.visitLabel(notEQ);
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+                    methodVisitor.visitLabel(end);
+                }
+
+                case LESS -> {
+                    Label less = new Label();
+                    Label end = new Label();
+                    //compare values on the Stack
+                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPLT, less);
+
+                    //if LESSTHAN evaluates false
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    //if LESSTHAN evaluates true
+                    methodVisitor.visitLabel(less);
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+                    methodVisitor.visitLabel(end);
+                }
+
+                case GREATER -> {
+                    Label greater = new Label();
+                    Label end = new Label();
+                    //compare values on the Stack
+                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPGT, greater);
+
+                    //if GREATERTHAN evaluates false
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    //if GREATERTHAN evaluates true
+                    methodVisitor.visitLabel(greater);
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+                    methodVisitor.visitLabel(end);
+                }
+
+                case LESSEQUAL -> {
+                    Label lesseq = new Label();
+                    Label end = new Label();
+                    //compare values on the Stack
+                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPLE, lesseq);
+
+                    //if LESSTHAN evaluates false
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    //if LESSTHAN evaluates true
+                    methodVisitor.visitLabel(lesseq);
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+                    methodVisitor.visitLabel(end);
+                }
+
+                case GREATEREQUAL -> {
+                    Label greatereq = new Label();
+                    Label end = new Label();
+                    //compare values on the Stack
+                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPGE, greatereq);
+
+                    //if GREATERTHAN evaluates false
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    //if GREATERTHAN evaluates true
+                    methodVisitor.visitLabel(greatereq);
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+                    methodVisitor.visitLabel(end);
+                }
+
+            }
+
+        }
 
     }
 

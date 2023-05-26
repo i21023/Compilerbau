@@ -2,14 +2,14 @@ package mmc;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
+import mmc.ast.Operator;
+import mmc.ast.expressions.Binary;
+import mmc.ast.expressions.BoolExpr;
 import mmc.ast.expressions.IntExpr;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
-import mmc.ast.statements.Block;
-import mmc.ast.statements.IStatement;
-import mmc.ast.statements.LocalVarDecl;
-import mmc.ast.statements.Return;
+import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
@@ -146,6 +147,31 @@ public class ByteCodeTest {
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
         Classwriter.WriteClassFile("LocalVarGet", "/Users/julian/IdeaProjects/Compilerbau/Compilerbau/src/test/java/mmc", code);
+    }
+
+
+    @Test
+    @DisplayName("Class with FieldVars and Method")
+    public void BinaryTest() {
+        Method method = new Method(BasicType.INT, "add", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new LocalVarDecl("y",
+                                BasicType.INT, new Binary(Operator.PLUS, new IntExpr(1), new IntExpr(1))),
+                                new If(new Block(new ArrayList<IStatement>(Arrays.asList(new Assign(new LocalOrFieldVar("y"), new IntExpr(10), null))) {
+                                }), null, new Binary (Operator.EQUAL, new IntExpr(2), new LocalOrFieldVar("y"))),
+
+                                new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
     }
 }
 
