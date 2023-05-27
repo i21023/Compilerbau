@@ -1,16 +1,17 @@
-package mmc.semantikcheck;
+package mmc.semantikcheck.Environment;
 
-import mmc.ast.main.Parameter;
-import mmc.ast.statements.*;
 import mmc.ast.Type;
+import mmc.ast.main.Parameter;
+import mmc.ast.statements.LocalVarDecl;
+import mmc.semantikcheck.Exception;
 
 import java.util.HashMap;
 import java.util.Stack;
 
-public class InScope {
+public class ScopeEnvironment {
     private Stack<HashMap<String, Type>> localVars;
 
-    public InScope() {
+    public ScopeEnvironment() {
         localVars = new Stack<HashMap<String, Type>>();
     }
 
@@ -33,7 +34,6 @@ public class InScope {
         localVars.pop();
     }
 
-
     public Type getLocalVar(String name) {
         for (HashMap<String, Type> map : localVars) {
             if (map.containsKey(name)) {
@@ -42,7 +42,6 @@ public class InScope {
         }
         return null;
     }
-
 
     public boolean contains(String name) {
         for (HashMap<String, Type> map : localVars) {

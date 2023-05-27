@@ -3,12 +3,14 @@ package mmc.ast.main;
 import mmc.Visitable;
 import mmc.ast.AccessModifier;
 import mmc.ast.Type;
+import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;
 import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 import org.objectweb.asm.ClassWriter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Method implements Visitable {
@@ -17,6 +19,7 @@ public class Method implements Visitable {
     public List<Parameter> parameters;
     public IStatement statement;
     public AccessModifier accessModifier;
+    private Block block;
     public boolean isStatic;
 
     public Method(Type pType, String pName, List<Parameter> pParameters, IStatement pStatement, AccessModifier pAccessModifier, boolean pIsStatic)
@@ -27,6 +30,13 @@ public class Method implements Visitable {
         statement=pStatement;
         accessModifier=pAccessModifier;
         isStatic = pIsStatic;
+    }
+    public Method(AccessModifier pAccessModifier, Type pType, String pName, ArrayList<Parameter> pParameters, Block pBlock) {
+        type = pType;
+        name = pName;
+        parameters = pParameters;
+        accessModifier = pAccessModifier;
+        block = pBlock;
     }
 
     public Type getType() {
