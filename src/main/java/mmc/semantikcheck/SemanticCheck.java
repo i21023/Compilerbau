@@ -118,9 +118,11 @@ public class SemanticCheck implements SemanticVisitor {
         if (toCheck.getType() instanceof BasicType) {
             typeExist = true;
         }
-        var objectClass = (ReferenceType) toCheck.getType();
-        var declaredClassnames = programEnvironment.getClasses();
-        typeExist = declaredClassnames.containsKey(objectClass.type);
+        else{
+            var objectClass = (ReferenceType) toCheck.getType();
+            var declaredClassnames = programEnvironment.getClasses();
+            typeExist = declaredClassnames.containsKey(objectClass.type);
+        }
         valid = valid && typeExist;
         return new TypeCheckResult(valid, toCheck.getType());
     }
@@ -221,9 +223,11 @@ public class SemanticCheck implements SemanticVisitor {
         if (toCheck.getType() instanceof BasicType) {
             typeExist = true;
         }
-        var objectClass = (ReferenceType) toCheck.getType();
-        var declaredClassnames = programEnvironment.getClasses();
-        typeExist = declaredClassnames.containsKey(objectClass.type);
+        else{
+            var objectClass = (ReferenceType) toCheck.getType();
+            var declaredClassnames = programEnvironment.getClasses();
+            typeExist = declaredClassnames.containsKey(objectClass.type);
+        }
         if (typeExist) {
             return new TypeCheckResult(true, toCheck.getType());
         } else {
@@ -410,10 +414,11 @@ public class SemanticCheck implements SemanticVisitor {
         if (toCheck.getType() instanceof BasicType) {
             typeExist = true;
         }
-        var objectClass = (ReferenceType) toCheck.getType();
-        var declaredClassnames = programEnvironment.getClasses();
-        typeExist = declaredClassnames.containsKey(objectClass.type);
-
+        else{
+            var objectClass = (ReferenceType) toCheck.getType();
+            var declaredClassnames = programEnvironment.getClasses();
+            typeExist = declaredClassnames.containsKey(objectClass.type);
+        }
         if (!typeExist) {
             errors.add(new Exception("Type: " + newClass + " is unknown"));
             valid = false;
@@ -593,22 +598,6 @@ public class SemanticCheck implements SemanticVisitor {
     }
 
     @Override
-    public TypeCheckResult typeCheck(IntExpr toCheck) {
-
-        return new TypeCheckResult(true, toCheck.getType());
-    }
-
-    @Override
-    public TypeCheckResult typeCheck(CharExpr charExpr) {
-        return new TypeCheckResult(true, charExpr.getType());
-    }
-
-    @Override
-    public TypeCheckResult typeCheck(BoolExpr boolExpr) {
-        return new TypeCheckResult(true, boolExpr.getType());
-    }
-
-    @Override
     public TypeCheckResult typeCheck(Binary binary) {
         var valid = true;
 
@@ -688,5 +677,21 @@ public class SemanticCheck implements SemanticVisitor {
         valid = valid && lResult.isValid() && rResult.isValid();
 
         return new TypeCheckResult(valid, binary.getType());
+    }
+
+    @Override
+    public TypeCheckResult typeCheck(IntExpr toCheck) {
+
+        return new TypeCheckResult(true, toCheck.getType());
+    }
+
+    @Override
+    public TypeCheckResult typeCheck(CharExpr charExpr) {
+        return new TypeCheckResult(true, charExpr.getType());
+    }
+
+    @Override
+    public TypeCheckResult typeCheck(BoolExpr boolExpr) {
+        return new TypeCheckResult(true, boolExpr.getType());
     }
 }
