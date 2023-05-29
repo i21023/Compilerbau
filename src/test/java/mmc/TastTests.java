@@ -42,6 +42,7 @@ public class TastTests {
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
         Program testTast = new Program(classDecls);
+        Program tast = generateTypedast(testTast);
 
     }
 
@@ -68,7 +69,7 @@ public class TastTests {
         Method method = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(
                         Arrays.asList(new LocalVarDecl("y",
-                                BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+                                BasicType.INT, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
@@ -79,4 +80,39 @@ public class TastTests {
         Program tast = generateTypedast(prog);
 
     }
+
+    @Test
+    @DisplayName("Class with FieldVars")
+    public void FieldVarClassTest() {
+        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(null,
+                "x", AccessModifier.PUBLIC, new IntExpr(5), false))), new ArrayList<Method>(),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        Program tast = generateTypedast(prog);
+
+        assertEquals(BasicType.INT, tast.classes.get(0).fields.get(0).type);
+    }
+
+    @Test
+    @DisplayName("Class with FieldVars and Method")
+    public void LocalVarGetTest() {
+        Method method = new Method(null, "getY", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new LocalVarDecl("y",
+                                null, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        Program tast = generateTypedast(prog);
+
+        assertEquals(BasicType.INT, tast.classes.get(0).methods.get(0).type);
+    }
+
+
 }
