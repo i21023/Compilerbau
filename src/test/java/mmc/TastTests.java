@@ -38,7 +38,7 @@ public class TastTests {
         //Program tast = Compiler.getAst(file);
         //List<Constructor> constructors = new List<Constructor>(1);
         ClassDecl classDecl = new ClassDecl("EmptyClass", new ArrayList<Field>(),
-                new ArrayList<Method>(), new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Method>(), new ArrayList<Constructor>());
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
         Program testTast = new Program(classDecls);
@@ -53,7 +53,7 @@ public class TastTests {
         Binary IfExpression = new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b"));
         Block Rumpf = new Block(new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a", BasicType.INT), new LocalVarDecl("b", BasicType.INT), new If(IfBlock, ElseBlock, IfExpression))));
         ArrayList<Method> method = new ArrayList<Method>(Arrays.asList(new Method(null, "add", new ArrayList<Parameter>(), Rumpf, AccessModifier.PUBLIC, false)));
-        ArrayList<ClassDecl> Testclass = new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), method, new ArrayList<Constructor>(), AccessModifier.PUBLIC)));
+        ArrayList<ClassDecl> Testclass = new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), method, new ArrayList<Constructor>())));
         Program prog = new Program(Testclass);
 
         Program tast = generateTypedast(prog);
@@ -72,7 +72,7 @@ public class TastTests {
 
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
 
