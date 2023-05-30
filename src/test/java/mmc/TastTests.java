@@ -4,12 +4,10 @@ import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.Operator;
 import mmc.ast.Type;
-import mmc.ast.expressions.Binary;
-import mmc.ast.expressions.BoolExpr;
-import mmc.ast.expressions.IntExpr;
-import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
 import org.antlr.v4.runtime.CharStream;
@@ -117,10 +115,13 @@ public class TastTests {
     @Test
     @DisplayName("Rekursion-Test")
     public void RekursionTest() {
+        If Ifstm = new If(new Block(new ArrayList<IStatement>(Arrays.asList(new Return(null, new LocalOrFieldVar("a"))))),
+                null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0)));
         Method method = new Method(null, "addRek", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b"))),
                 new Block(new ArrayList<IStatement>(
-                        Arrays.asList(new LocalVarDecl("y",
-                                null, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+                        Arrays.asList(Ifstm, new Return(null, new MethodCall(new This(), "addRek",
+                                new ArrayList<IExpression>(Arrays.asList(new Unary(Operator.INCSUF, new LocalOrFieldVar("a")),
+                                        new Unary(Operator.DECSUF, new LocalOrFieldVar("b")))), null))))), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("Rekursion", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
@@ -131,13 +132,6 @@ public class TastTests {
         Program tast = generateTypedast(prog);
 
         assertEquals(BasicType.INT, tast.classes.get(0).methods.get(0).type);
-    }//noch nicht fertig
-
-    public int addRek(int a, int b) {
-        if (b == 0) {
-            return a;
-        }
-        return addRek(a++, b--);
     }
 
 
