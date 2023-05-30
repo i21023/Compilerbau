@@ -114,5 +114,31 @@ public class TastTests {
         assertEquals(BasicType.INT, tast.classes.get(0).methods.get(0).type);
     }
 
+    @Test
+    @DisplayName("Rekursion-Test")
+    public void RekursionTest() {
+        Method method = new Method(null, "addRek", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b"))),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new LocalVarDecl("y",
+                                null, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("Rekursion", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        Program tast = generateTypedast(prog);
+
+        assertEquals(BasicType.INT, tast.classes.get(0).methods.get(0).type);
+    }//noch nicht fertig
+
+    public int addRek(int a, int b) {
+        if (b == 0) {
+            return a;
+        }
+        return addRek(a++, b--);
+    }
+
 
 }

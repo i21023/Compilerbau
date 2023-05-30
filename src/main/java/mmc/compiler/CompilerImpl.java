@@ -56,8 +56,8 @@ public class CompilerImpl implements Compiler {
                                                 new Block(
                                                         new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("i"), new IntExpr(5), null)))),
                                                 new ArrayList<>(Arrays.asList(new Parameter(BasicType.CHAR, "param"))),
-                                                AccessModifier.PUBLIC))),
-                                AccessModifier.PUBLIC))));
+                                                AccessModifier.PUBLIC)))/*,
+                                AccessModifier.PUBLIC*/))));
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
                 HashMap<String, byte[]> code = programVisitor.getBytecode(program);
