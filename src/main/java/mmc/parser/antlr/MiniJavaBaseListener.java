@@ -329,18 +329,6 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -348,6 +336,18 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

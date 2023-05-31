@@ -268,16 +268,6 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitCalculate_expr(MiniJavaParser.Calculate_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#mul_div_expr}.
 	 * @param ctx the parse tree
 	 */
@@ -287,6 +277,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#calculate_op}.
 	 * @param ctx the parse tree

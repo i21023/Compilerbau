@@ -45,7 +45,7 @@ public class FieldDeclAdapter {
                 String name = fieldDeclContext.ID(i).getText();
 
                 IExpression expression = null;
-                if (fieldDeclContext.ASSIGN() != null) {
+                if (fieldDeclContext.ASSIGN() != null && fieldDeclContext.ASSIGN().size() > 0) {
                     expression = ExpressionAdapter.adapt(fieldDeclContext.expr(i));
                 }
 
@@ -58,7 +58,7 @@ public class FieldDeclAdapter {
             String name = fieldDeclContext.ID(0).getText();
 
             IExpression expression = null;
-            if (fieldDeclContext.ASSIGN() != null) {
+            if (fieldDeclContext.ASSIGN() != null && fieldDeclContext.ASSIGN().size() > 0) {
                 expression = ExpressionAdapter.adapt(fieldDeclContext.expr(0));
             }
 

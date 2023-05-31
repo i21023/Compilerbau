@@ -167,17 +167,17 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCalculate_expr(MiniJavaParser.Calculate_exprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#mul_div_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#calculate_op}.
 	 * @param ctx the parse tree
