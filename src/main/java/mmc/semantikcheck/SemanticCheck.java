@@ -1,9 +1,6 @@
 package mmc.semantikcheck;
 
-import mmc.ast.BasicType;
-import mmc.ast.Operator;
-import mmc.ast.ReferenceType;
-import mmc.ast.Type;
+import mmc.ast.*;
 import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
@@ -27,14 +24,40 @@ public class SemanticCheck implements SemanticVisitor {
     private ScopeEnvironment currentScope;
     public ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
     public ArrayList<String> getFields = new ArrayList<>();
-    public List<Field> classContainField = new ArrayList<>();
-    public List<ClassDecl> getClasses = new ArrayList<>();
 
+
+//Konstruktor Test mit Parameter
     /*public static void main(String[] args) {
-        ArrayList<ClassDecl> classDeclList = new ArrayList<>();
-        var program = new Program(classDeclList);
-        SemanticCheck semanticVisitor = new SemanticCheck();
-        TypeCheckResult typeCheck = program.accept(semanticVisitor); //TypeCheckResult als rückgabe
+        ArrayList<ClassDecl> classes = new ArrayList<>();
+        classes.add(new ClassDecl("add", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        Program prog = new Program(classes);
+        ClassDecl classDecl = prog.classes.get(0);
+
+        Parameter parameter = new Parameter(BasicType.INT, "i");
+
+        ArrayList<Parameter> parameters = new ArrayList<>();
+        parameters.add(parameter);
+
+        classDecl.constructors.add(new Constructor(new Block(), parameters,AccessModifier.PUBLIC));
+
+        Program tast = generateTypedast(prog);
+        System.out.println(tast);
+    }*/
+
+    //Class Fields
+        /*public static void main(String[] args) {
+            ArrayList<ClassDecl> classes = new ArrayList<>();
+            classes.add(new ClassDecl("add", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+            Program prog = new Program(classes);
+            Field privateField = new Field(AccessModifier.PRIVATE, INT, "private");
+            Field publicField = new Field(AccessModifier.PUBLIC, INT, "public");
+            Field protectedField = new Field(AccessModifier.PROTECTED, INT, "protected");
+
+            List<Field> fields = prog.classes.get(0).fields;
+            fields.add(privateField);
+            fields.add(publicField);
+            fields.add(protectedField);
+            Program tast = generateTypedast(prog);
     }*/
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
@@ -69,8 +92,9 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(ClassDecl toCheck) {
-        this.getClass = toCheck; //Für die Umgebung merken welche Klasse gerade
         var valid = true;
+
+        this.getClass = toCheck; //Für die Umgebung merken welche Klasse gerade
 
         if (fileName == null) {
             this.fileName = toCheck.name + ".java";
@@ -131,6 +155,7 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(Constructor toCheck) {
         boolean valid = true;
+
         currentScope.pushScope();
 
         for (Parameter parameter : toCheck.parameters) { //Für jeden Parameter im Konstruktor durchgehen
@@ -138,12 +163,13 @@ public class SemanticCheck implements SemanticVisitor {
             valid = valid && result.isValid();
             currentScope.addLocalVar(parameter); //Schauen ob im Scope
         }
+
         currentMethodReturnType = BasicType.VOID;
         var result = toCheck.statement.accept(this);
         currentScope.popScope();
         if (result.getType() != null && result.getType() != VOID) { //Wenn der Konstruktor einen Typ mitgegeben bekommt
             errors.add(new Exception(
-                    "Constructor have no return Type "));
+                    "Constructor have no return Type"));
             valid = false;
         }
         valid = valid && result.isValid();
@@ -154,12 +180,12 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(Method toCheck) {
         var valid = true;
 
-        for (Method otherMethod : this.getClass.methods) {
+        for (Method method : this.getClass.methods) {
             //von der aktullen Klasse methoden durchgehen und schauen ob toCheck schon mal drin ist\
-            if (otherMethod.equals(toCheck)) {
+            if (method.equals(toCheck)) {
                 break;
             }
-            if (otherMethod.isSameDeclaration(toCheck)) {
+            if (method.isSameDeclaration(toCheck)) {
                 errors.add(new Exception("Method " + toCheck.name + " is already defined in class "+ getClass.name));
                 valid = false;
             }
@@ -180,7 +206,9 @@ public class SemanticCheck implements SemanticVisitor {
         currentScope.popScope(); //Stack runter nehmen
 
         var resultType = toCheck.statement.accept(this).getType();
-
+        if(resultType == null){
+            resultType = VOID;
+        }
         if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
             errors.add(new Exception("Method-Declaration " + toCheck.name + " with type "
                     + toCheck.getType() + " has at least one Mismatching return Type:"));
@@ -192,28 +220,34 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(Assign toCheck) { //int a = 5;
         boolean valid = true;
+        IExpression lExpr = toCheck.leftExpr;
         var oldNullType = currentNullType;
-        var leftExpr = toCheck.leftExpr.accept(this);
-        var rightExpr = toCheck.rightExpr.accept(this);
+        currentNullType = toCheck.leftExpr.getType();
+        IExpression rExpr = toCheck.rightExpr;
+        currentNullType = oldNullType;
 
         //a = a;
-        if (leftExpr.equals(rightExpr)) {
+        if (lExpr.equals(rExpr)) {
             errors.add(new Exception("Cannot assign to self"));
             valid = false;
         }
 
+        var leftExpr = lExpr.accept(this);
+        currentNullType = leftExpr.getType();
+        var rightExpr = rExpr.accept(this);
+
         //int a = "Hello";
-        if (!Objects.equals(leftExpr.getType(), rightExpr.getType())) {
+        if (!Objects.equals(leftExpr.getType(), rExpr.getType())) {
             errors.add(new Exception("Mismatch types in Assign-Statement: cannot convert from"
                     + leftExpr.getType() + " to "
                     + rightExpr.getType()));
             valid = false;
         } else {
-            toCheck.type = leftExpr.getType();
+            toCheck.type = lExpr.getType();
         }
 
-        valid = leftExpr.isValid() && rightExpr.isValid();
         valid = valid && Objects.equals(leftExpr, rightExpr);
+        currentNullType = null;
         return new TypeCheckResult(valid, null); //Hat keine Typ deswegen null zurück geben
     }
 
@@ -243,16 +277,20 @@ public class SemanticCheck implements SemanticVisitor {
 
         valid = valid && isConditionBool.isValid();
 
-        if (!valid) { //Wenn kein bool zurück kam ist valid false
+        var boolType = BOOL;
+        var isEqual = Objects.equals(boolType, isConditionBool.getType());
+
+        if (!isEqual) { //Wenn kein bool zurück kam ist valid false
             errors.add(
                     new Exception(
                             "While Condition expected " + BOOL + " but got " + isConditionBool.getType()));
             valid = false;
         }
 
-        var blockResult = toCheck.statement.accept(this); //Statement Rückgabetyp
+        //Check Block
+        var blockResult = toCheck.statement.accept(this);
         toCheck.type = blockResult.getType();
-        valid = valid && isConditionBool.isValid() && blockResult.isValid() && isConditionBool.isValid();
+        valid = valid && isConditionBool.isValid() && blockResult.isValid() && isEqual;
         return new TypeCheckResult(valid, blockResult.getType());
     }
 
@@ -304,8 +342,9 @@ public class SemanticCheck implements SemanticVisitor {
 
         if (toCheck.expression != null) {
 
+            TypeCheckResult result = toCheck.expression.accept(this);
             var resultType = toCheck.expression.getType();
-            valid = toCheck.expression.accept(this).isValid() && valid;
+            valid = result.isValid() && valid;
 
             if (!Objects.equals(resultType, toCheck.getType())) { //Expression muss zum LocalVar Typ passen
                 errors.add(new Exception(
@@ -687,11 +726,13 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(CharExpr charExpr) {
+
         return new TypeCheckResult(true, charExpr.getType());
     }
 
     @Override
     public TypeCheckResult typeCheck(BoolExpr boolExpr) {
+
         return new TypeCheckResult(true, boolExpr.getType());
     }
 }

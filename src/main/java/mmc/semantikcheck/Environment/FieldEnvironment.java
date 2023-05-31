@@ -1,6 +1,8 @@
 package mmc.semantikcheck.Environment;
 
 import mmc.ast.AccessModifier;
+import mmc.ast.BasicType;
+import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.main.Field;
 
@@ -14,16 +16,10 @@ public class FieldEnvironment {
         type = field.getType();
     }
 
-    /**
-     * @return AccessModifier
-     */
     public AccessModifier getAccessModifier() {
         return accessModifier;
     }
 
-    /**
-     * @return Type
-     */
     public Type getType() {
         return type;
     }

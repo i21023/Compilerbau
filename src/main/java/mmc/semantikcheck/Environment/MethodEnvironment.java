@@ -21,23 +21,14 @@ public class MethodEnvironment {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    /**
-     * @return AccessModifier
-     */
     public AccessModifier getAccessModifier() {
         return accessModifier;
     }
 
-    /**
-     * @return Type
-     */
     public Type getType() {
         return type;
     }
-
-    /**
-     * @return PrintableVector<Type>
-     */
+    
     public List<Type> getParameterTypes() {
         return parameterTypes;
     }

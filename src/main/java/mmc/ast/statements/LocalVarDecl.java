@@ -15,6 +15,9 @@ public class LocalVarDecl implements IStatement{
         name = pName;
         expression = pExpression;
     }
+    public LocalVarDecl(String pName) {
+        name = pName;
+    }
 
     public LocalVarDecl(String pName, Type pType) {
         type = pType;

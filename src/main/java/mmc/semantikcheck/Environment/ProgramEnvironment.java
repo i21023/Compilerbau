@@ -17,7 +17,7 @@ public class ProgramEnvironment {
     public ProgramEnvironment(Program program) {
         classes = new HashMap<>();
         mains = new ArrayList<>();
-
+        imports = new HashMap<>();
 
         addStaticContext();
 
@@ -41,8 +41,6 @@ public class ProgramEnvironment {
         return null;
     }
 
-
-
     public HashMap<String, ClassEnvironment> getClasses() {
         return classes;
     }
@@ -59,79 +57,6 @@ public class ProgramEnvironment {
                 "err");
         SystemClass.fields.add(out);
         SystemClass.fields.add(err);
-        var intParams = new ArrayList<Parameter>();
-        intParams.add(new Parameter(BasicType.INT, "i"));
-        var boolParams = new ArrayList<Parameter>();
-        boolParams.add(new Parameter(BasicType.BOOL, "b"));
-        var charParams = new ArrayList<Parameter>();
-        charParams.add(new Parameter(BasicType.CHAR, "c"));
-        var stringParams = new ArrayList<Parameter>();
-        stringParams.add(new Parameter(new ReferenceType("java/lang/String"), "s"));
-
-        Method printlnInt = new Method(AccessModifier.PUBLIC, BasicType.VOID, "println",
-                intParams,
-                new Block());
-        Method printlnBool = new Method(AccessModifier.PUBLIC, BasicType.VOID, "println",
-                boolParams, new Block());
-        Method printlnChar = new Method(AccessModifier.PUBLIC, BasicType.VOID, "println",
-                charParams,
-                new Block());
-        Method println = new Method(AccessModifier.PUBLIC, BasicType.VOID, "println",
-                new ArrayList<>(),
-                new Block());
-
-        Method printlnString = new Method(AccessModifier.PUBLIC, BasicType.VOID,
-                "println",
-                stringParams,
-                new Block());
-        Method printInt = new Method(AccessModifier.PUBLIC, BasicType.VOID, "print",
-                intParams,
-                new Block());
-        Method printBool = new Method(AccessModifier.PUBLIC, BasicType.VOID, "print",
-                boolParams,
-                new Block());
-        Method printChar = new Method(AccessModifier.PUBLIC, BasicType.VOID, "print",
-                charParams,
-                new Block());
-        Method print = new Method(AccessModifier.PUBLIC, BasicType.VOID, "print",
-                new ArrayList<>(),
-                new Block());
-        Method printString = new Method(AccessModifier.PUBLIC, BasicType.VOID,
-                "print",
-                stringParams,
-                new Block());
-
-        ArrayList streamMethods = new ArrayList<>();
-        streamMethods.add(printlnInt);
-        streamMethods.add(printlnBool);
-        streamMethods.add(printlnChar);
-        streamMethods.add(println);
-        streamMethods.add(printInt);
-        streamMethods.add(printBool);
-        streamMethods.add(printChar);
-        streamMethods.add(print);
-        streamMethods.add(printlnString);
-        streamMethods.add(printString);
-        ClassDecl PrintStreamClass = new ClassDecl("java/io/PrintStream", new ArrayList<>(),
-                new ArrayList<>(),
-                streamMethods);
-
         classes.put(SystemClass.name, new ClassEnvironment(SystemClass));
-        classes.put(PrintStreamClass.name, new ClassEnvironment(PrintStreamClass));
-    }
-
-    /**
-     * @return String
-     */
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        classes.forEach((identifier, clazz) -> {
-            builder.append(identifier);
-            builder.append(": \n");
-            builder.append(clazz.toString());
-            builder.append("\n--------------------\n");
-        });
-        return builder.toString();
     }
 }
