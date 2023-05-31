@@ -45,7 +45,7 @@ public class SemanticCheck implements SemanticVisitor {
     }*/
 
     //Class Fields
-        /*public static void main(String[] args) {
+    public static void main(String[] args) {
             ArrayList<ClassDecl> classes = new ArrayList<>();
             classes.add(new ClassDecl("add", new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
             Program prog = new Program(classes);
@@ -58,7 +58,7 @@ public class SemanticCheck implements SemanticVisitor {
             fields.add(publicField);
             fields.add(protectedField);
             Program tast = generateTypedast(prog);
-    }*/
+    }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
         SemanticCheck semanticCheck = new SemanticCheck();
