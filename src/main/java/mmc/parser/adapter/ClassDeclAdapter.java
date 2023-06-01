@@ -44,6 +44,6 @@ public class ClassDeclAdapter {
             }
         }
 
-        return new ClassDecl(classdeclContext.ID().getText(), fieldDecls, methodDecls, constructorDecls, accessModifier);
+        return new ClassDecl(classdeclContext.ID().getText(), fieldDecls, methodDecls, constructorDecls/*, accessModifier*/);
     }
 }

@@ -6,5 +6,8 @@ public class ReferenceType implements Type {
     public ReferenceType(String pType) {
         type = pType;
     }
+    public String getType(){
+        return (String) type;
+    }
 }
 

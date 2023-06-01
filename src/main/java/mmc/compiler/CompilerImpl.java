@@ -10,6 +10,7 @@ import mmc.ast.statementexpression.Assign;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.LocalVarDecl;
 import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStreams;
 
 import java.io.File;
@@ -56,8 +57,11 @@ public class CompilerImpl implements Compiler {
                                                 new Block(
                                                         new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("i"), new IntExpr(5), null)))),
                                                 new ArrayList<>(Arrays.asList(new Parameter(BasicType.CHAR, "param"))),
-                                                AccessModifier.PUBLIC))),
-                                AccessModifier.PUBLIC))));
+                                                AccessModifier.PUBLIC)))/*,
+                                AccessModifier.PUBLIC*/))));
+
+                SemanticCheck tAst = new SemanticCheck();
+                Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
                 HashMap<String, byte[]> code = programVisitor.getBytecode(program);

@@ -27,6 +27,15 @@ public class Field implements Visitable {
         isStatic = pisStatic;
         expression = pExpression;
     }
+    public Field(String pName, AccessModifier pAccessModifier) {
+        name = pName;
+        accessModifier = pAccessModifier;
+    }
+    public Field(AccessModifier pAccessModifier, Type pType, String pName) {
+        name = pName;
+        accessModifier = pAccessModifier;
+        type = pType;
+    }
 
     public Type getType() {
         return type;

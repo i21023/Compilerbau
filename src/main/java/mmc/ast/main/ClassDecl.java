@@ -16,16 +16,14 @@ public class ClassDecl implements Visitable {
     public String name;
     public List<Field> fields;
     public List<Method> methods;
-    public AccessModifier accessModifier;
     public List<Constructor> constructors;
 
-    public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier)
+    public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors)
     {
         name=pName;
         fields=pFiedls;
         methods=pMethods;
         constructors=pConstructors;
-        accessModifier=pAccessModifier;
     }
 
 

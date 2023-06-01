@@ -20,38 +20,38 @@ public interface SemanticVisitor {
 
     TypeCheckResult typeCheck(Parameter toCheck);
 
-    TypeCheckResult typeCheck(While whileStmt);
+    TypeCheckResult typeCheck(While toCheck);
 
-    TypeCheckResult typeCheck(For forStmt);
+    TypeCheckResult typeCheck(For toCheck);
 
-    TypeCheckResult typeCheck(Return returnStmt);
+    TypeCheckResult typeCheck(Return toCheck);
 
-    TypeCheckResult typeCheck(LocalVarDecl localVarDecl);
+    TypeCheckResult typeCheck(LocalVarDecl toCheck);
 
-    TypeCheckResult typeCheck(If ifStmt);
+    TypeCheckResult typeCheck(If toCheck);
 
-    TypeCheckResult typeCheck(Block block);
+    TypeCheckResult typeCheck(Block toCheck);
 
-    TypeCheckResult typeCheck(New newDecl);
+    TypeCheckResult typeCheck(New toCheck);
 
-    TypeCheckResult typeCheck(MethodCall methodCall);
+    TypeCheckResult typeCheck(MethodCall toCheck);
 
-    TypeCheckResult typeCheck(Unary unary);
+    TypeCheckResult typeCheck(Unary toCheck);
 
-    TypeCheckResult typeCheck(This aThis);
+    TypeCheckResult typeCheck(This toCheck);
 
-    TypeCheckResult typeCheck(JNull aNull);
+    TypeCheckResult typeCheck(JNull toCheck);
 
-    TypeCheckResult typeCheck(LocalOrFieldVar localOrFieldVar);
+    TypeCheckResult typeCheck(LocalOrFieldVar toCheck);
 
-    TypeCheckResult typeCheck(IntExpr integerExpr);
+    TypeCheckResult typeCheck(IntExpr toCheck);
 
-    TypeCheckResult typeCheck(InstVar instVar);
+    TypeCheckResult typeCheck(InstVar toCheck);
 
-    TypeCheckResult typeCheck(CharExpr charExpr);
+    TypeCheckResult typeCheck(CharExpr toCheck);
 
-    TypeCheckResult typeCheck(BoolExpr boolExpr);
+    TypeCheckResult typeCheck(BoolExpr toCheck);
 
-    TypeCheckResult typeCheck(Binary binary);
+    TypeCheckResult typeCheck(Binary toCheck);
 
 }

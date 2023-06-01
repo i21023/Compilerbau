@@ -35,7 +35,7 @@ public class ByteCodeTest {
         //Program tast = Compiler.getAst(file);
         //List<Constructor> constructors = new List<Constructor>(1);
         ClassDecl classDecl = new ClassDecl("EmptyClass", new ArrayList<Field>(),
-                new ArrayList<Method>(), new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Method>(), new ArrayList<Constructor>());
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
         Program testTast = new Program(classDecls);
@@ -55,14 +55,14 @@ public class ByteCodeTest {
                 AccessModifier.PUBLIC)));
 
         ClassDecl classDecl = new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
-                con, AccessModifier.PUBLIC);
+                con);
         Program prog = new Program(Arrays.asList(classDecl));
 
         //(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier, Block pBlock)
         Program test = new Program(Arrays.asList(new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
                 new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(new ArrayList<IStatement>()),
                         new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "x"))),
-                        AccessModifier.PUBLIC))), AccessModifier.PUBLIC)));
+                        AccessModifier.PUBLIC))))));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ByteCodeTest {
                 AccessModifier.PUBLIC)));
 
         ClassDecl classDecl = new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
-                con, AccessModifier.PUBLIC);
+                con);
         Program prog = new Program(Arrays.asList(classDecl));
 
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
@@ -95,7 +95,7 @@ public class ByteCodeTest {
     public void FieldVarClassTest() {
         ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
                 "x", AccessModifier.PUBLIC, new IntExpr(5), false))), new ArrayList<Method>(),
-                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
 
@@ -118,7 +118,7 @@ public class ByteCodeTest {
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
                 "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
 
@@ -139,7 +139,7 @@ public class ByteCodeTest {
 
 
         ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
 

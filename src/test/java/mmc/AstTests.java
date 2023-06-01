@@ -36,7 +36,7 @@ public class AstTests {
         //Program ast = Compiler.getAst(file);
         //List<Constructor> constructors = new List<Constructor>(1);
         ClassDecl classDecl = new ClassDecl("EmptyClass", new ArrayList<Field>(),
-                new ArrayList<Method>(), new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Method>(), new ArrayList<Constructor>());
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
         Program testAst = new Program(classDecls);
@@ -48,7 +48,7 @@ public class AstTests {
     public void ClassWithMethodTest() {
         ClassDecl classDecl = new ClassDecl("ClassMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
                 new Method(BasicType.VOID, "testMethod", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC,
-                        false))), new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                        false))), new ArrayList<Constructor>());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class AstTests {
                 AccessModifier.PUBLIC)));
 
         ClassDecl classDecl = new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
-                con, AccessModifier.PUBLIC);
+                con);
         Program prog = new Program(Arrays.asList(classDecl));
     }
 
@@ -83,7 +83,7 @@ public class AstTests {
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
                 "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
 
