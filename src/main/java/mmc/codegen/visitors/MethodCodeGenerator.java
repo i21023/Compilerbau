@@ -163,6 +163,18 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(While whileStmt) {
+        Label startLoop = new Label();
+        Label endLoop = new Label();
+
+        methodVisitor.visitLabel(startLoop);
+        whileStmt.expression.accept(this);
+        methodVisitor.visitJumpInsn(Opcodes.IFNE, endLoop);
+
+        whileStmt.statement.accept(this);
+
+        methodVisitor.visitJumpInsn(Opcodes.GOTO, startLoop);
+
+        methodVisitor.visitLabel(endLoop);
 
     }
 
@@ -173,14 +185,29 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Unary unary) {
+        switch (unary.operator){
+            case NOT -> {
+                Label evaluateTrue = new Label();
+                Label end = new Label();
 
+                unary.expression.accept(this);
+                methodVisitor.visitJumpInsn(Opcodes.IFNE, evaluateTrue);
+
+                methodVisitor.visitInsn(Opcodes.ICONST_0);
+                methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                methodVisitor.visitLabel(evaluateTrue);
+                methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+                methodVisitor.visitLabel(end);
+            }
+        }
     }
 
     @Override
     public void visit(Binary binary) {
         if(binary.operator != Operator.AND && binary.operator != Operator.OR)
         {
-
             binary.expression1.accept(this);
             binary.expression2.accept(this);
 
@@ -304,6 +331,48 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
             }
 
         }
+        else{
+            switch(binary.operator){
+
+                case AND -> {
+
+                    Label andFalse = new Label();
+                    Label end = new Label();
+
+                    binary.expression1.accept(this);
+                    methodVisitor.visitJumpInsn(Opcodes.IFNE, andFalse);
+
+                    binary.expression2.accept(this);
+                    methodVisitor.visitJumpInsn(Opcodes.IFNE, andFalse);
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    methodVisitor.visitLabel(andFalse);
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+
+                    methodVisitor.visitLabel(end);
+
+                }
+
+                case OR -> {
+                    Label orTrue = new Label();
+                    Label end = new Label();
+
+                    binary.expression1.accept(this);
+                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, orTrue);
+
+                    binary.expression2.accept(this);
+                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, orTrue);
+                    methodVisitor.visitInsn(Opcodes.ICONST_0);
+                    methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
+
+                    methodVisitor.visitLabel(orTrue);
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+
+                    methodVisitor.visitLabel(end);
+                }
+            }
+        }
 
     }
 
@@ -395,6 +464,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                 methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, className, leftExpr.name,
                         GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
             }
+            //TODO: Instvar
 
         }
 
