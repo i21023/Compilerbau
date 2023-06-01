@@ -44,7 +44,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         List<Type> parameterTypes = method.parameters.stream().map(parameter -> parameter.type).collect(Collectors.toList());
 
-        methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(method.accessModifier, false),
+        methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(method.accessModifier, method.isStatic),
                 method.name, GeneratorHelpFunctions.getDescriptor(parameterTypes, method.type), null, null);
 
         //Add parameters to localVars
@@ -158,7 +158,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         else if (returnStmt.type instanceof ReferenceType) {
             methodVisitor.visitInsn(Opcodes.ARETURN);
         }
-
     }
 
     @Override
@@ -429,7 +428,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(JNull jNull) {
-
+        methodVisitor.visitInsn(Opcodes.ACONST_NULL);
     }
 
     @Override
@@ -465,9 +464,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                         GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
             }
             //TODO: Instvar
-
         }
-
     }
 
     @Override

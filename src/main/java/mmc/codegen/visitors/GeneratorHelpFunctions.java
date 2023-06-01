@@ -14,13 +14,21 @@ import static mmc.ast.BasicType.*;
 public class GeneratorHelpFunctions {
 
     public static int getAccessModifier(AccessModifier a, boolean isStatic){
-        return switch (a){
-            case PUBLIC -> Opcodes.ACC_PUBLIC;
-            case PRIVATE -> Opcodes.ACC_PRIVATE;
-            case PROTECTED -> Opcodes.ACC_PROTECTED;
-            case PUBLIC_STATIC -> 0;
-            case PRIVATE_STATIC -> 0;
+
+        int accessmodifier = 0;
+
+        switch (a){
+            case PUBLIC -> accessmodifier = Opcodes.ACC_PUBLIC;
+            case PRIVATE -> accessmodifier = Opcodes.ACC_PRIVATE;
+            case PROTECTED -> accessmodifier = Opcodes.ACC_PROTECTED;
+            default -> throw new IllegalArgumentException();
         };
+
+        if(isStatic){
+            return accessmodifier | Opcodes.ACC_STATIC;
+        }
+        return accessmodifier;
+
     }
 
     public static String getDescriptor(List<Type> parameterTypes, Type returnValue){
