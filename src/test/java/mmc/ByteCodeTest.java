@@ -158,13 +158,13 @@ public class ByteCodeTest {
                         Arrays.asList(new LocalVarDecl("y",
                                 BasicType.INT, new Binary(Operator.PLUS, new IntExpr(1), new IntExpr(1))),
                                 new If(new Block(new ArrayList<IStatement>(Arrays.asList(new Assign(new LocalOrFieldVar("y"), new IntExpr(10), null))) {
-                                }), null, new Binary (Operator.EQUAL, new IntExpr(2), new LocalOrFieldVar("y"))),
+                                }), null, new Binary (Operator.GREATEREQUAL, new IntExpr(1), new LocalOrFieldVar("y"))),
 
                                 new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>(), AccessModifier.PUBLIC);
+                new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
 
@@ -173,5 +173,29 @@ public class ByteCodeTest {
 
         Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
     }
+
+
+    @Test
+    @DisplayName("Class with While Loop")
+    public void WhileLoopTest() {
+        Method method = new Method(BasicType.INT, "loop", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(Arrays.asList(
+                        new LocalVarDecl("x", BasicType.INT, new IntExpr(5)),
+                        new While(new Binary(Operator.LESS, new LocalOrFieldVar("x"), new IntExpr(0)),
+                                new Assign(new LocalOrFieldVar("x"), new Binary(Operator.MINUS, new LocalOrFieldVar("x"), new IntExpr(1)), null)
+                                ), new Return(BasicType.INT, new LocalOrFieldVar("x"))))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "f", AccessModifier.PUBLIC, new IntExpr(0), false))), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
+    }
+
 }
 

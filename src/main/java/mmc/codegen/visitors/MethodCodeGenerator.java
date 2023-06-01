@@ -168,7 +168,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         methodVisitor.visitLabel(startLoop);
         whileStmt.expression.accept(this);
-        methodVisitor.visitJumpInsn(Opcodes.IFNE, endLoop);
+        methodVisitor.visitJumpInsn(Opcodes.IFEQ, endLoop);
 
         whileStmt.statement.accept(this);
 
