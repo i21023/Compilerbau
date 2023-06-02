@@ -28,7 +28,21 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
+        Method method = new Method(BasicType.INT, "add", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new LocalVarDecl("y",
+                                        BasicType.INT, new Binary(Operator.PLUS, new IntExpr(1), new IntExpr(1))),
+                                new If(new Block(new ArrayList<IStatement>(Arrays.asList(new Assign(new LocalOrFieldVar("y"), new IntExpr(10), null))) {
+                                }), null, new Binary (Operator.GREATEREQUAL, new IntExpr(1), new LocalOrFieldVar("y"))),
 
+                                new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+        Program program = generateTypedast(prog);
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
@@ -560,12 +574,18 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(LocalOrFieldVar toCheck) {
 
-        //schauen ob in class environment deklariert
+        //Muss erstmal schauen ob sie im Scope deklariert ist
+        Type localVar = currentScope.getLocalVar(toCheck.name);
 
-        // check if the variable is declared in the current class
+        if (localVar != null) {
+            toCheck.type = localVar;
+            return new TypeCheckResult(true, localVar);
+        }
+
+        // Schauen ob sie in der Klasse deklariert ist
         try {
             var fieldVar = CheckType.getFieldInType(toCheck.name,
-                    new ReferenceType(this.getClass.name), programEnvironment, getClass);
+                    new ReferenceType(this.getClass.name), programEnvironment, this.getClass);
 
             if (fieldVar != null) {
                 toCheck.type = fieldVar.getType();
@@ -575,7 +595,6 @@ public class SemanticCheck implements SemanticVisitor {
             errors.add(new Exception(e.getMessage()));
             return new TypeCheckResult(false, null);
         }
-
         errors.add(new Exception(
                 "Variable: " + toCheck.name + " is not declared in this scope"));
         return new TypeCheckResult(false, null);
@@ -616,6 +635,7 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(Binary binary) {
+
         var valid = true;
 
         var lResult = binary.expression1.accept(this);
@@ -664,11 +684,12 @@ public class SemanticCheck implements SemanticVisitor {
                         errors.add(errorToThrow);
                         valid = false;
                     } else {
-                        binary.type = isArithmeticOperator ? BasicType.INT : BasicType.BOOL;
+                        binary.type = (isArithmeticOperator ? INT : BOOL);
                     }
                 }
                 default -> {
                     errors.add(errorToThrow);
+                    binary.type = VOID;
                     valid = false;
                 }
             }
@@ -688,6 +709,7 @@ public class SemanticCheck implements SemanticVisitor {
             binary.type = BOOL;
         } else {
             errors.add(errorToThrow);
+            binary.type = VOID;
             valid = false;
         }
 
@@ -698,19 +720,16 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(IntExpr toCheck) {
-
         return new TypeCheckResult(true, toCheck.getType());
     }
 
     @Override
     public TypeCheckResult typeCheck(CharExpr charExpr) {
-
         return new TypeCheckResult(true, charExpr.getType());
     }
 
     @Override
     public TypeCheckResult typeCheck(BoolExpr boolExpr) {
-
         return new TypeCheckResult(true, boolExpr.getType());
     }
 

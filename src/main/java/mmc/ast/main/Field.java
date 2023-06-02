@@ -2,6 +2,7 @@ package mmc.ast.main;
 
 import mmc.Visitable;
 import mmc.ast.AccessModifier;
+import mmc.ast.BasicType;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.codegen.visitors.IClassCodeVisitor;
@@ -30,6 +31,11 @@ public class Field implements Visitable {
     public Field(String pName, AccessModifier pAccessModifier) {
         name = pName;
         accessModifier = pAccessModifier;
+    }
+
+    public Field(String pName, Type pType) {
+        name = pName;
+        type = pType;
     }
     public Field(AccessModifier pAccessModifier, boolean pisStatic, Type pType, String pName) {
         name = pName;
