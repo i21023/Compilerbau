@@ -28,21 +28,19 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
-        Method method = new Method(BasicType.INT, "add", new ArrayList<Parameter>(),
-                new Block(new ArrayList<IStatement>(
-                        Arrays.asList(new LocalVarDecl("y",
-                                        BasicType.INT, new Binary(Operator.PLUS, new IntExpr(1), new IntExpr(1))),
-                                new If(new Block(new ArrayList<IStatement>(Arrays.asList(new Assign(new LocalOrFieldVar("y"), new IntExpr(10), null))) {
-                                }), null, new Binary (Operator.GREATEREQUAL, new IntExpr(1), new LocalOrFieldVar("y"))),
-
-                                new Return(BasicType.INT, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+        Method method = new Method(BasicType.INT, "loop", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(Arrays.asList(
+                        new LocalVarDecl("x", BasicType.INT, new IntExpr(5)),
+                        new While(new Binary(Operator.LESS, new LocalOrFieldVar("x"), new IntExpr(0)),
+                                new Assign(new LocalOrFieldVar("x"), new Binary(Operator.MINUS, new LocalOrFieldVar("x"), new IntExpr(1)), null)
+                        ), new Return(BasicType.INT, new LocalOrFieldVar("x"))))), AccessModifier.PUBLIC, false);
 
 
-        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,false, "f", AccessModifier.PUBLIC, new IntExpr(0)))), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
-        Program program = generateTypedast(prog);
+        Program pr = generateTypedast(prog);
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
