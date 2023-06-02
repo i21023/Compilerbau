@@ -4,6 +4,7 @@ import mmc.ast.*;
 import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.CrementStatement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
@@ -29,7 +30,7 @@ public class SemanticCheck implements SemanticVisitor {
     public static void main(String[] args) {
         Program prog = new Program(new ArrayList<>(Arrays.asList(
                 new ClassDecl("Test",
-                        new ArrayList<Field>(Arrays.asList(new Field(INT, "i", AccessModifier.PUBLIC, null, false))),
+                        new ArrayList<Field>(Arrays.asList(new Field(INT, true, "i" , AccessModifier.PUBLIC, null))),
                         new ArrayList<Method>(),
                         new ArrayList<Constructor>(Arrays.asList(
                                 new Constructor(
@@ -47,13 +48,11 @@ public class SemanticCheck implements SemanticVisitor {
         if (result.isValid()) {
             return program; //Programm an ByteCode weitergeben
         } else { //Wenn nicht valide dann alle error Messages zurückgeben
-            String ANSI_RESET = "\u001B[0m";
-            String ANSI_RED = "\u001B[31m";
-            var errorString = "\n" + ANSI_RED;
+            var errorString = "\n" + "\u001B[31m";
             for (int i = semanticCheck.errors.size() - 1; i >= 0; i--) {
                 errorString += semanticCheck.errors.get(i).getMessage() + "\n";
             }
-            throw new Exception(errorString + ANSI_RESET);
+            throw new Exception(errorString + "\u001B[0m");
         }
     }
 
@@ -220,7 +219,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         //int a = "Hello";
         if (!Objects.equals(lExpr.getType(), rExpr.getType())) {
-            errors.add(new Exception("Mismatch types in Assign-Statement: cannot convert from"
+            errors.add(new Exception("Mismatch types in Assign-Statement: cannot convert from "
                     + leftExpr.getType() + " to "
                     + rightExpr.getType()));
             valid = false;
@@ -477,7 +476,6 @@ public class SemanticCheck implements SemanticVisitor {
             var parameterResult = parameter.accept(this);
             valid = valid && parameterResult.isValid();
         }
-
         try {
             var method = CheckType.getMethodInType(toCheck, toCheck.receiver.getType(), programEnvironment, this.getClass);
             var returnType = method.getType();
@@ -489,6 +487,23 @@ public class SemanticCheck implements SemanticVisitor {
             return new TypeCheckResult(false, null);
 
         }
+    }
+
+    @Override
+    public TypeCheckResult typeCheck(CrementStatement toCheck) {
+        boolean valid = true;
+        toCheck.expression.accept(this);
+        Type type = toCheck.expression.getType();
+
+        if (type instanceof BasicType && (((BasicType) type) == INT
+                || ((BasicType) type) == CHAR)) {
+            toCheck.type = toCheck.expression.getType();
+        } else {
+            valid = false;
+            errors.add(new Exception("The Operator: " + toCheck.operator
+                    + " is undefined for the argument type: " + toCheck.expression.getType()));
+        }
+        return new TypeCheckResult(valid, null);
     }
 
     @Override
@@ -536,7 +551,7 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(This toCheck) { //nochmal schauen
-        //toCheck.type = getClass.;
+        toCheck.setType(getClass.name);
         return new TypeCheckResult(true, toCheck.getType());
     }
 
@@ -570,14 +585,6 @@ public class SemanticCheck implements SemanticVisitor {
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage()));
             return new TypeCheckResult(false, null);
-        }
-
-        var importStaticField = programEnvironment.getImports().get(toCheck.name);
-
-        if (importStaticField != null) {
-            var importedType = new ReferenceType(importStaticField);
-            toCheck.type = importedType;
-            return new TypeCheckResult(true, importedType);
         }
 
         errors.add(new Exception(
@@ -716,5 +723,10 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(BoolExpr boolExpr) {
 
         return new TypeCheckResult(true, boolExpr.getType());
+    }
+
+    @Override
+    public TypeCheckResult typeCheck(StringExpr toCheck) {
+        return new TypeCheckResult(true, toCheck.getType());
     }
 }

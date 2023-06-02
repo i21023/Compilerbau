@@ -4,6 +4,7 @@ import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.ReferenceType;
 import mmc.ast.Type;
+import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.JNull;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.MethodCall;
@@ -24,7 +25,7 @@ public class CheckType {
                 return null;
             }
             var am = field.getAccessModifier();
-            if (am == AccessModifier.PRIVATE || am == AccessModifier.PRIVATE_STATIC) {
+            if (am == AccessModifier.PRIVATE) {
                 if (objectClass.type.equals(currentClass.name)) {
                     return field;
                 } else {
@@ -66,43 +67,43 @@ public class CheckType {
         throw new Exception("No declared Constructor with Arguments for this Type " + newDecl.getType());
     }
 
-    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev,
-                                                    ClassDecl currentClass) {
+    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
         boolean failedBecauseNotVisible = false;
+
         if (type instanceof ReferenceType) {
-            var objectClass = (ReferenceType) type;
-            var declaredClassnames = ev.getClasses();
-            var classContext = declaredClassnames.get(objectClass.type);
-            if (classContext == null) {
-                classContext = ev.getClasses().get(ev.getImports().get(objectClass.type));
-            }
-            if (classContext == null) {
-                throw new Exception("No declared Method " + toCheck.name + " with Arguments: "
+
+            var renferenceType = (ReferenceType) type; //Sicherheit nochmal Casten
+            var declaredClassnames = ev.getClasses(); //ProgramEnvironment Classes holen
+            var classContext = declaredClassnames.get(renferenceType.type); //Hashmap den typ heraus filtern
+            if (classContext == null) { //Wenn Typ nicht enthalten
+                throw new Exception("No declared Class " + toCheck.name + " with Arguments: "
                         + toCheck.type + " in Type " + type);
             }
+
+            //Schauen ob Methoden enthalten
             var foundMethods = new ArrayList<MethodEnvironment>();
             var methods = classContext.getMethods().get(toCheck.name);
             if (methods == null) {
                 throw new Exception("No declared Method " + toCheck.name + " with Arguments: "
                         + toCheck.type + " in Type " + type);
             }
-            for (var method : methods) {
-                if (method.getParameterTypes().size() == toCheck.arguments.size()) {
+            for (var method : methods) { //Für jede Methode Parameter checken
+                if (method.getParameterTypes().size() == toCheck.arguments.size()) { //Schauen ob beim Methode Call alle Parameter mitgegeben wurden
                     boolean isSame = true;
                     for (int i = 0; i < method.getParameterTypes().size(); i++) {
-                        var parameterType = method.getParameterTypes().get(i);
-                        var argument = toCheck.arguments.get(i);
+                        Type parameterType = method.getParameterTypes().get(i);
+                        IExpression argument = toCheck.arguments.get(i);
                         if (!((argument instanceof JNull && parameterType instanceof ReferenceType)
                                 || (!(argument instanceof JNull) && parameterType.equals(argument.getType())))) {
                             isSame = false;
                             break;
                         }
                     }
-                    if (isSame) {
-                        var am = method.getAccessModifier();
+                    if (isSame) {  //Access überprüfen
+                        var accessModifier = method.getAccessModifier();
                         boolean canAccess;
-                        if (am == AccessModifier.PRIVATE || am == AccessModifier.PRIVATE_STATIC) {
-                            canAccess = objectClass.type.equals(currentClass.name);
+                        if (accessModifier == AccessModifier.PRIVATE) {
+                            canAccess = renferenceType.type.equals(currentClass.name); //Gleiche bezeichnung suchen
                             if (!canAccess) {
                                 failedBecauseNotVisible = true;
                             }
@@ -119,7 +120,7 @@ public class CheckType {
                 if (failedBecauseNotVisible) {
 
                     throw new Exception(
-                            "The Method " + objectClass.type + "." + toCheck.name
+                            "The Method " + renferenceType.type + "." + toCheck.name
                                     + toCheck.type + " is not visible");
 
                 } else {

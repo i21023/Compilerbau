@@ -12,12 +12,10 @@ import java.util.HashMap;
 public class ProgramEnvironment {
     private HashMap<String, ClassEnvironment> classes;
     private ArrayList<String> mains;
-    private HashMap<String, String> imports;
 
     public ProgramEnvironment(Program program) {
         classes = new HashMap<>();
         mains = new ArrayList<>();
-        imports = new HashMap<>();
 
         addStaticContext();
 
@@ -30,9 +28,6 @@ public class ProgramEnvironment {
         });
     }
 
-    public HashMap<String, String> getImports() {
-        return imports;
-    }
 
     public String getMain() {
         if (mains.size() == 1) {
@@ -51,9 +46,9 @@ public class ProgramEnvironment {
                 new ArrayList<>(),
                 new ArrayList<>());
 
-        Field out = new Field(AccessModifier.PUBLIC_STATIC, new ReferenceType("java/io/PrintStream"),
+        Field out = new Field(AccessModifier.PUBLIC,true, new ReferenceType("java/io/PrintStream"),
                 "out");
-        Field err = new Field(AccessModifier.PUBLIC_STATIC, new ReferenceType("java/io/PrintStream"),
+        Field err = new Field(AccessModifier.PUBLIC, true , new ReferenceType("java/io/PrintStream"),
                 "err");
         SystemClass.fields.add(out);
         SystemClass.fields.add(err);

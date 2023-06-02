@@ -8,8 +8,8 @@ import mmc.semantikcheck.TypeCheckResult;
 
 public class StringExpr implements IExpression{
 
-    private String string;
-    private Type type;
+    public String string;
+    public Type type;
 
     public StringExpr(String pString){
         string = pString;
@@ -18,7 +18,7 @@ public class StringExpr implements IExpression{
 
     @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
-        return null;
+        return visitor.typeCheck(this);
     }
 
     @Override

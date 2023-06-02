@@ -1,6 +1,4 @@
 package mmc.ast.statementexpression;
-
-import mmc.ast.Operator;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.codegen.visitors.IMethodCodeVisitor;
