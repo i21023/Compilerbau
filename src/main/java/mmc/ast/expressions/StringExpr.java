@@ -18,7 +18,7 @@ public class StringExpr implements IExpression{
 
     @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
-        return null;
+        return visitor.typeCheck(this);
     }
 
     @Override

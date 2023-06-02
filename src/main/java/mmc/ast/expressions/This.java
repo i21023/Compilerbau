@@ -1,5 +1,6 @@
 package mmc.ast.expressions;
 
+import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
@@ -9,6 +10,10 @@ public class This implements IExpression{
 
     public Type type;
     public This(){}
+
+    public void setType(String className) { //Für SemantikCheck This
+        this.type = new ReferenceType(className);
+    }
 
     @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {

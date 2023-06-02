@@ -1,6 +1,4 @@
 package mmc.ast.statementexpression;
-
-import mmc.ast.Operator;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.codegen.visitors.IMethodCodeVisitor;
@@ -17,6 +15,12 @@ public class Assign implements IStatementExpression {
         leftExpr=pLeftExpr;
         rightExpr=pRightExpr;
         type = pType;
+    }
+
+    public Assign(IExpression pLeftExpr, IExpression pRightExpr)
+    {
+        leftExpr=pLeftExpr;
+        rightExpr=pRightExpr;
     }
 
  @Override
