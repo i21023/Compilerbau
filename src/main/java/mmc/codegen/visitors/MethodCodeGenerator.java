@@ -26,15 +26,17 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     private final ClassWriter classWriter;
     private MethodVisitor methodVisitor;
-    String className;
+    String currentClassName;
+    List<String> classNames;
 
     private Map<String, Type> fieldVars;
     private Stack<String> localVars;
 
-    public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String className){
+    public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String currentClassName, List<String> classNames){
         this.classWriter = cw;
         this.fieldVars = fieldVars;
-        this.className = className;
+        this.currentClassName = currentClassName;
+        this.classNames = classNames;
         localVars = new Stack<>();
     }
 
@@ -55,6 +57,17 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         methodVisitor.visitCode();
         method.statement.accept(this);
+        if(method.type == BasicType.VOID){
+            if(method.statement instanceof Block ){
+                List<IStatement> block = ((Block) method.statement).statements;
+                if(!(block.get(block.size() - 1) instanceof Return)){
+                    new Return(BasicType.VOID, null).accept(this);
+                }
+            }
+
+
+
+        }
         //TODO: Check if void comes back
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
@@ -149,7 +162,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     @Override
     public void visit(Return returnStmt) {
 
-        returnStmt.expression.accept(this);
+        if(returnStmt.expression != null)
+            returnStmt.expression.accept(this);
+
+
 
 
         if(returnStmt.type instanceof BasicType){
@@ -450,7 +466,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         }
         else if(fieldVars.containsKey(localOrFieldVar.name)){
             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, className, localOrFieldVar.name,
+            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, localOrFieldVar.name,
                     GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
         }
     }
@@ -474,7 +490,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
             else if(fieldVars.containsKey(leftExpr.name)){
                 methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
                 assign.rightExpr.accept(this);
-                methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, className, leftExpr.name,
+                methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
                         GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
             }
         }
