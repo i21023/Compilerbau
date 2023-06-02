@@ -36,11 +36,14 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         this.fieldVars = fieldVars;
         this.className = className;
         localVars = new Stack<>();
-        localVars.push("this");
     }
 
     @Override
     public void visit(Method method) {
+
+        if(!method.isStatic){
+            localVars.push("this");
+        }
 
         List<Type> parameterTypes = method.parameters.stream().map(parameter -> parameter.type).collect(Collectors.toList());
 
@@ -128,6 +131,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(LocalVarDecl localVarDecl) {
+        //TODO: example int a = 5, b = 6, c
         if(localVarDecl.expression == null){
             localVars.push(localVarDecl.name);
         }
@@ -427,6 +431,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     }
 
     @Override
+    public void visit(StringExpr stringExpr) {
+        methodVisitor.visitLdcInsn(stringExpr.value);
+    }
+
+    @Override
     public void visit(JNull jNull) {
         methodVisitor.visitInsn(Opcodes.ACONST_NULL);
     }
@@ -434,7 +443,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     @Override
     public void visit(LocalOrFieldVar localOrFieldVar) {
         if(localVars.contains(localOrFieldVar.name)){
-            methodVisitor.visitVarInsn(Opcodes.ILOAD, localVars.indexOf(localOrFieldVar.name));
+            if(localOrFieldVar.type instanceof BasicType)
+                methodVisitor.visitVarInsn(Opcodes.ILOAD, localVars.indexOf(localOrFieldVar.name));
+            else
+                methodVisitor.visitVarInsn(Opcodes.ALOAD, localVars.indexOf(localOrFieldVar.name));
         }
         else if(fieldVars.containsKey(localOrFieldVar.name)){
             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
@@ -450,12 +462,14 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Assign assign) {
-
         if(assign.leftExpr instanceof LocalOrFieldVar){
             LocalOrFieldVar leftExpr = (LocalOrFieldVar) assign.leftExpr;
             if(localVars.contains(leftExpr.name)){
                 assign.rightExpr.accept(this);
-                methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(leftExpr.name));
+                if(assign.rightExpr.getType() instanceof BasicType)
+                    methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(leftExpr.name));
+                else
+                    methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
             }
             else if(fieldVars.containsKey(leftExpr.name)){
                 methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
@@ -463,8 +477,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                 methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, className, leftExpr.name,
                         GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
             }
-            //TODO: Instvar
         }
+        //TODO: Instvar
     }
 
     @Override
@@ -474,6 +488,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(New newCall) {
-
+        methodVisitor.visitTypeInsn(Opcodes.NEW, newCall.type);
+        methodVisitor.visitTypeInsn(Opcodes.DUP);
+        //TODO: POP Reference if it is not assigned
+        newCall.arguments.forEach(argument -> argument.accept(this));
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, newCall.type, "<init>", GeneratorHelpFunctions.getDescriptor(newCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), BasicType.VOID), false);
     }
 }
