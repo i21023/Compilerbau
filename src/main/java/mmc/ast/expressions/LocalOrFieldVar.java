@@ -14,6 +14,12 @@ public class LocalOrFieldVar implements IExpression{
         name=pName;
     }
 
+    public LocalOrFieldVar(String pName, Type pType)
+    {
+        name=pName;
+        type = pType;
+    }
+
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);

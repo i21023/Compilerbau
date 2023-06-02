@@ -57,6 +57,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         methodVisitor.visitCode();
         method.statement.accept(this);
+
+        //TODO: Check if void comes back
+        /*
         if(method.type == BasicType.VOID){
             if(method.statement instanceof Block ){
                 List<IStatement> block = ((Block) method.statement).statements;
@@ -64,11 +67,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                     new Return(BasicType.VOID, null).accept(this);
                 }
             }
-
-
-
         }
-        //TODO: Check if void comes back
+        */
+
         methodVisitor.visitMaxs(0,0);
         methodVisitor.visitEnd();
 
@@ -199,7 +200,36 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(For forStmt) {
+        int stackSizeBefore = localVars.size();
 
+        Label start = new Label();
+        Label end = new Label();
+
+
+        //init statement
+        forStmt.initStatement.accept(this);
+
+        methodVisitor.visitLabel(start);
+
+        //condition
+        forStmt.condition.accept(this);
+
+        methodVisitor.visitJumpInsn(Opcodes.IFEQ, end); //if condition evaluates to false
+
+        forStmt.statementBlock.accept(this);
+
+        forStmt.updateStatement.accept(this);
+
+        methodVisitor.visitJumpInsn(Opcodes.GOTO, start);
+
+        methodVisitor.visitLabel(end);
+
+
+        int stackSizeAfter = localVars.size();
+        //remove all localVars from Stack that have been initialized in the Block
+        for(int i = stackSizeBefore; i < stackSizeAfter; i++){
+            localVars.pop();
+        }
     }
 
     @Override
@@ -482,7 +512,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
             LocalOrFieldVar leftExpr = (LocalOrFieldVar) assign.leftExpr;
             if(localVars.contains(leftExpr.name)){
                 assign.rightExpr.accept(this);
-                if(assign.rightExpr.getType() instanceof BasicType)
+                if(assign.getType() instanceof BasicType)
                     methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(leftExpr.name));
                 else
                     methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
@@ -504,10 +534,15 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(New newCall) {
-        methodVisitor.visitTypeInsn(Opcodes.NEW, newCall.type);
-        methodVisitor.visitTypeInsn(Opcodes.DUP);
+        if(!(newCall.type instanceof ReferenceType)){
+            throw new IllegalArgumentException("Cannot Call new on a Primitive Datatype");
+        }
+
+        String type = ((ReferenceType) newCall.type).type;
+        methodVisitor.visitTypeInsn(Opcodes.NEW, type);
+        methodVisitor.visitInsn(Opcodes.DUP);
         //TODO: POP Reference if it is not assigned
         newCall.arguments.forEach(argument -> argument.accept(this));
-        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, newCall.type, "<init>", GeneratorHelpFunctions.getDescriptor(newCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), BasicType.VOID), false);
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, type, "<init>", GeneratorHelpFunctions.getDescriptor(newCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), BasicType.VOID), false);
     }
 }

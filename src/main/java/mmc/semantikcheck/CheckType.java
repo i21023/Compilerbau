@@ -48,11 +48,11 @@ public class CheckType {
         var classContext = declaredClassnames.get(objectClass.type);
         var constructors = classContext.getConstructors();
         for (var constructor : constructors) {
-            if (constructor.getParameterTypes().size() == newDecl.expressions.size()) {
+            if (constructor.getParameterTypes().size() == newDecl.arguments.size()) {
                 boolean isSame = true;
                 for (int i = 0; i < constructor.getParameterTypes().size(); i++) {
                     var parameterType = constructor.getParameterTypes().get(i);
-                    var argument = newDecl.expressions.get(i);
+                    var argument = newDecl.arguments.get(i);
                     if (!parameterType.equals(argument.getType())) {
                         isSame = false;
                         break;
