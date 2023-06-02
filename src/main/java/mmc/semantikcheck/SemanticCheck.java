@@ -281,9 +281,9 @@ public class SemanticCheck implements SemanticVisitor {
         var valid = true;
 
         currentScope.pushScope();
-        TypeCheckResult initResult = toCheck.initExpr.accept(this);
-        TypeCheckResult condResult = toCheck.logicalCondition.accept(this);
-        TypeCheckResult updateResult = toCheck.updateExpr.accept(this);
+        TypeCheckResult initResult = toCheck.initStatement.accept(this);
+        TypeCheckResult condResult = toCheck.condition.accept(this);
+        TypeCheckResult updateResult = toCheck.updateStatement.accept(this);
 
         valid = valid && initResult.isValid() && condResult.isValid() && updateResult.isValid();
 
@@ -445,7 +445,7 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
 
-        for (var arguments : toCheck.expressions) {
+        for (var arguments : toCheck.arguments) {
             var result = arguments.accept(this);
             valid = valid && result.isValid();
         }
