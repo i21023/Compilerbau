@@ -28,18 +28,7 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
-        Program prog = new Program(new ArrayList<>(Arrays.asList(
-                new ClassDecl("Test",
-                        new ArrayList<Field>(Arrays.asList(new Field(INT, true, "i" , AccessModifier.PUBLIC, null))),
-                        new ArrayList<Method>(),
-                        new ArrayList<Constructor>(Arrays.asList(
-                                new Constructor(
-                                        new Block(
-                                                new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("i"), new IntExpr(5), null)))),
-                                        new ArrayList<>(Arrays.asList(new Parameter(BasicType.CHAR, "param"))),
-                                        AccessModifier.PUBLIC)))/*,
-                                AccessModifier.PUBLIC*/))));
-        Program tast = generateTypedast(prog);
+
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum

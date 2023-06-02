@@ -17,6 +17,12 @@ public class Assign implements IStatementExpression {
         type = pType;
     }
 
+    public Assign(IExpression pLeftExpr, IExpression pRightExpr)
+    {
+        leftExpr=pLeftExpr;
+        rightExpr=pRightExpr;
+    }
+
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
