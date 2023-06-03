@@ -36,7 +36,7 @@ public class SemanticCheck implements SemanticVisitor {
                         ), new Return(BasicType.INT, new LocalOrFieldVar("x"))))), AccessModifier.PUBLIC, false);
 
 
-        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,false, "f", AccessModifier.PUBLIC, new IntExpr(0)))), new ArrayList<Method>(Arrays.asList(method)),
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "f", AccessModifier.PUBLIC, new IntExpr(0), false))), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));

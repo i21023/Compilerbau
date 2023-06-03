@@ -26,11 +26,14 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     private final ClassWriter classWriter;
     private MethodVisitor methodVisitor;
-    String currentClassName;
-    List<String> classNames;
+    private String currentClassName;
+    private String lastCalledClassName;
+    private List<String> classNames;
 
     private Map<String, Type> fieldVars;
     private Stack<String> localVars;
+
+
 
     public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String currentClassName, List<String> classNames){
         this.classWriter = cw;

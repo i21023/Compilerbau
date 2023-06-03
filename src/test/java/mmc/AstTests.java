@@ -81,8 +81,8 @@ public class AstTests {
                                 new IntExpr(30), null)))), AccessModifier.PUBLIC, false);
 
 
-        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, false,
-                "x", AccessModifier.PUBLIC, new IntExpr(10)))), new ArrayList<Method>(Arrays.asList(method)),
+        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));

@@ -92,8 +92,8 @@ public class ByteCodeTest {
     @Test
     @DisplayName("Class with FieldVars")
     public void FieldVarClassTest() {
-        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, false,
-                "x", AccessModifier.PUBLIC, new IntExpr(5)))), new ArrayList<Method>(),
+        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(5), false))), new ArrayList<Method>(),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
@@ -115,8 +115,8 @@ public class ByteCodeTest {
                                 new IntExpr(30), null)))), AccessModifier.PUBLIC, false);
 
 
-        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, false,
-                "x", AccessModifier.PUBLIC, new IntExpr(10) ))), new ArrayList<Method>(Arrays.asList(method)),
+        ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
@@ -185,7 +185,7 @@ public class ByteCodeTest {
                                 ), new Return(BasicType.INT, new LocalOrFieldVar("x"))))), AccessModifier.PUBLIC, false);
 
 
-        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, false, "f", AccessModifier.PUBLIC, new IntExpr(0)))), new ArrayList<Method>(Arrays.asList(method)),
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "f", AccessModifier.PUBLIC, new IntExpr(0), false))), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
@@ -228,6 +228,25 @@ public class ByteCodeTest {
                                 ))), null),
                         new Return(BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
 
+
+        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
+    }
+
+    @Test
+    @DisplayName("Initialize String")
+    public void StringTest() {
+        Method method = new Method(new ReferenceType("java/lang/String"), "foo", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(Arrays.asList(
+                        new LocalVarDecl("i", new ReferenceType("java/lang/String"), new New(new ArrayList<>(Arrays.asList(new StringExpr("Test"))), new ReferenceType("java/lang/String"))),
+                        new Return(new ReferenceType("java/lang/String"), new LocalOrFieldVar("i", new ReferenceType("java/lang/String")))))), AccessModifier.PUBLIC, false);
 
         ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());

@@ -20,7 +20,7 @@ public class Field implements Visitable {
     public boolean isStatic;
     public IExpression expression;
 
-    public Field(Type pType, boolean pisStatic, String pName,AccessModifier pAccessModifier, IExpression pExpression)
+    public Field(Type pType, String pName,AccessModifier pAccessModifier, IExpression pExpression, boolean pisStatic)
     {
         type=pType;
         name=pName;

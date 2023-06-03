@@ -54,7 +54,7 @@ public class GeneratorHelpFunctions {
             };
         }
         else if (type instanceof ReferenceType){
-            return ((ReferenceType) type).type;
+            return "L" + ((ReferenceType) type).type + ";";
         }
         else{
             return "";

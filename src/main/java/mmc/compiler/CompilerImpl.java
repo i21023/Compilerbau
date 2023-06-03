@@ -52,7 +52,7 @@ public class CompilerImpl implements Compiler {
 
                 Program prog = new Program(new ArrayList<>(Arrays.asList(
                         new ClassDecl("Test",
-                                new ArrayList<Field>(Arrays.asList(new Field(BOOL, true, "i" , AccessModifier.PUBLIC, null))),
+                                new ArrayList<Field>(Arrays.asList(new Field(BOOL,  "i" , AccessModifier.PUBLIC, null, false))),
                                 new ArrayList<Method>(),
                                 new ArrayList<Constructor>(Arrays.asList(
                                         new Constructor(

@@ -49,7 +49,7 @@ public class FieldDeclAdapter {
                     expression = ExpressionAdapter.adapt(fieldDeclContext.expr(i));
                 }
 
-                fieldDecls.add(new Field(type,staticFlag, name, accessModifier, expression));
+                fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag));
 
             }
             return fieldDecls;
@@ -62,7 +62,7 @@ public class FieldDeclAdapter {
                 expression = ExpressionAdapter.adapt(fieldDeclContext.expr(0));
             }
 
-            return List.of(new Field(type,staticFlag, name, accessModifier, expression));
+            return List.of(new Field(type, name, accessModifier, expression, staticFlag));
         }
     }
 }
