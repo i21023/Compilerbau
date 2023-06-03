@@ -25,6 +25,7 @@ import java.util.HashMap;
 import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 //hallo
 public class TastTests {
 
@@ -51,7 +52,7 @@ public class TastTests {
         Block IfBlock = new Block(new ArrayList<IStatement>(Arrays.asList(new Return(new BoolExpr(true)))));
         Binary IfExpression = new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b"));
         Block Rumpf = new Block(new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a", BasicType.INT), new LocalVarDecl("b", BasicType.INT), new If(IfBlock, ElseBlock, IfExpression))));
-        ArrayList<Method> method = new ArrayList<Method>(Arrays.asList(new Method(null, "add", new ArrayList<Parameter>(), Rumpf, AccessModifier.PUBLIC, false)));
+        ArrayList<Method> method = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL, "isEqual", new ArrayList<Parameter>(), Rumpf, AccessModifier.PUBLIC, false)));
         ArrayList<ClassDecl> Testclass = new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), method, new ArrayList<Constructor>())));
         Program prog = new Program(Testclass);
 
@@ -76,14 +77,16 @@ public class TastTests {
         Program prog = new Program(Arrays.asList(classDecl));
 
         Program tast = generateTypedast(prog);
+        Type typ = tast.classes.get(0).methods.get(0).type;
+        assertEquals(BasicType.INT, typ);
 
     }
 
     @Test
     @DisplayName("Class with FieldVars")
     public void FieldVarClassTest() {
-        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(null,
-                "x", AccessModifier.PUBLIC, new IntExpr(5), false))), new ArrayList<Method>(),
+        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, true,
+                "x", AccessModifier.PUBLIC, new IntExpr(5)))), new ArrayList<Method>(),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
@@ -96,10 +99,10 @@ public class TastTests {
     @Test
     @DisplayName("Class with FieldVars and Method")
     public void LocalVarGetTest() {
-        Method method = new Method(null, "getY", new ArrayList<Parameter>(),
+        Method method = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(
                         Arrays.asList(new LocalVarDecl("y",
-                                null, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+                                BasicType.INT, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
@@ -117,7 +120,7 @@ public class TastTests {
     public void RekursionTest() {
         If Ifstm = new If(new Block(new ArrayList<IStatement>(Arrays.asList(new Return(null, new LocalOrFieldVar("a"))))),
                 null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0)));
-        Method method = new Method(null, "addRek", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b"))),
+        Method method = new Method(BasicType.INT, "addRek", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b"))),
                 new Block(new ArrayList<IStatement>(
                         Arrays.asList(Ifstm, new Return(null, new MethodCall(new This(), "addRek",
                                 new ArrayList<IExpression>(Arrays.asList(new Unary(Operator.INCSUF, new LocalOrFieldVar("a")),
