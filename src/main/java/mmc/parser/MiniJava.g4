@@ -26,13 +26,15 @@ return_statement: RETURN expr? SEMICOLON;
 
 ///Statement expression
 statement_expr: method_call_statement | new_statement | assign_statement | crement_statement; // example MyClass obj = new MyClass(42);
-method_call_statement: (inst_var | ID) LEFT_BRACKET ( expr (COMMA expr)* )? RIGHT_BRACKET; // methode1 ( expr , expr );
+method_call_statement: method_owner_prefix? (ID LEFT_BRACKET ( expr (COMMA expr)* )? RIGHT_BRACKET DOT)* (ID LEFT_BRACKET ( expr (COMMA expr)* )? RIGHT_BRACKET);
+//example a.hello().hello2(); methode1 ( expr , expr );
+method_owner_prefix: (THIS | inst_var | new_statement | ID) DOT;
 new_statement: NEW ID LEFT_BRACKET expr RIGHT_BRACKET;
 assign_statement: (inst_var | ID) ASSIGN expr; // example this.a = c + 3;
-crement_statement: cre_op (ID | INT | inst_var ) | (ID | INT | inst_var ) cre_op; //example a++; ++a
+crement_statement: (cre_op (ID | INT | inst_var )) | ((ID | INT | inst_var ) cre_op); //example a++; ++a
 
 //Instanciate variable
-inst_var: THIS DOT ID? | (THIS DOT)? (ID DOT)+ ID; // example this.a
+inst_var: (THIS DOT ID) | ((THIS DOT)? (ID DOT)+ ID); // example this.a
 
 //expression
 expr: binary_expr | basic_expr;
