@@ -8,8 +8,10 @@ public class LogicalExprAdapter {
 
     public static Binary adapt(MiniJavaParser.Logical_exprContext logicalExpr) {
 
-        return new Binary(getOperator(logicalExpr.logical_op().getText()), BasicExprAdapter.adapt(logicalExpr.basic_expr()), ExpressionAdapter.adapt(logicalExpr.expr()));
-
+        return new Binary(
+                getOperator(logicalExpr.logical_op().getText()),
+                BasicExprAdapter.adapt(logicalExpr.basic_expr()),
+                ExpressionAdapter.adapt(logicalExpr.expr()));
     }
 
     public static Operator getOperator(String operator) {
@@ -23,6 +25,5 @@ public class LogicalExprAdapter {
             case ">=" -> Operator.GREATEREQUAL;
             default -> null;
         };
-
     }
 }

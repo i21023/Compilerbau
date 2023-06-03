@@ -36,7 +36,7 @@ public interface SemanticVisitor {
 
     TypeCheckResult typeCheck(MethodCall toCheck);
 
-    TypeCheckResult typeCheck(CrementStatement toCheck);
+    TypeCheckResult typeCheck(Crement toCheck);
 
     TypeCheckResult typeCheck(Unary toCheck);
 

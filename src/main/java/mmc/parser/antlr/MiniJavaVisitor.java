@@ -125,11 +125,11 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssign_statement(MiniJavaParser.Assign_statementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniJavaParser#cre_expr}.
+	 * Visit a parse tree produced by {@link MiniJavaParser#crement_statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCre_expr(MiniJavaParser.Cre_exprContext ctx);
+	T visitCrement_statement(MiniJavaParser.Crement_statementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#inst_var}.
 	 * @param ctx the parse tree

@@ -30,7 +30,7 @@ public class MiniJavaParser extends Parser {
 		RULE_statement = 8, RULE_local_var_decl = 9, RULE_if_else_statement = 10, 
 		RULE_else_statement = 11, RULE_while_statement = 12, RULE_for_statement = 13, 
 		RULE_return_statement = 14, RULE_statement_expr = 15, RULE_method_call_statement = 16, 
-		RULE_new_statement = 17, RULE_assign_statement = 18, RULE_cre_expr = 19, 
+		RULE_new_statement = 17, RULE_assign_statement = 18, RULE_crement_statement = 19, 
 		RULE_inst_var = 20, RULE_expr = 21, RULE_binary_expr = 22, RULE_basic_expr = 23, 
 		RULE_logical_expr = 24, RULE_calculate_expr = 25, RULE_mul_div_expr = 26, 
 		RULE_value_calculate_expr = 27, RULE_calculate_op = 28, RULE_logical_op = 29, 
@@ -42,9 +42,10 @@ public class MiniJavaParser extends Parser {
 			"method_type", "statement_block", "statement", "local_var_decl", "if_else_statement", 
 			"else_statement", "while_statement", "for_statement", "return_statement", 
 			"statement_expr", "method_call_statement", "new_statement", "assign_statement", 
-			"cre_expr", "inst_var", "expr", "binary_expr", "basic_expr", "logical_expr", 
-			"calculate_expr", "mul_div_expr", "value_calculate_expr", "calculate_op", 
-			"logical_op", "add_sub_op", "mul_div_op", "cre_op", "type", "main", "literal"
+			"crement_statement", "inst_var", "expr", "binary_expr", "basic_expr", 
+			"logical_expr", "calculate_expr", "mul_div_expr", "value_calculate_expr", 
+			"calculate_op", "logical_op", "add_sub_op", "mul_div_op", "cre_op", "type", 
+			"main", "literal"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -1104,8 +1105,8 @@ public class MiniJavaParser extends Parser {
 	public static class If_else_statementContext extends ParserRuleContext {
 		public TerminalNode IF() { return getToken(MiniJavaParser.IF, 0); }
 		public TerminalNode LEFT_BRACKET() { return getToken(MiniJavaParser.LEFT_BRACKET, 0); }
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
+		public Logical_exprContext logical_expr() {
+			return getRuleContext(Logical_exprContext.class,0);
 		}
 		public TerminalNode RIGHT_BRACKET() { return getToken(MiniJavaParser.RIGHT_BRACKET, 0); }
 		public Statement_blockContext statement_block() {
@@ -1145,7 +1146,7 @@ public class MiniJavaParser extends Parser {
 			setState(220);
 			match(LEFT_BRACKET);
 			setState(221);
-			expr();
+			logical_expr();
 			setState(222);
 			match(RIGHT_BRACKET);
 			setState(223);
@@ -1462,8 +1463,8 @@ public class MiniJavaParser extends Parser {
 		public Assign_statementContext assign_statement() {
 			return getRuleContext(Assign_statementContext.class,0);
 		}
-		public Cre_exprContext cre_expr() {
-			return getRuleContext(Cre_exprContext.class,0);
+		public Crement_statementContext crement_statement() {
+			return getRuleContext(Crement_statementContext.class,0);
 		}
 		public Statement_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1516,7 +1517,7 @@ public class MiniJavaParser extends Parser {
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(262);
-				cre_expr();
+				crement_statement();
 				}
 				break;
 			}
@@ -1761,7 +1762,7 @@ public class MiniJavaParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class Cre_exprContext extends ParserRuleContext {
+	public static class Crement_statementContext extends ParserRuleContext {
 		public Cre_opContext cre_op() {
 			return getRuleContext(Cre_opContext.class,0);
 		}
@@ -1770,28 +1771,28 @@ public class MiniJavaParser extends Parser {
 		public Inst_varContext inst_var() {
 			return getRuleContext(Inst_varContext.class,0);
 		}
-		public Cre_exprContext(ParserRuleContext parent, int invokingState) {
+		public Crement_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cre_expr; }
+		@Override public int getRuleIndex() { return RULE_crement_statement; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof MiniJavaListener ) ((MiniJavaListener)listener).enterCre_expr(this);
+			if ( listener instanceof MiniJavaListener ) ((MiniJavaListener)listener).enterCrement_statement(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof MiniJavaListener ) ((MiniJavaListener)listener).exitCre_expr(this);
+			if ( listener instanceof MiniJavaListener ) ((MiniJavaListener)listener).exitCrement_statement(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof MiniJavaVisitor ) return ((MiniJavaVisitor<? extends T>)visitor).visitCre_expr(this);
+			if ( visitor instanceof MiniJavaVisitor ) return ((MiniJavaVisitor<? extends T>)visitor).visitCrement_statement(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final Cre_exprContext cre_expr() throws RecognitionException {
-		Cre_exprContext _localctx = new Cre_exprContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_cre_expr);
+	public final Crement_statementContext crement_statement() throws RecognitionException {
+		Crement_statementContext _localctx = new Crement_statementContext(_ctx, getState());
+		enterRule(_localctx, 38, RULE_crement_statement);
 		try {
 			setState(307);
 			_errHandler.sync(this);
@@ -2476,8 +2477,8 @@ public class MiniJavaParser extends Parser {
 			return getRuleContext(Calculate_exprContext.class,0);
 		}
 		public TerminalNode RIGHT_BRACKET() { return getToken(MiniJavaParser.RIGHT_BRACKET, 0); }
-		public Cre_exprContext cre_expr() {
-			return getRuleContext(Cre_exprContext.class,0);
+		public Crement_statementContext crement_statement() {
+			return getRuleContext(Crement_statementContext.class,0);
 		}
 		public Value_calculate_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2548,7 +2549,7 @@ public class MiniJavaParser extends Parser {
 				enterOuterAlt(_localctx, 6);
 				{
 				setState(387);
-				cre_expr();
+				crement_statement();
 				}
 				break;
 			}
@@ -3170,7 +3171,7 @@ public class MiniJavaParser extends Parser {
 		"\u0000\u0000\u00d7\u00da\u0001\u0000\u0000\u0000\u00d8\u00d6\u0001\u0000"+
 		"\u0000\u0000\u00d8\u00d9\u0001\u0000\u0000\u0000\u00d9\u0013\u0001\u0000"+
 		"\u0000\u0000\u00da\u00d8\u0001\u0000\u0000\u0000\u00db\u00dc\u0005!\u0000"+
-		"\u0000\u00dc\u00dd\u0005\u0019\u0000\u0000\u00dd\u00de\u0003*\u0015\u0000"+
+		"\u0000\u00dc\u00dd\u0005\u0019\u0000\u0000\u00dd\u00de\u00030\u0018\u0000"+
 		"\u00de\u00df\u0005\u001a\u0000\u0000\u00df\u00e1\u0003\u000e\u0007\u0000"+
 		"\u00e0\u00e2\u0003\u0016\u000b\u0000\u00e1\u00e0\u0001\u0000\u0000\u0000"+
 		"\u00e1\u00e2\u0001\u0000\u0000\u0000\u00e2\u0015\u0001\u0000\u0000\u0000"+

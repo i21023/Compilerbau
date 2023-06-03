@@ -4,7 +4,7 @@ import mmc.ast.*;
 import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
-import mmc.ast.statementexpression.CrementStatement;
+import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
@@ -491,7 +491,7 @@ public class SemanticCheck implements SemanticVisitor {
     }
 
     @Override
-    public TypeCheckResult typeCheck(CrementStatement toCheck) {
+    public TypeCheckResult typeCheck(Crement toCheck) {
         boolean valid = true;
         toCheck.expression.accept(this);
         Type type = toCheck.expression.getType();

@@ -6,13 +6,13 @@ import mmc.ast.expressions.IExpression;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class CrementStatement implements IStatementExpression {
+public class Crement implements IStatementExpression {
 
     public IExpression expression;
     public Operator operator;
     public Type type;
 
-    public CrementStatement(Type pType, IExpression pExpression, Operator pOperator) {
+    public Crement(Type pType, IExpression pExpression, Operator pOperator) {
         expression = pExpression;
         operator = pOperator;
         type = pType;

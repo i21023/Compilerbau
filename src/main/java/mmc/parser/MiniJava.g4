@@ -18,18 +18,18 @@ method_type: VOID | type;
 statement_block: LEFT_BRACE statement* RIGHT_BRACE; //Block
 statement: statement_block | local_var_decl SEMICOLON | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
 local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a = 3; a = b; a = a + b; a = ( a - b )
-if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement_block else_statement?; // example if ( expr ) { statement }
+if_else_statement: IF LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement_block; // example else { statement }
 while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block; // example while ( expr ) { statement }
 for_statement: FOR LEFT_BRACKET (statement_expr | local_var_decl)? SEMICOLON logical_expr? SEMICOLON statement_expr? RIGHT_BRACKET statement_block;
 return_statement: RETURN expr? SEMICOLON;
 
 ///Statement expression
-statement_expr: method_call_statement | new_statement | assign_statement | cre_expr; // example MyClass obj = new MyClass(42);
+statement_expr: method_call_statement | new_statement | assign_statement | crement_statement; // example MyClass obj = new MyClass(42);
 method_call_statement: (inst_var | ID) LEFT_BRACKET ( expr (COMMA expr)* )? RIGHT_BRACKET; // methode1 ( expr , expr );
 new_statement: NEW ID LEFT_BRACKET expr RIGHT_BRACKET;
 assign_statement: (inst_var | ID) ASSIGN expr; // example this.a = c + 3;
-cre_expr: cre_op (ID | INT | inst_var ) | (ID | INT | inst_var ) cre_op; //example a++; ++a
+crement_statement: cre_op (ID | INT | inst_var ) | (ID | INT | inst_var ) cre_op; //example a++; ++a
 
 //Instanciate variable
 inst_var: THIS DOT ID? | (THIS DOT)? (ID DOT)+ ID; // example this.a
@@ -41,7 +41,7 @@ basic_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr
 logical_expr: basic_expr logical_op expr;// (a +b ) == c; c == (a+b)
 calculate_expr: calculate_expr add_sub_op mul_div_expr | mul_div_expr;
 mul_div_expr: mul_div_expr mul_div_op value_calculate_expr | value_calculate_expr;
-value_calculate_expr: INT | ID | inst_var | method_call_statement | LEFT_BRACKET calculate_expr RIGHT_BRACKET | cre_expr;
+value_calculate_expr: INT | ID | inst_var | method_call_statement | LEFT_BRACKET calculate_expr RIGHT_BRACKET | crement_statement;
 // example  b =  a == 5 * 3 + 7 + 6 / 2;
 
 /* example

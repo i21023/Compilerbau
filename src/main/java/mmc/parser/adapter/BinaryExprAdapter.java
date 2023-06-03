@@ -1,16 +1,16 @@
 package mmc.parser.adapter;
 
-import mmc.ast.expressions.Binary;
-import mmc.ast.statements.IStatement;
+import mmc.ast.expressions.IExpression;
 import mmc.parser.antlr.MiniJavaParser;
-
-import java.util.List;
 
 public class BinaryExprAdapter {
 
-    public static Binary adapt(MiniJavaParser.Binary_exprContext binaryExprContext) {
-        return null;
-    }
+    public static IExpression adapt(MiniJavaParser.Binary_exprContext binaryExprContext) {
 
-
+        if (binaryExprContext.logical_expr() != null) {
+            return LogicalExprAdapter.adapt(binaryExprContext.logical_expr());
+        } else {
+            return CalculateExprAdapter.adapt(binaryExprContext.calculate_expr());
+        }
     }
+}

@@ -11,6 +11,7 @@ import mmc.parser.antlr.MiniJavaParser;
 public class BasicExprAdapter {
 
     public static IExpression adapt(MiniJavaParser.Basic_exprContext basicExpr) {
+
         if (basicExpr.THIS() != null) {
             return new This();
         } else if (basicExpr.ID() != null) {

@@ -198,15 +198,15 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitAssign_statement(MiniJavaParser.Assign_statementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#cre_expr}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#crement_statement}.
 	 * @param ctx the parse tree
 	 */
-	void enterCre_expr(MiniJavaParser.Cre_exprContext ctx);
+	void enterCrement_statement(MiniJavaParser.Crement_statementContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#cre_expr}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#crement_statement}.
 	 * @param ctx the parse tree
 	 */
-	void exitCre_expr(MiniJavaParser.Cre_exprContext ctx);
+	void exitCrement_statement(MiniJavaParser.Crement_statementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#inst_var}.
 	 * @param ctx the parse tree

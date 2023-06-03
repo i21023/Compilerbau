@@ -10,7 +10,7 @@ public class ExpressionAdapter {
         if (exprContext.basic_expr() != null) {
             return BasicExprAdapter.adapt(exprContext.basic_expr());
         } else {
-            return null;
+            return BinaryExprAdapter.adapt(exprContext.binary_expr());
         }
     }
 }
