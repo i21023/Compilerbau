@@ -17,11 +17,13 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
     private final ClassWriter classWriter;
 
     private Map<String, Type> fieldVars;
+    private List<String> classNames;
 
-    public ClassCodeGenerator(){
+    public ClassCodeGenerator(List<String> classes){
         classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
 
         fieldVars = new HashMap<String, Type>();
+        classNames = classes;
     }
 
     public byte[] getBytecode(){
@@ -54,7 +56,7 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
                             field.expression, null));
             });
 
-            defaultConstructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name));
+            defaultConstructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames));
 
         }
         else{
@@ -62,13 +64,13 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
                 classDecl.fields.stream().filter(field -> field.expression != null).forEach(field -> {
                     constructor.statement.statements.add(0, new Assign(new LocalOrFieldVar(field.name),
                             field.expression, null));
-                    constructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name));
+                    constructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames));
                 });
             });
         }
 
         //Generate Method ByteCode
-        classDecl.methods.forEach(method -> method.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name)));
+        classDecl.methods.forEach(method -> method.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames)));
 
     }
 

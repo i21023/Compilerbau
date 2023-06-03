@@ -36,6 +36,8 @@ public interface SemanticVisitor {
 
     TypeCheckResult typeCheck(MethodCall toCheck);
 
+    TypeCheckResult typeCheck(CrementStatement toCheck);
+
     TypeCheckResult typeCheck(Unary toCheck);
 
     TypeCheckResult typeCheck(This toCheck);
@@ -43,15 +45,13 @@ public interface SemanticVisitor {
     TypeCheckResult typeCheck(JNull toCheck);
 
     TypeCheckResult typeCheck(LocalOrFieldVar toCheck);
-
-    TypeCheckResult typeCheck(IntExpr toCheck);
-
+    TypeCheckResult typeCheck(Binary toCheck);
     TypeCheckResult typeCheck(InstVar toCheck);
 
+    TypeCheckResult typeCheck(IntExpr toCheck);
     TypeCheckResult typeCheck(CharExpr toCheck);
 
     TypeCheckResult typeCheck(BoolExpr toCheck);
-
-    TypeCheckResult typeCheck(Binary toCheck);
+    TypeCheckResult typeCheck(StringExpr toCheck);
 
 }

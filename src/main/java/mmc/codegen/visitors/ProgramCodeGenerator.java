@@ -1,8 +1,12 @@
 package mmc.codegen.visitors;
 
+import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Program;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProgramCodeGenerator implements IProgramCodeVisitor{
 
@@ -19,8 +23,10 @@ public class ProgramCodeGenerator implements IProgramCodeVisitor{
 
     @Override
     public void visit(Program program) {
+        final List<String> classNames = program.classes.stream().map(x -> x.name).collect(Collectors.toList());
+
         program.classes.forEach(c -> {
-            ClassCodeGenerator classGenerator = new ClassCodeGenerator();
+            ClassCodeGenerator classGenerator = new ClassCodeGenerator(classNames);
             c.accept(classGenerator);
             classes.put(c.name, classGenerator.getBytecode());
         });

@@ -43,6 +43,8 @@ public interface IMethodCodeVisitor {
 
     public void visit(IntExpr intExpr);
 
+    public void visit(StringExpr stringExpr);
+
     public void visit(JNull jNull);
 
     public void visit(LocalOrFieldVar localOrFieldVar);

@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static mmc.ast.BasicType.BOOL;
+
 public class CompilerImpl implements Compiler {
     @Override
     public void compile(String fileName, String outDir) {
@@ -48,9 +50,9 @@ public class CompilerImpl implements Compiler {
 
                 Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
-                program = new Program(new ArrayList<>(Arrays.asList(
+                Program prog = new Program(new ArrayList<>(Arrays.asList(
                         new ClassDecl("Test",
-                                new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "i", AccessModifier.PUBLIC, null, false))),
+                                new ArrayList<Field>(Arrays.asList(new Field(BOOL,  "i" , AccessModifier.PUBLIC, null, false))),
                                 new ArrayList<Method>(),
                                 new ArrayList<Constructor>(Arrays.asList(
                                         new Constructor(

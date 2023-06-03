@@ -8,17 +8,17 @@ import mmc.semantikcheck.TypeCheckResult;
 
 public class StringExpr implements IExpression{
 
-    private String string;
+    public final String value;
     private Type type;
 
     public StringExpr(String pString){
-        string = pString;
+        value = pString;
         type = new ReferenceType("java/lang/String");
     }
 
     @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
-        return null;
+        return visitor.typeCheck(this);
     }
 
     @Override
@@ -26,8 +26,8 @@ public class StringExpr implements IExpression{
         return type;
     }
 
-    /*@Override
+    @Override
     public void accept(IMethodCodeVisitor visitor) {
         visitor.visit(this);
-    }*/
+    }
 }

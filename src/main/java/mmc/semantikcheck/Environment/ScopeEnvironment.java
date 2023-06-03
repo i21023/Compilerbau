@@ -34,15 +34,6 @@ public class ScopeEnvironment {
         localVars.pop();
     }
 
-    public Type getLocalVar(String name) {
-        for (HashMap<String, Type> map : localVars) {
-            if (map.containsKey(name)) {
-                return map.get(name);
-            }
-        }
-        return null;
-    }
-
     public boolean contains(String name) {
         for (HashMap<String, Type> map : localVars) {
             if (map.containsKey(name)) {
@@ -58,5 +49,13 @@ public class ScopeEnvironment {
 
     public void addLocalVar(Parameter parameter) {
         addLocalVar(parameter.name, parameter.getType());
+    }
+    public Type getLocalVar(String name) {
+        for (HashMap<String, Type> map : localVars) {
+            if (map.containsKey(name)) {
+                return map.get(name);
+            }
+        }
+        return null;
     }
 }

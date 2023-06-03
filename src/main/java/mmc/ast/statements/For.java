@@ -9,16 +9,16 @@ import mmc.semantikcheck.TypeCheckResult;
 
 public class For implements IStatement{
 
-    public IStatementExpression initExpr;
-    public IExpression logicalCondition;
-    public IStatementExpression updateExpr;
+    public IStatement initStatement;
+    public IExpression condition;
+    public IStatement updateStatement;
     public Block statementBlock;
     public Type type;
 
-    public For (IStatementExpression initExpr, IExpression logicalCondition, IStatementExpression updateExpr, Block statementBlock, Type pType) {
-        this.initExpr = initExpr;
-        this.logicalCondition = logicalCondition;
-        this.updateExpr = updateExpr;
+    public For (IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock, Type pType) {
+        this.initStatement = initExpr;
+        this.condition = logicalCondition;
+        this.updateStatement = updateExpr;
         this.statementBlock = statementBlock;
         this.type = pType;
     }

@@ -10,12 +10,12 @@ import mmc.semantikcheck.TypeCheckResult;
 import java.util.List;
 
 public class New implements IStatementExpression {
-    public List<IExpression> expressions;
+    public List<IExpression> arguments;
     public Type type;
     public New(List<IExpression> pExpressions, Type pType)
     {
         type = pType;
-        expressions=pExpressions;
+        arguments=pExpressions;
     }
 
  @Override
