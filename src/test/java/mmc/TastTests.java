@@ -85,8 +85,8 @@ public class TastTests {
     @Test
     @DisplayName("Class with FieldVars")
     public void FieldVarClassTest() {
-        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, true,
-                "x", AccessModifier.PUBLIC, new IntExpr(5)))), new ArrayList<Method>(),
+        ClassDecl classDecl = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(5), true))), new ArrayList<Method>(),
                 new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
