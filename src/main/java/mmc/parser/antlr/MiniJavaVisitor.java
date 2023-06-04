@@ -113,11 +113,29 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMethod_call_statement(MiniJavaParser.Method_call_statementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#method_owner_prefix}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethod_owner_prefix(MiniJavaParser.Method_owner_prefixContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#method_chain}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethod_chain(MiniJavaParser.Method_chainContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#new_statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitNew_statement(MiniJavaParser.New_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#argumentList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgumentList(MiniJavaParser.ArgumentListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#assign_statement}.
 	 * @param ctx the parse tree

@@ -10,14 +10,21 @@ import mmc.semantikcheck.TypeCheckResult;
 import java.util.List;
 
 public class MethodCall implements IStatementExpression  {
-    public IExpression receiver;
+    public IExpression methodOwnerPrefix;
     public String name;
     public List<IExpression> arguments;
     public Type type;
 
+    public MethodCall(IExpression pExpression, String pName, List<IExpression> pExpressions)
+    {
+        methodOwnerPrefix =pExpression;
+        name=pName;
+        arguments=pExpressions;
+    }
+
     public MethodCall(IExpression pExpression, String pName, List<IExpression> pExpressions, Type pType)
     {
-        receiver=pExpression;
+        methodOwnerPrefix =pExpression;
         name=pName;
         arguments=pExpressions;
         type=pType;

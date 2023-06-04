@@ -469,7 +469,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         var valid = true;
 
-        var receiver = toCheck.receiver.accept(this);
+        var receiver = toCheck.methodOwnerPrefix.accept(this);
 
         valid = valid && receiver.isValid();
 
@@ -478,7 +478,7 @@ public class SemanticCheck implements SemanticVisitor {
             valid = valid && parameterResult.isValid();
         }
         try {
-            var method = CheckType.getMethodInType(toCheck, toCheck.receiver.getType(), programEnvironment, this.getClass);
+            var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, this.getClass);
             var returnType = method.getType();
             toCheck.type = returnType;
             return new TypeCheckResult(valid, null);

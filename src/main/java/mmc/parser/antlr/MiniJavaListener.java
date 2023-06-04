@@ -178,6 +178,26 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitMethod_call_statement(MiniJavaParser.Method_call_statementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#method_owner_prefix}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethod_owner_prefix(MiniJavaParser.Method_owner_prefixContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#method_owner_prefix}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethod_owner_prefix(MiniJavaParser.Method_owner_prefixContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#method_chain}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethod_chain(MiniJavaParser.Method_chainContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#method_chain}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethod_chain(MiniJavaParser.Method_chainContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#new_statement}.
 	 * @param ctx the parse tree
 	 */
@@ -187,6 +207,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNew_statement(MiniJavaParser.New_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#argumentList}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgumentList(MiniJavaParser.ArgumentListContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#argumentList}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgumentList(MiniJavaParser.ArgumentListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#assign_statement}.
 	 * @param ctx the parse tree
