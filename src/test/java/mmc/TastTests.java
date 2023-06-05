@@ -7,6 +7,7 @@ import mmc.ast.Type;
 import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
@@ -143,6 +144,22 @@ public class TastTests {
         Block WhileBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
         While WhileStmt = new While(new BoolExpr(true), WhileBlock);
         Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), WhileStmt, AccessModifier.PUBLIC, false);
+        ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        Program tast = generateTypedast(prog);
+
+    }
+
+    @Test
+    @DisplayName("For-Test")
+    public void ForTest() {
+        Block ForBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
+        For ForStmt = new For(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
+                new Binary(Operator.LESSEQUAL, new LocalOrFieldVar("i"), new IntExpr(10)),
+                new Crement(null, new LocalOrFieldVar("i"), Operator.INCSUF), ForBlock);
+        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), ForStmt, AccessModifier.PUBLIC, false);
         ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
