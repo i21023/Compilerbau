@@ -62,7 +62,7 @@ logical_op: '==' | '!=' | '<' | '>' | '<=' | '>=';
 add_sub_op: '+' | '-';
 mul_div_op: '*' | '/';
 cre_op: '++' | '--';
-assign_op: '=' | '+=' | '-=' | '*=' | '/=';
+assign_op: '=' | '+=' | '-=' | '*=' | '/=' | '%=';
 
 //Datatypes
 type: 'int' | 'boolean' | 'char' | ID ;
