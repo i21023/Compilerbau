@@ -116,6 +116,20 @@ public class MiniJavaBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitFor_init(MiniJavaParser.For_initContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitFor_statement_expr(MiniJavaParser.For_statement_exprContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitReturn_statement(MiniJavaParser.Return_statementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -263,7 +277,21 @@ public class MiniJavaBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCre_op(MiniJavaParser.Cre_opContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPre_cre_op(MiniJavaParser.Pre_cre_opContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSuf_cre_op(MiniJavaParser.Suf_cre_opContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitAssign_op(MiniJavaParser.Assign_opContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

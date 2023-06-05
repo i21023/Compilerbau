@@ -21,7 +21,9 @@ local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a 
 if_else_statement: IF LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement_block; // example else { statement }
 while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block; // example while ( expr ) { statement }
-for_statement: FOR LEFT_BRACKET (statement_expr | local_var_decl)? SEMICOLON logical_expr? SEMICOLON statement_expr? RIGHT_BRACKET statement_block;
+for_statement: FOR LEFT_BRACKET for_init? SEMICOLON logical_expr? SEMICOLON for_statement_expr? RIGHT_BRACKET statement_block;
+for_init: for_statement_expr | local_var_decl;
+for_statement_expr: statement_expr (COMMA statement_expr)*;
 return_statement: RETURN expr? SEMICOLON;
 
 ///Statement expression
@@ -33,7 +35,7 @@ method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
 new_statement: NEW ID LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
 assign_statement: (inst_var | ID) assign_op expr; // example this.a = c + 3; x += 3;
-crement_statement: (cre_op (ID | INT | inst_var )) | ((ID | INT | inst_var ) cre_op); //example a++; ++a
+crement_statement: (pre_cre_op (ID | inst_var )) | ((ID | inst_var ) suf_cre_op); //example a++; ++a
 
 //Instanciate variable
 inst_var: (THIS DOT ID) | ((THIS DOT)? (ID DOT)+ ID); // example this.a
@@ -61,7 +63,8 @@ calculate_op: mul_div_op | add_sub_op;
 logical_op: '==' | '!=' | '<' | '>' | '<=' | '>=';
 add_sub_op: '+' | '-';
 mul_div_op: '*' | '/';
-cre_op: '++' | '--';
+pre_cre_op: '++' | '--';
+suf_cre_op: '++' | '--';
 assign_op: '=' | '+=' | '-=' | '*=' | '/=' | '%=';
 
 //Datatypes

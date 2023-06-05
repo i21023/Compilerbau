@@ -3,10 +3,7 @@ package mmc.parser.adapter;
 import mmc.ast.BasicType;
 import mmc.ast.ReferenceType;
 import mmc.ast.Type;
-import mmc.ast.main.Constructor;
 import mmc.parser.antlr.MiniJavaParser;
-
-import java.awt.image.BandedSampleModel;
 
 public class TypeAdapter {
 
@@ -18,6 +15,8 @@ public class TypeAdapter {
                 return BasicType.BOOL;
             case "char":
                 return BasicType.CHAR;
+            case "String":
+                return new ReferenceType("java.lang.String");
             default:
                 return new ReferenceType(typeContext.ID().getText());
         }

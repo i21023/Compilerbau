@@ -148,6 +148,26 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitFor_statement(MiniJavaParser.For_statementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#for_init}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_init(MiniJavaParser.For_initContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#for_init}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_init(MiniJavaParser.For_initContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#for_statement_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_statement_expr(MiniJavaParser.For_statement_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#for_statement_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_statement_expr(MiniJavaParser.For_statement_exprContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#return_statement}.
 	 * @param ctx the parse tree
 	 */
@@ -358,15 +378,35 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitMul_div_op(MiniJavaParser.Mul_div_opContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#cre_op}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#pre_cre_op}.
 	 * @param ctx the parse tree
 	 */
-	void enterCre_op(MiniJavaParser.Cre_opContext ctx);
+	void enterPre_cre_op(MiniJavaParser.Pre_cre_opContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#cre_op}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#pre_cre_op}.
 	 * @param ctx the parse tree
 	 */
-	void exitCre_op(MiniJavaParser.Cre_opContext ctx);
+	void exitPre_cre_op(MiniJavaParser.Pre_cre_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#suf_cre_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterSuf_cre_op(MiniJavaParser.Suf_cre_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#suf_cre_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitSuf_cre_op(MiniJavaParser.Suf_cre_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#assign_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssign_op(MiniJavaParser.Assign_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#assign_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssign_op(MiniJavaParser.Assign_opContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#type}.
 	 * @param ctx the parse tree
