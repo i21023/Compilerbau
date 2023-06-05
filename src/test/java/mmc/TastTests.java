@@ -51,7 +51,7 @@ public class TastTests {
         Block ElseBlock = new Block(new ArrayList<IStatement>(Arrays.asList(new Return(new BoolExpr(false)))));
         Block IfBlock = new Block(new ArrayList<IStatement>(Arrays.asList(new Return(new BoolExpr(true)))));
         Binary IfExpression = new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b"));
-        Block Rumpf = new Block(new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a", BasicType.INT), new LocalVarDecl("b", BasicType.INT), new If(IfBlock, ElseBlock, IfExpression))));
+        Block Rumpf = new Block(new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a", BasicType.INT), new Assign(new LocalOrFieldVar("a"), new IntExpr(3), null), new LocalVarDecl("b", BasicType.INT), new Assign(new LocalOrFieldVar("b"), new IntExpr(3), null), new If(IfBlock, ElseBlock, IfExpression))));
         ArrayList<Method> method = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL, "isEqual", new ArrayList<Parameter>(), Rumpf, AccessModifier.PUBLIC, false)));
         ArrayList<ClassDecl> Testclass = new ArrayList<ClassDecl>(Arrays.asList(new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), method, new ArrayList<Constructor>())));
         Program prog = new Program(Testclass);
@@ -154,6 +154,7 @@ public class TastTests {
     @Test
     @DisplayName("If-Fail-Test")
     public void IfFailTest() {
+        boolean HasFailed = false;
 
         Block IfBlock = new Block(Arrays.asList(new Return(new BoolExpr(true))));
         If Ifstm = new If(IfBlock, new Block(), new Binary(Operator.EQUAL, new IntExpr(3), new StringExpr("Hallo")));
@@ -162,13 +163,19 @@ public class TastTests {
 
         Program prog = new Program(Arrays.asList(classDecl));
 
-        Program tast = generateTypedast(prog);
+        try {
+            Program tast = generateTypedast(prog);
+        } catch (Exception e) {
+            HasFailed = true;
+        }
+        assertEquals(true, HasFailed);
 
     }
 
     @Test
     @DisplayName("While-Fail-Test")
     public void WhileFailTest() {
+        boolean HasFailed = false;
         Block WhileBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
         While WhileStmt = new While(new Binary(Operator.EQUAL, new IntExpr(5), new BoolExpr(false)), WhileBlock);
         Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), WhileStmt, AccessModifier.PUBLIC, false);
@@ -176,7 +183,12 @@ public class TastTests {
 
         Program prog = new Program(Arrays.asList(classDecl));
 
-        Program tast = generateTypedast(prog);
+        try {
+            Program tast = generateTypedast(prog);
+        } catch (Exception e) {
+            HasFailed = true;
+        }
+        assertEquals(true, HasFailed);
 
     }
 
