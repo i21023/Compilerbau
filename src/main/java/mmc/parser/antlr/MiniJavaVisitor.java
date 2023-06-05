@@ -95,6 +95,18 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFor_statement(MiniJavaParser.For_statementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#for_init}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_init(MiniJavaParser.For_initContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#for_statement_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_statement_expr(MiniJavaParser.For_statement_exprContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#return_statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -221,11 +233,23 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMul_div_op(MiniJavaParser.Mul_div_opContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniJavaParser#cre_op}.
+	 * Visit a parse tree produced by {@link MiniJavaParser#pre_cre_op}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCre_op(MiniJavaParser.Cre_opContext ctx);
+	T visitPre_cre_op(MiniJavaParser.Pre_cre_opContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#suf_cre_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSuf_cre_op(MiniJavaParser.Suf_cre_opContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#assign_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssign_op(MiniJavaParser.Assign_opContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#type}.
 	 * @param ctx the parse tree

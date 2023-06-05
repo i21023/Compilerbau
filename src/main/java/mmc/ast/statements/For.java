@@ -2,6 +2,7 @@ package mmc.ast.statements;
 
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
+import mmc.ast.expressions.IntExpr;
 import mmc.ast.statementexpression.IStatementExpression;
 import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
@@ -14,6 +15,13 @@ public class For implements IStatement{
     public IStatement updateStatement;
     public Block statementBlock;
     public Type type;
+
+    public For (IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock) {
+        this.initStatement = initExpr;
+        this.condition = logicalCondition;
+        this.updateStatement = updateExpr;
+        this.statementBlock = statementBlock;
+    }
 
     public For (IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock, Type pType) {
         this.initStatement = initExpr;
