@@ -32,7 +32,7 @@ method_owner_prefix: (THIS | inst_var | new_statement | ID) DOT;
 method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
 new_statement: NEW ID LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
-assign_statement: (inst_var | ID) ASSIGN expr; // example this.a = c + 3;
+assign_statement: (inst_var | ID) assign_op expr; // example this.a = c + 3; x += 3;
 crement_statement: (cre_op (ID | INT | inst_var )) | ((ID | INT | inst_var ) cre_op); //example a++; ++a
 
 //Instanciate variable
@@ -62,6 +62,7 @@ logical_op: '==' | '!=' | '<' | '>' | '<=' | '>=';
 add_sub_op: '+' | '-';
 mul_div_op: '*' | '/';
 cre_op: '++' | '--';
+assign_op: '=' | '+=' | '-=' | '*=' | '/=' | '%=';
 
 //Datatypes
 type: 'int' | 'boolean' | 'char' | ID ;
