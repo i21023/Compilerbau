@@ -7,8 +7,10 @@ import mmc.ast.expressions.IntExpr;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.Crement;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.LocalVarDecl;
+import mmc.ast.statements.Return;
 import mmc.codegen.visitors.ProgramCodeGenerator;
 import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStreams;
@@ -48,22 +50,21 @@ public class CompilerImpl implements Compiler {
                 InputStream inputStream = new FileInputStream(file);
                 SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
 
-                Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
+                //Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
-                Program prog = new Program(new ArrayList<>(Arrays.asList(
+                Program program = new Program(new ArrayList<>(Arrays.asList(
                         new ClassDecl("Test",
-                                new ArrayList<Field>(Arrays.asList(new Field(BOOL,  "i" , AccessModifier.PUBLIC, null, false))),
-                                new ArrayList<Method>(),
-                                new ArrayList<Constructor>(Arrays.asList(
-                                        new Constructor(
-                                                new Block(
-                                                        new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("i"), new IntExpr(5), null)))),
-                                                new ArrayList<>(Arrays.asList(new Parameter(BasicType.CHAR, "param"))),
-                                                AccessModifier.PUBLIC)))/*,
-                                AccessModifier.PUBLIC*/))));
+                                new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,  "i" , AccessModifier.PUBLIC, new IntExpr(5), true))),
+                                new ArrayList<Method>(Arrays.asList(new Method(BasicType.INT, "foo", new ArrayList(), new Block (
+                                        new ArrayList<>(Arrays.asList(new LocalVarDecl("j", BasicType.INT, new IntExpr(0)),
+                                                new Return( BasicType.INT, new Crement(BasicType.INT,
+                                                        new LocalOrFieldVar("i", BasicType.INT, true), Operator.INCPRE))))),
+                                        AccessModifier.PUBLIC, false))),
+                                new ArrayList<Constructor>()
+                                ))));
 
-                SemanticCheck tAst = new SemanticCheck();
-                Program tAstProgram = tAst.generateTypedast(program);
+                //SemanticCheck tAst = new SemanticCheck();
+                //Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
                 HashMap<String, byte[]> code = programVisitor.getBytecode(program);

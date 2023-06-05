@@ -6,9 +6,11 @@ import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
 import mmc.ast.main.Constructor;
+import mmc.ast.main.Field;
 import mmc.ast.main.Method;
 import mmc.ast.main.Parameter;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
@@ -32,7 +34,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     private Map<String, Type> fieldVars;
     private Stack<String> localVars;
-
+    private boolean isStaticMethod;
 
 
     public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String currentClassName, List<String> classNames){
@@ -45,6 +47,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Method method) {
+
+        isStaticMethod = method.isStatic;
 
         if(!method.isStatic){
             localVars.push("this");
@@ -101,6 +105,19 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     }
 
+    public void classConstructor(List<Field> fields){
+        methodVisitor = classWriter.visitMethod(Opcodes.ACC_STATIC, "<clinit>", "()V", null, null);
+        methodVisitor.visitCode();
+
+        fields.forEach(field -> {
+            new Assign(new LocalOrFieldVar(field.name, field.type, field.isStatic), field.expression, null).accept(this);
+        });
+
+        methodVisitor.visitInsn(Opcodes.RETURN);
+        methodVisitor.visitMaxs(0,0);
+        methodVisitor.visitEnd();
+    }
+
     @Override
     public void visit(Block block) {
         int stackSizeBefore = localVars.size();
@@ -148,7 +165,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(LocalVarDecl localVarDecl) {
-        //TODO: example int a = 5, b = 6, c
         if(localVarDecl.expression == null){
             localVars.push(localVarDecl.name);
         }
@@ -168,9 +184,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         if(returnStmt.expression != null)
             returnStmt.expression.accept(this);
-
-
-
 
         if(returnStmt.type instanceof BasicType){
 
@@ -498,9 +511,18 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                 methodVisitor.visitVarInsn(Opcodes.ALOAD, localVars.indexOf(localOrFieldVar.name));
         }
         else if(fieldVars.containsKey(localOrFieldVar.name)){
-            methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, localOrFieldVar.name,
-                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
+
+            if(!localOrFieldVar.isStatic){
+                methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+                methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, localOrFieldVar.name,
+                        GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
+            }
+            else{
+                methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, localOrFieldVar.name,
+                        GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
+
+            }
+
         }
     }
 
@@ -521,10 +543,18 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
                     methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
             }
             else if(fieldVars.containsKey(leftExpr.name)){
-                methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-                assign.rightExpr.accept(this);
-                methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
-                        GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+                if(!leftExpr.isStatic){
+                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+                    assign.rightExpr.accept(this);
+                    methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+                }
+                else{
+                    assign.rightExpr.accept(this);
+                    methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, leftExpr.name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+                }
+
             }
         }
         //TODO: Instvar
@@ -548,4 +578,79 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         newCall.arguments.forEach(argument -> argument.accept(this));
         methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, type, "<init>", GeneratorHelpFunctions.getDescriptor(newCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), BasicType.VOID), false);
     }
+
+    @Override
+    public void visit(Crement crement) {
+
+        switch(crement.operator){
+
+            case INCPRE -> {
+                doCrement(crement,1);
+                crement.expression.accept(this);
+            }
+            case INCSUF -> {
+                crement.expression.accept(this);
+                doCrement(crement,1);
+            }
+            case DECPRE -> {
+                doCrement(crement,-1);
+                crement.expression.accept(this);
+            }
+            case DECSUF -> {
+                crement.expression.accept(this);
+                doCrement(crement,-1);
+            }
+            default -> {
+                throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
+            }
+        }
+    }
+
+    public void doCrement (Crement crement, int amount){
+        if(crement.expression instanceof LocalOrFieldVar){
+            String name = ((LocalOrFieldVar) crement.expression).name;
+
+            if(localVars.contains(name)){ //LocalVar
+                methodVisitor.visitIincInsn(localVars.indexOf(name), amount);
+            }
+            else{ //FieldVar
+                if(!((LocalOrFieldVar) crement.expression).isStatic){
+                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+                    methodVisitor.visitInsn(Opcodes.DUP);
+                    methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                    if(amount == 1){
+                        methodVisitor.visitInsn(Opcodes.ICONST_1);
+                    }
+                    else{
+                        methodVisitor.visitInsn(Opcodes.ICONST_M1);
+                    }
+                    methodVisitor.visitInsn(Opcodes.IADD);
+                    methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                }
+                else{
+                    //methodVisitor.visitInsn(Opcodes.DUP);
+                    methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                    if(amount == 1){
+                        methodVisitor.visitInsn(Opcodes.ICONST_1);
+                    }
+                    else{
+                        methodVisitor.visitInsn(Opcodes.ICONST_M1);
+                    }
+                    methodVisitor.visitInsn(Opcodes.IADD);
+                    methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                }
+
+            }
+        }
+        else{ //InstVar
+
+        }
+
+
+    }
+
 }

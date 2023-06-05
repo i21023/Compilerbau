@@ -8,6 +8,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class LocalOrFieldVar implements IExpression{
     public String name;
     public Type type;
+    public boolean isStatic;
 
     public LocalOrFieldVar(String pName)
     {
@@ -22,6 +23,13 @@ public class LocalOrFieldVar implements IExpression{
     {
         name=pName;
         type = pType;
+    }
+
+    public LocalOrFieldVar(String pName, Type pType, boolean pisStatic)
+    {
+        name = pName;
+        type = pType;
+        isStatic = pisStatic;
     }
 
  @Override

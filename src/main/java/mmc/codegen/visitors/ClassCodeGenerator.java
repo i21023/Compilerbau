@@ -12,6 +12,7 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ClassCodeGenerator implements IClassCodeVisitor{
     private final ClassWriter classWriter;
@@ -39,35 +40,28 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
         //Generate Field Bytecode
         classDecl.fields.forEach(field -> field.accept(this));
 
-        classDecl.fields.stream().filter(field -> field.expression != null).forEach(field -> {
-            classDecl.constructors.forEach(constructor -> {
-                constructor.statement.statements.add(0, new Assign(new LocalOrFieldVar(field.name), field.expression, null));
-            });
-        });
-
         //Generate Constructor Bytecode
         if(classDecl.constructors.isEmpty()){
             //generate default Constructor
-            Constructor defaultConstructor = new Constructor();
-
-            //add all fieldvar Exprs to default constructor
-            classDecl.fields.stream().filter(field -> field.expression != null).forEach(field -> {
-                    defaultConstructor.statement.statements.add(0, new Assign(new LocalOrFieldVar(field.name),
-                            field.expression, null));
-            });
-
-            defaultConstructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames));
-
+            classDecl.constructors.add(new Constructor());
         }
-        else{
-            classDecl.constructors.forEach(constructor -> {
-                classDecl.fields.stream().filter(field -> field.expression != null).forEach(field -> {
-                    constructor.statement.statements.add(0, new Assign(new LocalOrFieldVar(field.name),
-                            field.expression, null));
-                    constructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames));
-                });
+
+        List<Field> nonStaticFieldInitializations = new ArrayList<Field>();
+        List<Field> staticFieldInitializations = new ArrayList<Field>();
+
+        Map<Boolean, List<Field>> partitionedFieldList = classDecl.fields.stream().filter(field -> field.expression != null).collect(Collectors.partitioningBy(field -> field.isStatic));
+
+        //add all nonstatic fieldVar initializations to each constructor
+        classDecl.constructors.forEach(constructor -> {
+            partitionedFieldList.get(false).forEach(field -> {
+                constructor.statement.statements.add(0, new Assign(new LocalOrFieldVar(field.name),
+                        field.expression, null));
             });
-        }
+            constructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames));
+        });
+
+        //add static fieldVar initializations in class initialization method
+        new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames).classConstructor(partitionedFieldList.get(true));
 
         //Generate Method ByteCode
         classDecl.methods.forEach(method -> method.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames)));

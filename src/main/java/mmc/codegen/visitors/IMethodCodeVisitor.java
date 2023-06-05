@@ -5,6 +5,7 @@ import mmc.ast.expressions.*;
 import mmc.ast.main.Constructor;
 import mmc.ast.main.Method;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
@@ -56,4 +57,6 @@ public interface IMethodCodeVisitor {
     public void visit(MethodCall methodCall);
 
     public void visit(New newCall);
+
+    public void visit(Crement crement);
 }
