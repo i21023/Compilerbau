@@ -14,6 +14,7 @@ public class MethodCall implements IStatementExpression  {
     public String name;
     public List<IExpression> arguments;
     public Type type;
+    public boolean isStatic; //TODO: @Emma bitte im Semantikcheck setzen :)
 
     public MethodCall(IExpression pExpression, String pName, List<IExpression> pExpressions)
     {
