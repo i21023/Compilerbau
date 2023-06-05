@@ -50,9 +50,9 @@ public class CompilerImpl implements Compiler {
                 InputStream inputStream = new FileInputStream(file);
                 SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
 
-                //Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
+                Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
-                Program program = new Program(new ArrayList<>(Arrays.asList(
+                /*Program program = new Program(new ArrayList<>(Arrays.asList(
                         new ClassDecl("Test",
                                 new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,  "i" , AccessModifier.PUBLIC, new IntExpr(5), true))),
                                 new ArrayList<Method>(Arrays.asList(new Method(BasicType.INT, "foo", new ArrayList(), new Block (
@@ -61,13 +61,13 @@ public class CompilerImpl implements Compiler {
                                                         new LocalOrFieldVar("i", BasicType.INT, true), Operator.INCPRE))))),
                                         AccessModifier.PUBLIC, false))),
                                 new ArrayList<Constructor>()
-                                ))));
+                                ))));*/
 
-                //SemanticCheck tAst = new SemanticCheck();
-                //Program tAstProgram = tAst.generateTypedast(program);
+                SemanticCheck tAst = new SemanticCheck();
+                Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
-                HashMap<String, byte[]> code = programVisitor.getBytecode(program);
+                HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
 
 
                 String finalOutDir = outDir;
