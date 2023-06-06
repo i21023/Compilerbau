@@ -53,7 +53,7 @@ public class CompilerImpl implements Compiler {
 
                 Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
-                Method method = new Method(new ReferenceType("java/lang/String"), "foo", new ArrayList<Parameter>(),
+                /*Method method = new Method(new ReferenceType("java/lang/String"), "foo", new ArrayList<Parameter>(),
                         new Block(new ArrayList<IStatement>(Arrays.asList(
                                 new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
                                 new For(new LocalVarDecl("j", BasicType.INT, new IntExpr(0)), new Binary(Operator.LESS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(10)), new Crement(BasicType.INT, new LocalOrFieldVar("j"), Operator.INCSUF),
@@ -67,13 +67,13 @@ public class CompilerImpl implements Compiler {
                         new Field( new ReferenceType("java/lang/String"),"field", AccessModifier.PUBLIC, new StringExpr("Test 1 2 3"), true)))), new ArrayList<Method>(Arrays.asList(method)),
                         new ArrayList<Constructor>());
 
-                Program prog = new Program(Arrays.asList(classDecl));
+                Program prog = new Program(Arrays.asList(classDecl));*/
 
                 SemanticCheck tAst = new SemanticCheck();
-                //Program tAstProgram = tAst.generateTypedast(prog);
+                Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
-                HashMap<String, byte[]> code = programVisitor.getBytecode(prog);
+                HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
 
 
                 String finalOutDir = outDir;
