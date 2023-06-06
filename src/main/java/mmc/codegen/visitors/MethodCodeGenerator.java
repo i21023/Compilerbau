@@ -36,6 +36,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
     private Stack<String> localVars;
     private boolean isStaticMethod;
 
+    private boolean pushCrementOnStack = false;
+
 
     public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String currentClassName, List<String> classNames){
         this.classWriter = cw;
@@ -165,28 +167,30 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(LocalVarDecl localVarDecl) {
+
         if(localVarDecl.expression == null){
             localVars.push(localVarDecl.name);
+            return;
         }
         localVarDecl.expression.accept(this);
         if(localVarDecl.type instanceof BasicType){
             methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.size());
-            localVars.push(localVarDecl.name);
         }
         else{
             methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.size());
-            localVars.push(localVarDecl.name);
         }
+        localVars.push(localVarDecl.name);
     }
 
     @Override
     public void visit(Return returnStmt) {
 
         if(returnStmt.expression != null)
+            pushCrementOnStack = true;
             returnStmt.expression.accept(this);
+            pushCrementOnStack = false;
 
         if(returnStmt.type instanceof BasicType){
-
             switch((BasicType) returnStmt.type){
                 case VOID -> methodVisitor.visitInsn(Opcodes.RETURN);
                 case INT, BOOL, CHAR -> methodVisitor.visitInsn(Opcodes.IRETURN);
@@ -221,8 +225,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
         Label start = new Label();
         Label end = new Label();
 
-
         //init statement
+        //don't call block or else the declared variables will not be available in for body
+        if(forStmt.initStatement instanceof Block block){
+            block.statements.forEach(statement -> statement.accept(this));
+        }
         forStmt.initStatement.accept(this);
 
         methodVisitor.visitLabel(start);
@@ -234,6 +241,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
         forStmt.statementBlock.accept(this);
 
+        if(forStmt.updateStatement instanceof Block block){
+            block.statements.forEach(statement -> statement.accept(this));
+        }
         forStmt.updateStatement.accept(this);
 
         methodVisitor.visitJumpInsn(Opcodes.GOTO, start);
@@ -533,32 +543,65 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
     @Override
     public void visit(Assign assign) {
-        if(assign.leftExpr instanceof LocalOrFieldVar){
-            LocalOrFieldVar leftExpr = (LocalOrFieldVar) assign.leftExpr;
-            if(localVars.contains(leftExpr.name)){
-                assign.rightExpr.accept(this);
-                if(assign.getType() instanceof BasicType)
-                    methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(leftExpr.name));
-                else
-                    methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
-            }
-            else if(fieldVars.containsKey(leftExpr.name)){
-                if(!leftExpr.isStatic){
-                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-                    assign.rightExpr.accept(this);
-                    methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
-                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
-                }
-                else{
-                    assign.rightExpr.accept(this);
-                    methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, leftExpr.name,
-                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
-                }
 
+        switch (assign.operator) {
+            case ASSIGN -> {
+                pushCrementOnStack = true;
+                if(assign.leftExpr instanceof LocalOrFieldVar){
+                    LocalOrFieldVar leftExpr = (LocalOrFieldVar) assign.leftExpr;
+                    if(localVars.contains(leftExpr.name)){
+                        assign.rightExpr.accept(this);
+                        if(assign.getType() instanceof BasicType)
+                            methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(leftExpr.name));
+                        else
+                            methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
+                    }
+                    else if(fieldVars.containsKey(leftExpr.name)){
+                        if(!leftExpr.isStatic){
+                            methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+                            assign.rightExpr.accept(this);
+                            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
+                                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+                        }
+                        else{
+                            assign.rightExpr.accept(this);
+                            methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, leftExpr.name,
+                                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+                        }
+
+                    }
+                }
+                //TODO: Instvar
+                pushCrementOnStack = false;
+            }
+
+            case PLUSASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.PLUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case MINUSASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.MINUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case MULTASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.MULT, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case DIVASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.DIV, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case MODASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.MOD, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            default -> {
+                throw new IllegalArgumentException("Unexpected Operator: " + assign.operator);
             }
         }
-        //TODO: Instvar
+
     }
+
 
     @Override
     public void visit(MethodCall methodCall) {
@@ -586,24 +629,34 @@ public class MethodCodeGenerator implements IMethodCodeVisitor{
 
             case INCPRE -> {
                 doCrement(crement,1);
-                crement.expression.accept(this);
+                if(pushCrementOnStack){
+                    crement.expression.accept(this);
+                }
+
             }
             case INCSUF -> {
-                crement.expression.accept(this);
+                if(pushCrementOnStack){
+                    crement.expression.accept(this);
+                }
                 doCrement(crement,1);
             }
             case DECPRE -> {
                 doCrement(crement,-1);
-                crement.expression.accept(this);
+                if(pushCrementOnStack){
+                    crement.expression.accept(this);
+                }
             }
             case DECSUF -> {
-                crement.expression.accept(this);
+                if(pushCrementOnStack){
+                    crement.expression.accept(this);
+                }
                 doCrement(crement,-1);
             }
             default -> {
                 throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
             }
         }
+        pushCrementOnStack = false;
     }
 
     public void doCrement (Crement crement, int amount){

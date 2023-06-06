@@ -1,8 +1,15 @@
 package mmc.ast;
 
 public enum Operator {
-    //Assign operators:
+    //assign operators:
     ASSIGN,
+    PLUSASSIGN,
+    MINUSASSIGN,
+    MULTASSIGN,
+    DIVASSIGN,
+    MODASSIGN,
+
+    //crement operators
     INCPRE,
     INCSUF,
     DECPRE,
