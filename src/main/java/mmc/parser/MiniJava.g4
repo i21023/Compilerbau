@@ -60,7 +60,7 @@ hallo
 
 // Operator
 calculate_op: mul_div_op | add_sub_op;
-logical_op: '==' | '!=' | '<' | '>' | '<=' | '>=';
+logical_op: '==' | '!=' | '<' | '>' | '<=' | '>=' | '|' | '&' | '||' | '&&';
 add_sub_op: '+' | '-';
 mul_div_op: '*' | '/';
 pre_cre_op: '++' | '--';

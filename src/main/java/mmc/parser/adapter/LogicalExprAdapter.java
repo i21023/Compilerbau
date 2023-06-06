@@ -12,6 +12,7 @@ public class LogicalExprAdapter {
                 getOperator(logicalExpr.logical_op().getText()),
                 BasicExprAdapter.adapt(logicalExpr.basic_expr()),
                 ExpressionAdapter.adapt(logicalExpr.expr()));
+
     }
 
     public static Operator getOperator(String operator) {
@@ -23,6 +24,10 @@ public class LogicalExprAdapter {
             case ">" -> Operator.GREATER;
             case "<=" -> Operator.LESSEQUAL;
             case ">=" -> Operator.GREATEREQUAL;
+            case "|" -> Operator.SINGLEOR;
+            case "&" -> Operator.SINGLEAND;
+            case "||" -> Operator.OR;
+            case "&&" -> Operator.AND;
             default -> null;
         };
     }

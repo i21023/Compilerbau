@@ -32,6 +32,8 @@ public enum Operator {
 
     //logical operators:
     NOT,
+    SINGLEAND,
+    SINGLEOR,
     AND,
     OR
 }
