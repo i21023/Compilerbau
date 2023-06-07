@@ -51,38 +51,32 @@ public class CompilerImpl implements Compiler {
                 InputStream inputStream = new FileInputStream(file);
                 SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
 
-                Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
-
-/*                Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
+                Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
                         new Block(new ArrayList<IStatement>(Arrays.asList(
                                 new LocalVarDecl("i", BasicType.INT),
                                 new Assign(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(0), BasicType.INT),
                                 new If(new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.INCSUF ), new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.DECSUF ),
-                                        new Binary(Operator.AND,
-                                                new Unary(Operator.NOT, new BoolExpr(false)),
+                                        new Binary(Operator.SINGLEAND,
+                                                new Unary(Operator.NOT, new BoolExpr(true)),
                                                 new Binary(Operator.EQUAL, new Assign(new LocalOrFieldVar("i"), new IntExpr(10), BasicType.INT) ,new IntExpr(10))
                                         )),
 
-                                new Return( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
+                                new Return( BasicType.INT, new Binary(Operator.SINGLEAND, new IntExpr(13), new IntExpr(10)))))), AccessModifier.PUBLIC, false);
 
-                Method method2 = new Method( new ReferenceType("java/lang/String"), "bar", new ArrayList<Parameter>(),
-                        new Block(new ArrayList<IStatement>(Arrays.asList(
-                                new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
-                                new Return( new ReferenceType("java/lang/String"), new MethodCall(new New(new ArrayList<>(Arrays.asList(new StringExpr("Hallooo"))), new ReferenceType("java/lang/String")), "substring", new ArrayList<>(Arrays.asList(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(3))), new ReferenceType("java/lang/String")))))), AccessModifier.PUBLIC, false);
 
-                ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method, method2)),
+                ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
                         new ArrayList<Constructor>());
 
 
-                Program prog = new Program(Arrays.asList(classDecl));*/
+                Program prog = new Program(Arrays.asList(classDecl));
 
 
 
                 SemanticCheck tAst = new SemanticCheck();
-                Program tAstProgram = tAst.generateTypedast(program);
+                //Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
-                HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
+                HashMap<String, byte[]> code = programVisitor.getBytecode(prog);
 
 
                 String finalOutDir = outDir;
