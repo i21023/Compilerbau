@@ -7,6 +7,8 @@ import mmc.ast.ReferenceType;
 import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.Crement;
+import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
@@ -259,5 +261,92 @@ public class ByteCodeTest {
         Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
     }
 
+    @Test
+    @DisplayName("More Complex Test with For Loop, static Field Var and StatementExpressions as Expressions")
+    public void ComplexTest1(){
+
+        Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(Arrays.asList(
+                        new LocalVarDecl("i", BasicType.INT),
+                        new LocalVarDecl("kwd", BasicType.INT, new IntExpr(500)),
+                        new Assign(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(0), BasicType.INT),
+                        new For(new LocalVarDecl("j", BasicType.INT, new IntExpr(0)), new Binary(Operator.LESS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(10)), new Crement(BasicType.INT, new LocalOrFieldVar("j"), Operator.INCSUF),
+                                new Block(new ArrayList<>(Arrays.asList(
+                                        new Assign(new LocalOrFieldVar("i", BasicType.INT), new Binary(Operator.PLUS, new LocalOrFieldVar("i", BasicType.INT), new LocalOrFieldVar("j", BasicType.INT)), BasicType.INT)
+                                ))), null),
+                        new Return( BasicType.INT, new Assign(new LocalOrFieldVar("i", BasicType.INT), new LocalOrFieldVar("i", BasicType.INT), BasicType.INT))))), AccessModifier.PUBLIC, false);
+
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(new ArrayList<>(Arrays.asList(
+                new Field( BasicType.INT,"field", AccessModifier.PUBLIC, new IntExpr(100), true)))), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+    }
+
+
+    @Test
+    @DisplayName("Assign in If Condition")
+    public void ComplexTest2(){
+
+        /*        public class Test{
+
+            public int foo(){
+                int i;
+                i = 0;
+
+                if(!false && (i = 10) == 10){
+                    i++;
+                }
+                else {
+                    i--;
+                }
+
+                return i;
+            }
+
+        }*/
+
+    Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
+            new Block(new ArrayList<IStatement>(Arrays.asList(
+                    new LocalVarDecl("i", BasicType.INT),
+                    new Assign(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(0), BasicType.INT),
+                    new If(new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.INCSUF ), new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.DECSUF ),
+                            new Binary(Operator.AND,
+                                    new Unary(Operator.NOT, new BoolExpr(false)),
+                                    new Binary(Operator.EQUAL, new Assign(new LocalOrFieldVar("i"), new IntExpr(10), BasicType.INT) ,new IntExpr(10))
+                            )),
+
+                    new Return( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
+
+
+    ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+            new ArrayList<Constructor>());
+
+
+    Program prog = new Program(Arrays.asList(classDecl));
+
+    }
+
+    //Call nonstatic String Method charAt
+    Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
+            new Block(new ArrayList<IStatement>(Arrays.asList(
+                    new LocalVarDecl("i", BasicType.INT),
+                    new Assign(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(0), BasicType.INT),
+                    new If(new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.INCSUF ), new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.DECSUF ),
+                            new Binary(Operator.AND,
+                                    new Unary(Operator.NOT, new BoolExpr(false)),
+                                    new Binary(Operator.EQUAL, new Assign(new LocalOrFieldVar("i"), new IntExpr(10), BasicType.INT) ,new IntExpr(10))
+                            )),
+
+                    new Return( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
+
+    Method method2 = new Method( BasicType.CHAR, "bar", new ArrayList<Parameter>(),
+            new Block(new ArrayList<IStatement>(Arrays.asList(
+                    new LocalVarDecl("x", new ReferenceType("java/lang/String"), new StringExpr("Hallo")),
+                    new Return( BasicType.CHAR, new MethodCall(new LocalOrFieldVar("x", new ReferenceType("java/lang/String")), "charAt", new ArrayList<>(Arrays.asList(new IntExpr(1))), BasicType.CHAR))))), AccessModifier.PUBLIC, false);
+
+    ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method, method2)),
+            new ArrayList<Constructor>());
 }
 

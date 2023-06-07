@@ -11,6 +11,10 @@ public class This implements IExpression{
     public Type type;
     public This(){}
 
+    public This(Type pType){
+        type = pType;
+    }
+
     public void setType(String className) { //Für SemantikCheck This
         this.type = new ReferenceType(className);
     }

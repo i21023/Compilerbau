@@ -36,7 +36,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     private Stack<String> localVars;
     private boolean isStaticMethod;
 
-    private boolean pushCrementOnStack = false;
+    private boolean pushOnStack = false;
 
 
     public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String currentClassName, List<String> classNames) {
@@ -131,7 +131,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         Label notEQ = new Label();
         Label end = new Label();
 
+        pushOnStack = true;
         ifStmt.expression.accept(this);
+        pushOnStack = false;
         methodVisitor.visitInsn(Opcodes.ICONST_1);
 
         if (ifStmt.blockElse == null) {
@@ -176,11 +178,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     @Override
     public void visit(Return returnStmt) {
 
-        if (returnStmt.expression != null)
-            pushCrementOnStack = true;
-        returnStmt.expression.accept(this);
-        pushCrementOnStack = false;
-
+        if (returnStmt.expression != null){
+            pushOnStack = true;
+            returnStmt.expression.accept(this);
+            pushOnStack = false;
+        }
         if (returnStmt.type instanceof BasicType) {
             switch ((BasicType) returnStmt.type) {
                 case VOID -> methodVisitor.visitInsn(Opcodes.RETURN);
@@ -197,7 +199,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         Label endLoop = new Label();
 
         methodVisitor.visitLabel(startLoop);
+
+        pushOnStack = true;
         whileStmt.expression.accept(this);
+        pushOnStack = false;
+
         methodVisitor.visitJumpInsn(Opcodes.IFEQ, endLoop);
 
         whileStmt.statement.accept(this);
@@ -225,7 +231,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitLabel(start);
 
         //condition
+        pushOnStack = true;
         forStmt.condition.accept(this);
+        pushOnStack = false;
 
         methodVisitor.visitJumpInsn(Opcodes.IFEQ, end); //if condition evaluates to false
 
@@ -256,7 +264,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                 Label end = new Label();
 
                 unary.expression.accept(this);
-                methodVisitor.visitJumpInsn(Opcodes.IFNE, evaluateTrue);
+                methodVisitor.visitJumpInsn(Opcodes.IFEQ, evaluateTrue);
 
                 methodVisitor.visitInsn(Opcodes.ICONST_0);
                 methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
@@ -403,10 +411,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     Label end = new Label();
 
                     binary.expression1.accept(this);
-                    methodVisitor.visitJumpInsn(Opcodes.IFNE, andFalse);
+                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, andFalse);
 
                     binary.expression2.accept(this);
-                    methodVisitor.visitJumpInsn(Opcodes.IFNE, andFalse);
+                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, andFalse);
                     methodVisitor.visitInsn(Opcodes.ICONST_1);
                     methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
 
@@ -422,10 +430,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     Label end = new Label();
 
                     binary.expression1.accept(this);
-                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, orTrue);
+                    methodVisitor.visitJumpInsn(Opcodes.IFNE, orTrue);
 
                     binary.expression2.accept(this);
-                    methodVisitor.visitJumpInsn(Opcodes.IFEQ, orTrue);
+                    methodVisitor.visitJumpInsn(Opcodes.IFNE, orTrue);
                     methodVisitor.visitInsn(Opcodes.ICONST_0);
                     methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
 
@@ -519,19 +527,25 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(This thisExpr) {
-
+        lastCalledClassName = currentClassName;
+        methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
     }
 
     @Override
     public void visit(Assign assign) {
 
+        boolean pushOnStackState = pushOnStack;
+
         switch (assign.operator) {
             case ASSIGN -> {
-                pushCrementOnStack = true;
-                if (assign.leftExpr instanceof LocalOrFieldVar) {
-                    LocalOrFieldVar leftExpr = (LocalOrFieldVar) assign.leftExpr;
+                if (assign.leftExpr instanceof LocalOrFieldVar leftExpr) {
                     if (localVars.contains(leftExpr.name)) {
                         assign.rightExpr.accept(this);
+
+                        if(pushOnStack){ //when used as expression
+                            methodVisitor.visitInsn(Opcodes.DUP);
+                        }
+
                         if (assign.getType() instanceof BasicType)
                             methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.indexOf(leftExpr.name));
                         else
@@ -539,11 +553,24 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     } else if (fieldVars.containsKey(leftExpr.name)) {
                         if (!leftExpr.isStatic) {
                             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+
+                            pushOnStack = true;
                             assign.rightExpr.accept(this);
+                            pushOnStack = pushOnStackState;
+
+                            if(pushOnStack){ //if used as expression
+                                methodVisitor.visitInsn(Opcodes.DUP_X1);
+                            }
+
                             methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
                                     GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
                         } else {
                             assign.rightExpr.accept(this);
+
+                            if(pushOnStack){
+                                methodVisitor.visitInsn(Opcodes.DUP);
+                            }
+
                             methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, leftExpr.name,
                                     GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
                         }
@@ -551,7 +578,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     }
                 }
                 //TODO: Instvar
-                pushCrementOnStack = false;
             }
 
             case PLUSASSIGN -> {
@@ -585,19 +611,50 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     @Override
     public void visit(MethodCall methodCall) {
 
+        boolean pushOnStackState = pushOnStack;
+
+        pushOnStack = true;
+        methodCall.methodOwnerPrefix.accept(this);
+        methodCall.arguments.forEach(argument -> argument.accept(this));
+        pushOnStack = pushOnStackState;
+
+        String type = methodCall.methodOwnerPrefix.getType() instanceof ReferenceType ref ? ref.type : null;
+
+        if(type == null)
+            throw new IllegalArgumentException("Unexpected: " + methodCall.methodOwnerPrefix.getType());
+
+        if(methodCall.isStatic){
+            methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
+        }
+        else{
+            methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
+        }
+
+        if(!pushOnStack){
+            methodVisitor.visitInsn(Opcodes.POP);
+        }
     }
 
     @Override
     public void visit(New newCall) {
+
+        boolean pushOnStackState = pushOnStack;
+
         if (!(newCall.type instanceof ReferenceType)) {
-            throw new IllegalArgumentException("Cannot Call new on a Primitive Datatype");
+            throw new IllegalArgumentException("Cannot call new on a primitive datatype");
         }
 
         String type = ((ReferenceType) newCall.type).type;
         methodVisitor.visitTypeInsn(Opcodes.NEW, type);
-        methodVisitor.visitInsn(Opcodes.DUP);
-        //TODO: POP Reference if it is not assigned
+
+        if(pushOnStack){ //Don't put reference on stack when called as statement
+            methodVisitor.visitInsn(Opcodes.DUP);
+        }
+
+        pushOnStack = true;
         newCall.arguments.forEach(argument -> argument.accept(this));
+        pushOnStack = pushOnStackState;
+
         methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, type, "<init>", GeneratorHelpFunctions.getDescriptor(newCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), BasicType.VOID), false);
     }
 
@@ -608,25 +665,25 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
             case INCPRE -> {
                 doCrement(crement, 1);
-                if (pushCrementOnStack) {
+                if (pushOnStack) {
                     crement.expression.accept(this);
                 }
 
             }
             case INCSUF -> {
-                if (pushCrementOnStack) {
+                if (pushOnStack) {
                     crement.expression.accept(this);
                 }
                 doCrement(crement, 1);
             }
             case DECPRE -> {
                 doCrement(crement, -1);
-                if (pushCrementOnStack) {
+                if (pushOnStack) {
                     crement.expression.accept(this);
                 }
             }
             case DECSUF -> {
-                if (pushCrementOnStack) {
+                if (pushOnStack) {
                     crement.expression.accept(this);
                 }
                 doCrement(crement, -1);
@@ -635,7 +692,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                 throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
             }
         }
-        pushCrementOnStack = false;
     }
 
     public void doCrement(Crement crement, int amount) {
