@@ -279,7 +279,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(Binary binary) {
-        if (binary.operator != Operator.AND && binary.operator != Operator.OR && binary.operator != Operator.SINGLEAND && binary.operator != Operator.SINGLEOR) {
+        if (binary.operator != Operator.AND && binary.operator != Operator.OR) {
             binary.expression1.accept(this);
             binary.expression2.accept(this);
 
@@ -477,7 +477,16 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(InstVar instVar) {
+        instVar.expression.accept(this);
+        lastCalledClassName = ((ReferenceType) instVar.expression.getType()).type;
 
+        if (!instVar.isStatic) {
+            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, lastCalledClassName, instVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+        } else {
+            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, lastCalledClassName, instVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+        }
     }
 
     @Override

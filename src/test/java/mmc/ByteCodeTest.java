@@ -348,5 +348,42 @@ public class ByteCodeTest {
 
     ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method, method2)),
             new ArrayList<Constructor>());
+
+
+    //Single And
+/*
+    public class Test{
+
+        public int foo(){
+            int i;
+            i = 0;
+
+            if(!true & (i = 10) == 10){
+                i++;
+            }
+            else{
+                i--;
+            }
+            return i;
+        }
+    }
+    Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
+            new Block(new ArrayList<IStatement>(Arrays.asList(
+                    new LocalVarDecl("i", BasicType.INT),
+                    new Assign(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(0), BasicType.INT),
+                    new If(new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.INCSUF ), new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.DECSUF ),
+                            new Binary(Operator.SINGLEAND,
+                                    new Unary(Operator.NOT, new BoolExpr(true)),
+                                    new Binary(Operator.EQUAL, new Assign(new LocalOrFieldVar("i"), new IntExpr(10), BasicType.INT) ,new IntExpr(9))
+                            )),
+
+                    new Return( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
+
+
+    ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+            new ArrayList<Constructor>());
+
+
+    Program prog = new Program(Arrays.asList(classDecl));*/
 }
 

@@ -53,15 +53,9 @@ public class CompilerImpl implements Compiler {
 
                 Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
                         new Block(new ArrayList<IStatement>(Arrays.asList(
-                                new LocalVarDecl("i", BasicType.INT),
-                                new Assign(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(0), BasicType.INT),
-                                new If(new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.INCSUF ), new Crement( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.DECSUF ),
-                                        new Binary(Operator.SINGLEAND,
-                                                new Unary(Operator.NOT, new BoolExpr(true)),
-                                                new Binary(Operator.EQUAL, new Assign(new LocalOrFieldVar("i"), new IntExpr(10), BasicType.INT) ,new IntExpr(10))
-                                        )),
-
-                                new Return( BasicType.INT, new Binary(Operator.SINGLEAND, new IntExpr(13), new IntExpr(10)))))), AccessModifier.PUBLIC, false);
+                                new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
+                                new MethodCall(new InstVar("out", new LocalOrFieldVar("System", new ReferenceType("java/lang/String"), true)), "println", new ArrayList<>(Arrays.asList(new StringExpr("Hallo"))), new ReferenceType("java/io/printStream")),
+                                new Return( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
 
 
                 ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
