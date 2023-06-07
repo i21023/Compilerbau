@@ -46,9 +46,6 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
             classDecl.constructors.add(new Constructor());
         }
 
-        List<Field> nonStaticFieldInitializations = new ArrayList<Field>();
-        List<Field> staticFieldInitializations = new ArrayList<Field>();
-
         Map<Boolean, List<Field>> partitionedFieldList = classDecl.fields.stream().filter(field -> field.expression != null).collect(Collectors.partitioningBy(field -> field.isStatic));
 
         //add all nonstatic fieldVar initializations to each constructor
@@ -61,7 +58,9 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
         });
 
         //add static fieldVar initializations in class initialization method
-        new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames).classConstructor(partitionedFieldList.get(true));
+        if(partitionedFieldList.get(true).size() > 0){
+            new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames).classConstructor(partitionedFieldList.get(true));
+        }
 
         //Generate Method ByteCode
         classDecl.methods.forEach(method -> method.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames)));
