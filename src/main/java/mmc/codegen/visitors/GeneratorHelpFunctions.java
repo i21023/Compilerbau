@@ -21,7 +21,6 @@ public class GeneratorHelpFunctions {
             case PUBLIC -> accessmodifier = Opcodes.ACC_PUBLIC;
             case PRIVATE -> accessmodifier = Opcodes.ACC_PRIVATE;
             case PROTECTED -> accessmodifier = Opcodes.ACC_PROTECTED;
-            default -> throw new IllegalArgumentException();
         };
 
         if(isStatic){
