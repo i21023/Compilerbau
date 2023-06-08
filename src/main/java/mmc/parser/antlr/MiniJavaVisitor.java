@@ -173,17 +173,17 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpr(MiniJavaParser.ExprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniJavaParser#binary_expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBinary_expr(MiniJavaParser.Binary_exprContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#basic_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBasic_expr(MiniJavaParser.Basic_exprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#binary_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinary_expr(MiniJavaParser.Binary_exprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#logical_expr}.
 	 * @param ctx the parse tree
@@ -209,11 +209,11 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniJavaParser#calculate_op}.
+	 * Visit a parse tree produced by {@link MiniJavaParser#string_concat_expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCalculate_op(MiniJavaParser.Calculate_opContext ctx);
+	T visitString_concat_expr(MiniJavaParser.String_concat_exprContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#logical_op}.
 	 * @param ctx the parse tree

@@ -1,10 +1,11 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.BasicType;
 import mmc.ast.Operator;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.statementexpression.Crement;
+import mmc.parser.adapter.InstVarAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class CrementStatementAdapter {

@@ -341,18 +341,6 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinary_expr(MiniJavaParser.Binary_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBinary_expr(MiniJavaParser.Binary_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBasic_expr(MiniJavaParser.Basic_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -360,6 +348,18 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBasic_expr(MiniJavaParser.Basic_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBinary_expr(MiniJavaParser.Binary_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBinary_expr(MiniJavaParser.Binary_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -413,13 +413,13 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCalculate_op(MiniJavaParser.Calculate_opContext ctx) { }
+	@Override public void enterString_concat_expr(MiniJavaParser.String_concat_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCalculate_op(MiniJavaParser.Calculate_opContext ctx) { }
+	@Override public void exitString_concat_expr(MiniJavaParser.String_concat_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

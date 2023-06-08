@@ -278,16 +278,6 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitExpr(MiniJavaParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#binary_expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterBinary_expr(MiniJavaParser.Binary_exprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#binary_expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitBinary_expr(MiniJavaParser.Binary_exprContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#basic_expr}.
 	 * @param ctx the parse tree
 	 */
@@ -297,6 +287,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBasic_expr(MiniJavaParser.Basic_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#binary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterBinary_expr(MiniJavaParser.Binary_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#binary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitBinary_expr(MiniJavaParser.Binary_exprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#logical_expr}.
 	 * @param ctx the parse tree
@@ -338,15 +338,15 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#calculate_op}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#string_concat_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterCalculate_op(MiniJavaParser.Calculate_opContext ctx);
+	void enterString_concat_expr(MiniJavaParser.String_concat_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#calculate_op}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#string_concat_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitCalculate_op(MiniJavaParser.Calculate_opContext ctx);
+	void exitString_concat_expr(MiniJavaParser.String_concat_exprContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#logical_op}.
 	 * @param ctx the parse tree

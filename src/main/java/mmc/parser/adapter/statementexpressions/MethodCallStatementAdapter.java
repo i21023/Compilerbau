@@ -1,9 +1,11 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.expressions.This;
 import mmc.ast.statementexpression.MethodCall;
+import mmc.parser.adapter.InstVarAdapter;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;

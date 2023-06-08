@@ -1,8 +1,8 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.expressions.IExpression;
-import mmc.ast.statementexpression.IStatementExpression;
 import mmc.ast.statementexpression.New;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;

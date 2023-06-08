@@ -1,10 +1,12 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.Operator;
 import mmc.ast.expressions.Binary;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.statementexpression.Assign;
+import mmc.parser.adapter.InstVarAdapter;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class AssignStatementAdapter {

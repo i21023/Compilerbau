@@ -1,4 +1,4 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statements;
 
 import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;

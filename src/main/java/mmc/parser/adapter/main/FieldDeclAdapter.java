@@ -1,9 +1,11 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.main;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.main.Field;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
+import mmc.parser.adapter.TypeAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;
