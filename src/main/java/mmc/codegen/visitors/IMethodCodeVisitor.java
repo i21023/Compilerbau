@@ -2,6 +2,7 @@ package mmc.codegen.visitors;
 
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
+import mmc.ast.expressions.Class;
 import mmc.ast.main.Constructor;
 import mmc.ast.main.Method;
 import mmc.ast.statementexpression.Assign;
@@ -59,4 +60,6 @@ public interface IMethodCodeVisitor {
     public void visit(New newCall);
 
     public void visit(Crement crement);
+
+    public void visit(Class classz);
 }

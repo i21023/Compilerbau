@@ -5,6 +5,7 @@ import mmc.ast.Operator;
 import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
+import mmc.ast.expressions.Class;
 import mmc.ast.main.Constructor;
 import mmc.ast.main.Field;
 import mmc.ast.main.Method;
@@ -646,8 +647,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
             } else {
                 methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
             }
-
-            if (!pushOnStack) {
+            if (!pushOnStack && methodCall.type != BasicType.VOID) {
                 methodVisitor.visitInsn(Opcodes.POP);
             }
         }
@@ -711,7 +711,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
             }
         }
 
-        public void doCrement (Crement crement,int amount){
+    @Override
+    public void visit(Class classz) {
+
+    }
+
+    public void doCrement (Crement crement,int amount){
             if (crement.expression instanceof LocalOrFieldVar) {
                 String name = ((LocalOrFieldVar) crement.expression).name;
 

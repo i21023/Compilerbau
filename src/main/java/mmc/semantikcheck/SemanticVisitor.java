@@ -1,6 +1,7 @@
 package mmc.semantikcheck;
 
 import mmc.ast.expressions.*;
+import mmc.ast.expressions.Class;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.*;
 import mmc.ast.statements.*;
@@ -53,5 +54,7 @@ public interface SemanticVisitor {
 
     TypeCheckResult typeCheck(BoolExpr toCheck);
     TypeCheckResult typeCheck(StringExpr toCheck);
+
+    TypeCheckResult typeCheck(Class toCheck);
 
 }

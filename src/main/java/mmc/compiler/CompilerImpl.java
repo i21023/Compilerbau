@@ -5,6 +5,7 @@ import mmc.ast.BasicType;
 import mmc.ast.Operator;
 import mmc.ast.ReferenceType;
 import mmc.ast.expressions.*;
+import mmc.ast.expressions.Class;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
@@ -51,10 +52,12 @@ public class CompilerImpl implements Compiler {
                 InputStream inputStream = new FileInputStream(file);
                 SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
 
+                //Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
+
                 Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
                         new Block(new ArrayList<IStatement>(Arrays.asList(
                                 new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
-                                new MethodCall(new InstVar("out", new LocalOrFieldVar("System", new ReferenceType("java/lang/String"), true)), "println", new ArrayList<>(Arrays.asList(new StringExpr("Hallo"))), new ReferenceType("java/io/printStream")),
+                                new MethodCall(new InstVar("out", new Class("java/lang/System", new ReferenceType("java/lang/System")), new ReferenceType("java/io/PrintStream"), true), "println", new ArrayList<>(Arrays.asList(new StringExpr("Hallo1234"))), BasicType.VOID),
                                 new Return( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
 
 
@@ -63,8 +66,6 @@ public class CompilerImpl implements Compiler {
 
 
                 Program prog = new Program(Arrays.asList(classDecl));
-
-
 
                 SemanticCheck tAst = new SemanticCheck();
                 //Program tAstProgram = tAst.generateTypedast(program);

@@ -18,6 +18,14 @@ public class InstVar implements IExpression{
         expression=pExpression;
     }
 
+    public InstVar(String pName, IExpression pExpression, Type pType, boolean pIsStatic)
+    {
+        name=pName;
+        expression=pExpression;
+        type = pType;
+        isStatic = pIsStatic;
+    }
+
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);

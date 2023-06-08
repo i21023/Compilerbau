@@ -2,6 +2,7 @@ package mmc.semantikcheck;
 
 import mmc.ast.*;
 import mmc.ast.expressions.*;
+import mmc.ast.expressions.Class;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
@@ -733,6 +734,11 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(StringExpr toCheck) {
+        return new TypeCheckResult(true, toCheck.getType());
+    }
+
+    @Override
+    public TypeCheckResult typeCheck(Class toCheck) {
         return new TypeCheckResult(true, toCheck.getType());
     }
 }
