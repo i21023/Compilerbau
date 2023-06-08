@@ -1,10 +1,11 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statements;
 
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
-import mmc.ast.main.Field;
 import mmc.ast.statements.IStatement;
 import mmc.ast.statements.LocalVarDecl;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
+import mmc.parser.adapter.TypeAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;

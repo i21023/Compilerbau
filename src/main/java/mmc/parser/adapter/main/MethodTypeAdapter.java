@@ -1,7 +1,8 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.main;
 
 import mmc.ast.BasicType;
 import mmc.ast.Type;
+import mmc.parser.adapter.TypeAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class MethodTypeAdapter {

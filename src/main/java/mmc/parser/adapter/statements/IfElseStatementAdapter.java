@@ -1,9 +1,9 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statements;
 
-import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.statements.IStatement;
 import mmc.ast.statements.If;
+import mmc.parser.adapter.expressions.LogicalExprAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class IfElseStatementAdapter {

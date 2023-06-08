@@ -1,7 +1,7 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statements;
 
 import mmc.ast.statements.IStatement;
-import mmc.ast.statements.Return;
+import mmc.parser.adapter.statementexpressions.StatementExprAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.List;

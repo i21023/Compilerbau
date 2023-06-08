@@ -1,8 +1,12 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.expressions;
 
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.IntExpr;
 import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.parser.adapter.InstVarAdapter;
+import mmc.parser.adapter.expressions.CalculateExprAdapter;
+import mmc.parser.adapter.statementexpressions.CrementStatementAdapter;
+import mmc.parser.adapter.statementexpressions.MethodCallStatementAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class ValueCalculateExprAdapter {

@@ -1,7 +1,9 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.expressions;
 
 import mmc.ast.Operator;
 import mmc.ast.expressions.Binary;
+import mmc.parser.adapter.expressions.BasicExprAdapter;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class LogicalExprAdapter {

@@ -207,14 +207,14 @@ public class MiniJavaBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBinary_expr(MiniJavaParser.Binary_exprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBasic_expr(MiniJavaParser.Basic_exprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBasic_expr(MiniJavaParser.Basic_exprContext ctx) { return visitChildren(ctx); }
+	@Override public T visitBinary_expr(MiniJavaParser.Binary_exprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -249,7 +249,7 @@ public class MiniJavaBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCalculate_op(MiniJavaParser.Calculate_opContext ctx) { return visitChildren(ctx); }
+	@Override public T visitString_concat_expr(MiniJavaParser.String_concat_exprContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

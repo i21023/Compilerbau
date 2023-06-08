@@ -1,4 +1,4 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.expressions;
 
 import mmc.ast.Operator;
 import mmc.ast.expressions.IExpression;
@@ -6,6 +6,9 @@ import mmc.ast.expressions.IntExpr;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.expressions.This;
 import mmc.ast.expressions.Unary;
+import mmc.parser.adapter.InstVarAdapter;
+import mmc.parser.adapter.LiteralAdapter;
+import mmc.parser.adapter.statementexpressions.StatementExprAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class BasicExprAdapter {

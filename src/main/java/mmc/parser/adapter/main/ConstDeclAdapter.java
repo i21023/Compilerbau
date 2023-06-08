@@ -1,10 +1,11 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.main;
 
 import mmc.ast.AccessModifier;
-import mmc.ast.Type;
 import mmc.ast.main.Constructor;
 import mmc.ast.main.Parameter;
 import mmc.ast.statements.Block;
+import mmc.parser.adapter.TypeAdapter;
+import mmc.parser.adapter.statements.StatementBlockAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;

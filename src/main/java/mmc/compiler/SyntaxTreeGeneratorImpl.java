@@ -3,7 +3,7 @@ package mmc.compiler;
 import mmc.ast.main.Program;
 import mmc.parser.antlr.MiniJavaLexer;
 import mmc.parser.antlr.MiniJavaParser;
-import mmc.parser.adapter.ProgramAdapter;
+import mmc.parser.adapter.main.ProgramAdapter;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 

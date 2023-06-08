@@ -1,6 +1,10 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.statementexpression.IStatementExpression;
+import mmc.parser.adapter.statementexpressions.AssignStatementAdapter;
+import mmc.parser.adapter.statementexpressions.CrementStatementAdapter;
+import mmc.parser.adapter.statementexpressions.MethodCallStatementAdapter;
+import mmc.parser.adapter.statementexpressions.NewStatementAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class StatementExprAdapter {
