@@ -26,6 +26,15 @@ public class ClassDecl implements Visitable {
         constructors=pConstructors;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this==o)return true;
+        if(o==null||getClass()!=o.getClass())return false;
+        ClassDecl Class = (ClassDecl) o;
+        return name.equals(Class.name)&&fields.equals(Class.fields)&&methods.equals(Class.methods)&&constructors.equals(Class.constructors);
+    }
+
 
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {

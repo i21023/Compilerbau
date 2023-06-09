@@ -15,10 +15,17 @@ public class Program implements Visitable {
     public List<ClassDecl> classes;
     public ProgramEnvironment programEnvironment;
 
-    public Program(List<ClassDecl> pClasses){
+    public Program(List<ClassDecl> pClasses) {
         classes = pClasses;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) return true;
+        if(o==null||getClass() != o.getClass()) return false;
+        Program program = (Program) o;
+        return classes.equals(program.classes);
+    }
 
     @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
@@ -26,7 +33,7 @@ public class Program implements Visitable {
     }
 
     @Override
-    public void accept (IProgramCodeVisitor visitor){
+    public void accept(IProgramCodeVisitor visitor) {
         visitor.visit(this);
     }
 }

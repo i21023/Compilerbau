@@ -8,7 +8,7 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class For implements IStatement{
+public class For implements IStatement {
 
     public IStatement initStatement;
     public IExpression condition;
@@ -16,19 +16,28 @@ public class For implements IStatement{
     public Block statementBlock;
     public Type type;
 
-    public For (IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock) {
+    public For(IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock) {
         this.initStatement = initExpr;
         this.condition = logicalCondition;
         this.updateStatement = updateExpr;
         this.statementBlock = statementBlock;
     }
 
-    public For (IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock, Type pType) {
+    public For(IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock, Type pType) {
         this.initStatement = initExpr;
         this.condition = logicalCondition;
         this.updateStatement = updateExpr;
         this.statementBlock = statementBlock;
         this.type = pType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        For oFor = (For) o;
+        return initStatement.equals(oFor.initStatement) && condition.equals(oFor.condition) && updateStatement.equals((oFor.updateStatement))
+                && statementBlock.equals(oFor.statementBlock) && type.equals(oFor.type);
     }
 
     @Override

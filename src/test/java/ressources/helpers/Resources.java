@@ -27,7 +27,7 @@ public class Resources {
      * @return InputStream
      */
     public static InputStream getFileAsStream(String fileName) throws FileNotFoundException {
-    InputStream inStr = new FileInputStream("C:\\Users\\Micha\\Nextcloud\\Documents\\Studium\\4. Semester\\Compilerbau\\Projekt\\Compilerbau\\src\\test\\java\\ressources\\testcases\\EmptyClass.java");
+    InputStream inStr = new FileInputStream("C:\\Users\\Micha\\Documents\\GitHub\\MachMalCompiler\\Compilerbau\\src\\test\\java\\ressources\\Testcases\\"+fileName);
         ClassLoader classLoader = Resources.class.getClassLoader();
           File file = new File(classLoader.getResource(fileName).getFile());
         assertNotNull(file);

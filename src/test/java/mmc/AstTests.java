@@ -9,6 +9,8 @@ import mmc.ast.statementexpression.Assign;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;
 import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.compiler.SyntaxTreeGenerator;
+import mmc.compiler.SyntaxTreeGeneratorImpl;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class AstTests {
 
@@ -39,8 +42,19 @@ public class AstTests {
                 new ArrayList<Method>(), new ArrayList<Constructor>());
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
-        Program testAst = new Program(classDecls);
-        //assertEquals(testAst,ast);
+        Program prog = new Program(classDecls);
+        //try {
+        //CharStream file = Resources.getFileInput("C:\\Users\\Micha\\Documents\\GitHub\\MachMalCompiler\\Compilerbau\\src\\test\\java\\ressources\\Testcases\\FieldVarClassMutable.java");
+        SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
+
+        Program program = astGenerator.generateSyntaxTree(file);
+
+
+        assertEquals(prog, program);
+        //} catch (IOException e) {
+        //  e.printStackTrace();
+
+        //}
     }
 
     @Test
@@ -88,6 +102,18 @@ public class AstTests {
         Program prog = new Program(Arrays.asList(classDecl));
 
         //Vergleich mit Parser muss hierhin
+        try {
+            CharStream file = Resources.getFileInput("C:\\Users\\Micha\\Documents\\GitHub\\MachMalCompiler\\Compilerbau\\src\\test\\java\\ressources\\Testcases\\FieldVarClassMutable.java");
+            SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
 
     }
 }

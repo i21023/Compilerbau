@@ -19,17 +19,15 @@ public class Constructor implements Visitable {
     public Type type;
     public AccessModifier accessModifier;
 
-    public Constructor(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier)
-    {
-        statement=pStatement;
-        parameters=pParameters;
-        accessModifier=pAccessModifier;
+    public Constructor(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier) {
+        statement = pStatement;
+        parameters = pParameters;
+        accessModifier = pAccessModifier;
         type = BasicType.VOID;
     }
 
-    public Constructor()
-    {
-        accessModifier=AccessModifier.PUBLIC;
+    public Constructor() {
+        accessModifier = AccessModifier.PUBLIC;
         parameters = new ArrayList<Parameter>();
         statement = new Block();
         type = BasicType.VOID;
@@ -37,6 +35,14 @@ public class Constructor implements Visitable {
 
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Constructor constructor = (Constructor) o;
+        return parameters.equals(constructor.parameters) && statement.equals(constructor.statement) && type.equals(constructor.type) && accessModifier.equals(constructor.accessModifier);
     }
 
     @Override

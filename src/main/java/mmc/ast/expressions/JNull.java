@@ -5,11 +5,21 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class JNull implements IExpression{
+public class JNull implements IExpression {
     public Type type;
-    public JNull(){}
 
- @Override
+    public JNull() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JNull jNull = (JNull) o;
+        return type.equals(jNull.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

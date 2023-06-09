@@ -22,15 +22,15 @@ public class Method implements Visitable {
     private Block block;
     public boolean isStatic;
 
-    public Method(Type pType, String pName, List<Parameter> pParameters, IStatement pStatement, AccessModifier pAccessModifier, boolean pIsStatic)
-    {
-        type=pType;
-        name=pName;
-        parameters=pParameters;
-        statement=pStatement;
-        accessModifier=pAccessModifier;
+    public Method(Type pType, String pName, List<Parameter> pParameters, IStatement pStatement, AccessModifier pAccessModifier, boolean pIsStatic) {
+        type = pType;
+        name = pName;
+        parameters = pParameters;
+        statement = pStatement;
+        accessModifier = pAccessModifier;
         isStatic = pIsStatic;
     }
+
     public Method(AccessModifier pAccessModifier, Type pType, String pName, ArrayList<Parameter> pParameters, Block pBlock) {
         type = pType;
         name = pName;
@@ -43,7 +43,16 @@ public class Method implements Visitable {
         return type;
     }
 
- @Override
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Method method = (Method) o;
+        return type.equals(method.type) && name.equals(method.name) && parameters.equals(method.parameters)
+                && statement.equals(method.statement) && accessModifier.equals(method.accessModifier) && block.equals(method.block) && isStatic == method.isStatic;
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

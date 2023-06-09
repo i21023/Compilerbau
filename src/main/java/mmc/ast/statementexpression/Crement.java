@@ -20,6 +20,14 @@ public class Crement implements IStatementExpression {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Crement crement = (Crement) o;
+        return expression.equals(crement.expression) && operator.equals(crement.operator) && type.equals(crement.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return null;
     }

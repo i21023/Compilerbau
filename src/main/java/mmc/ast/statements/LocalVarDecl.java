@@ -28,6 +28,16 @@ public class LocalVarDecl implements IStatement{
     public Type getType() {
         return type;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this==o)return true;
+        if(o==null||getClass()!=o.getClass())return false;
+        LocalVarDecl LVD = (LocalVarDecl) o;
+        return type.equals(LVD.type)&&name.equals(LVD.name)&&expression.equals(LVD.expression);
+    }
+
  @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);

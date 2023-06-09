@@ -26,6 +26,14 @@ public class Return implements IStatement {
     }
 
     @Override
+    public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null||getClass()!=o.getClass())return false;
+        Return oReturn = (Return) o;
+        return expression.equals(oReturn.expression)&&type.equals(oReturn.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

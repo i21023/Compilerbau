@@ -22,6 +22,14 @@ public class Parameter implements Visitable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if(this==o)return true;
+        if(o==null||getClass()!=o.getClass())return false;
+        Parameter parameter = (Parameter) o;
+        return type.equals(parameter.type)&&name.equals(parameter.name);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

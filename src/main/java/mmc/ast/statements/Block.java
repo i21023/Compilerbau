@@ -24,6 +24,15 @@ public class Block implements IStatement {
     }
 
     @Override
+    public boolean equals(Object o)
+    {
+        if(this==o)return true;
+        if(o==null||getClass()!=o.getClass())return false;
+        Block block = (Block) o;
+        return statements.equals(block.statements)&& type.equals(block.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

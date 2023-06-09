@@ -1,4 +1,5 @@
 package mmc.ast.statementexpression;
+
 import mmc.ast.Operator;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
@@ -14,30 +15,35 @@ public class Assign implements IStatementExpression {
     public Operator operator;
     public Type type;
 
-    public Assign(IExpression pLeftExpr, IExpression pRightExpr, Type pType)
-    {
-        leftExpr=pLeftExpr;
-        rightExpr=pRightExpr;
+    public Assign(IExpression pLeftExpr, IExpression pRightExpr, Type pType) {
+        leftExpr = pLeftExpr;
+        rightExpr = pRightExpr;
         type = pType;
         operator = Operator.ASSIGN;
     }
 
-    public Assign(IExpression pLeftExpr, IExpression pRightExpr)
-    {
-        leftExpr=pLeftExpr;
-        rightExpr=pRightExpr;
+    public Assign(IExpression pLeftExpr, IExpression pRightExpr) {
+        leftExpr = pLeftExpr;
+        rightExpr = pRightExpr;
         operator = Operator.ASSIGN;
     }
 
-    public Assign(IExpression pLeftExpr, Operator pOperator, IExpression pRightExpr, Type pType)
-    {
-        leftExpr=pLeftExpr;
-        rightExpr=pRightExpr;
+    public Assign(IExpression pLeftExpr, Operator pOperator, IExpression pRightExpr, Type pType) {
+        leftExpr = pLeftExpr;
+        rightExpr = pRightExpr;
         type = pType;
         operator = pOperator;
     }
 
- @Override
+    @Override
+    public boolean equals(Object o){
+        if(this==o)return true;
+        if(o==null||getClass()!=o.getClass())return false;
+        Assign assign = (Assign) o;
+        return leftExpr.equals(assign.leftExpr)&&rightExpr.equals(assign.rightExpr)&&operator.equals(assign.operator)&&type.equals(assign.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

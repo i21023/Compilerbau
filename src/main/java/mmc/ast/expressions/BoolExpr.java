@@ -6,17 +6,24 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class BoolExpr implements IExpression{
+public class BoolExpr implements IExpression {
     public boolean value;
     public Type type;
 
-    public BoolExpr(boolean pValue)
-    {
+    public BoolExpr(boolean pValue) {
         type = BasicType.BOOL;
-        value=pValue;
+        value = pValue;
     }
 
- @Override
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BoolExpr boolExpr = (BoolExpr) o;
+        return value == boolExpr.value && type.equals(boolExpr.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

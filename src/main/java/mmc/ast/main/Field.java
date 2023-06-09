@@ -20,14 +20,14 @@ public class Field implements Visitable {
     public boolean isStatic;
     public IExpression expression;
 
-    public Field(Type pType, String pName,AccessModifier pAccessModifier, IExpression pExpression, boolean pisStatic)
-    {
-        type=pType;
-        name=pName;
+    public Field(Type pType, String pName, AccessModifier pAccessModifier, IExpression pExpression, boolean pisStatic) {
+        type = pType;
+        name = pName;
         accessModifier = pAccessModifier;
         isStatic = pisStatic;
         expression = pExpression;
     }
+
     public Field(String pName, AccessModifier pAccessModifier) {
         name = pName;
         accessModifier = pAccessModifier;
@@ -37,6 +37,7 @@ public class Field implements Visitable {
         name = pName;
         type = pType;
     }
+
     public Field(AccessModifier pAccessModifier, boolean pisStatic, Type pType, String pName) {
         name = pName;
         accessModifier = pAccessModifier;
@@ -46,6 +47,14 @@ public class Field implements Visitable {
 
     public Type getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Field field = (Field) o;
+        return type.equals(field.type) && name.equals(field.name) && accessModifier.equals(field.accessModifier) && isStatic == field.isStatic && expression.equals(field.expression);
     }
 
     @Override

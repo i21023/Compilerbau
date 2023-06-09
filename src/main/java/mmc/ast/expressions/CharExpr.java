@@ -6,17 +6,24 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class CharExpr implements IExpression{
+public class CharExpr implements IExpression {
     public char value;
     public Type type;
 
-    public CharExpr(char pValue)
-    {
-        value=pValue;
-        type= BasicType.CHAR;
+    public CharExpr(char pValue) {
+        value = pValue;
+        type = BasicType.CHAR;
     }
 
- @Override
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CharExpr charExpr = (CharExpr) o;
+        return value == charExpr.value && type.equals(charExpr.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

@@ -9,13 +9,13 @@ import mmc.semantikcheck.TypeCheckResult;
 import javax.swing.plaf.nimbus.State;
 import java.beans.Expression;
 
-public class If implements IStatement{
+public class If implements IStatement {
     public IExpression expression;
     public IStatement blockIf;
     public IStatement blockElse;
     public Type type;
 
-    public If(IStatement pIf, IStatement pElse, IExpression pExpression){
+    public If(IStatement pIf, IStatement pElse, IExpression pExpression) {
         blockIf = pIf;
         blockElse = pElse;
         expression = pExpression;
@@ -24,7 +24,16 @@ public class If implements IStatement{
     public Type getType() {
         return type;
     }
- @Override
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        If oIf = (If) o;
+        return expression.equals(oIf.expression) && blockIf.equals(oIf.blockIf) && blockElse.equals(oIf.blockElse) && type.equals(oIf.type);
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

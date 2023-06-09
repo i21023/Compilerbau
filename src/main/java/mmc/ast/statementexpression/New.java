@@ -14,19 +14,26 @@ public class New implements IStatementExpression {
     public Type type;
     private String name;
 
-    public New(String pName, List<IExpression> pExpressions)
-    {
-        arguments=pExpressions;
+    public New(String pName, List<IExpression> pExpressions) {
+        arguments = pExpressions;
         name = pName;
     }
 
-    public New(List<IExpression> pExpressions, Type pType)
-    {
+    public New(List<IExpression> pExpressions, Type pType) {
         type = pType;
-        arguments=pExpressions;
+        arguments = pExpressions;
     }
 
- @Override
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        New oNew = (New) o;
+        return arguments.equals(oNew.arguments)&&type.equals(oNew.type)&&name.equals(oNew.name);
+
+    }
+
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }
