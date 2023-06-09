@@ -13,10 +13,17 @@ public class ReferenceType implements Type {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) ;
         ReferenceType RT = (ReferenceType) o;
-        return type.equals(RT.type);
+        if (type == null && RT.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(RT.type)) {
+            typeIsEqual = true;
+        }
+
+        return typeIsEqual;
     }
 }
 

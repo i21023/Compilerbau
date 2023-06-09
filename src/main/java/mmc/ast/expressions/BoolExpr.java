@@ -17,9 +17,15 @@ public class BoolExpr implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BoolExpr boolExpr = (BoolExpr) o;
+        if (type == null && boolExpr.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(boolExpr.type)) {
+            typeIsEqual = true;
+        }
         return value == boolExpr.value && type.equals(boolExpr.type);
     }
 

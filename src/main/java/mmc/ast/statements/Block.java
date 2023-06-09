@@ -26,10 +26,16 @@ public class Block implements IStatement {
     @Override
     public boolean equals(Object o)
     {
+        boolean typeIsEqual = false;
         if(this==o)return true;
         if(o==null||getClass()!=o.getClass())return false;
         Block block = (Block) o;
-        return statements.equals(block.statements)&& type.equals(block.type);
+        if (type == null && block.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(block.type)) {
+            typeIsEqual = true;
+        }
+        return statements.equals(block.statements)&& typeIsEqual;
     }
 
     @Override

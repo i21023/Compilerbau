@@ -17,10 +17,16 @@ public class CharExpr implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CharExpr charExpr = (CharExpr) o;
-        return value == charExpr.value && type.equals(charExpr.type);
+        if (type == null && charExpr.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(charExpr.type)) {
+            typeIsEqual = true;
+        }
+        return value == charExpr.value && typeIsEqual;
     }
 
     @Override

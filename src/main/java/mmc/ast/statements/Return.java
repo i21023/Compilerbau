@@ -10,10 +10,11 @@ public class Return implements IStatement {
     public IExpression expression;
     public Type type;
 
-    public Return(Type pType,IExpression pExpression) {
+    public Return(Type pType, IExpression pExpression) {
         expression = pExpression;
         type = pType;
     }
+
     public Return(IExpression pExpression) {
         expression = pExpression;
     }
@@ -26,11 +27,18 @@ public class Return implements IStatement {
     }
 
     @Override
-    public boolean equals(Object o){
-        if(this==o)return true;
-        if(o==null||getClass()!=o.getClass())return false;
+    public boolean equals(Object o) {
+        boolean typeIsEqual = false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Return oReturn = (Return) o;
-        return expression.equals(oReturn.expression)&&type.equals(oReturn.type);
+        if (type == null && oReturn.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(oReturn.type)) {
+            typeIsEqual = true;
+        }
+
+        return expression.equals(oReturn.expression) && typeIsEqual;
     }
 
     @Override

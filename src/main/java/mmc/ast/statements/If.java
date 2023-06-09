@@ -27,10 +27,16 @@ public class If implements IStatement {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         If oIf = (If) o;
-        return expression.equals(oIf.expression) && blockIf.equals(oIf.blockIf) && blockElse.equals(oIf.blockElse) && type.equals(oIf.type);
+        if (type == null && oIf.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(oIf.type)) {
+            typeIsEqual = true;
+        }
+        return expression.equals(oIf.expression) && blockIf.equals(oIf.blockIf) && blockElse.equals(oIf.blockElse) && typeIsEqual;
     }
 
     @Override

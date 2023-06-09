@@ -20,11 +20,17 @@ public class Binary implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Binary binary = (Binary) o;
+        if (type == null && binary.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(binary.type)) {
+            typeIsEqual = true;
+        }
         return operator.equals(binary.operator) && expression1.equals(binary.expression1)
-                && expression2.equals(binary.expression2) && type.equals(binary.type);
+                && expression2.equals(binary.expression2) && typeIsEqual;
     }
 
     @Override

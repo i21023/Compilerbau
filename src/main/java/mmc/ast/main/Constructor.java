@@ -39,10 +39,16 @@ public class Constructor implements Visitable {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Constructor constructor = (Constructor) o;
-        return parameters.equals(constructor.parameters) && statement.equals(constructor.statement) && type.equals(constructor.type) && accessModifier.equals(constructor.accessModifier);
+        if (type == null && constructor.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(constructor.type)) {
+            typeIsEqual = true;
+        }
+        return parameters.equals(constructor.parameters) && statement.equals(constructor.statement) && typeIsEqual && accessModifier.equals(constructor.accessModifier);
     }
 
     @Override

@@ -33,11 +33,17 @@ public class For implements IStatement {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         For oFor = (For) o;
+        if (type == null && oFor.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(oFor.type)) {
+            typeIsEqual = true;
+        }
         return initStatement.equals(oFor.initStatement) && condition.equals(oFor.condition) && updateStatement.equals((oFor.updateStatement))
-                && statementBlock.equals(oFor.statementBlock) && type.equals(oFor.type);
+                && statementBlock.equals(oFor.statementBlock) && typeIsEqual;
     }
 
     @Override

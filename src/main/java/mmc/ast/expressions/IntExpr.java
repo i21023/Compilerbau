@@ -17,10 +17,16 @@ public class IntExpr implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IntExpr intExpr = (IntExpr) o;
-        return value == intExpr.value && type.equals(intExpr.type);
+        if (type == null && intExpr.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(intExpr.type)) {
+            typeIsEqual = true;
+        }
+        return value == intExpr.value && typeIsEqual;
     }
 
     @Override

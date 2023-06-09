@@ -1,4 +1,5 @@
 package mmc.ast.main;
+
 import mmc.Visitable;
 import mmc.ast.BasicType;
 import mmc.ast.Type;
@@ -11,10 +12,9 @@ public class Parameter implements Visitable {
     public Type type;
     public String name;
 
-    public Parameter(Type pType, String pName)
-    {
-        type=pType;
-        name=pName;
+    public Parameter(Type pType, String pName) {
+        type = pType;
+        name = pName;
     }
 
     public Type getType() {
@@ -23,10 +23,16 @@ public class Parameter implements Visitable {
 
     @Override
     public boolean equals(Object o) {
-        if(this==o)return true;
-        if(o==null||getClass()!=o.getClass())return false;
+        boolean typeIsEqual = false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Parameter parameter = (Parameter) o;
-        return type.equals(parameter.type)&&name.equals(parameter.name);
+        if (type == null && parameter.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(parameter.type)) {
+            typeIsEqual = true;
+        }
+        return typeIsEqual && name.equals(parameter.name);
     }
 
     @Override

@@ -23,10 +23,16 @@ public class This implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         This oThis = (This) o;
-        return type.equals(oThis.type);
+        if (type == null && oThis.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(oThis.type)) {
+            typeIsEqual = true;
+        }
+        return typeIsEqual;
     }
 
     @Override

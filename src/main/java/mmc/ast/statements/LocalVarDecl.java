@@ -1,11 +1,12 @@
 package mmc.ast.statements;
+
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-public class LocalVarDecl implements IStatement{
+public class LocalVarDecl implements IStatement {
     public String name;
     public Type type;
     public IExpression expression;
@@ -15,6 +16,7 @@ public class LocalVarDecl implements IStatement{
         name = pName;
         expression = pExpression;
     }
+
     public LocalVarDecl(String pName) {
         name = pName;
     }
@@ -30,15 +32,20 @@ public class LocalVarDecl implements IStatement{
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if(this==o)return true;
-        if(o==null||getClass()!=o.getClass())return false;
+    public boolean equals(Object o) {
+        boolean typeIsEqual = false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         LocalVarDecl LVD = (LocalVarDecl) o;
-        return type.equals(LVD.type)&&name.equals(LVD.name)&&expression.equals(LVD.expression);
+        if (type == null && LVD.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(LVD.type)) {
+            typeIsEqual = true;
+        }
+        return typeIsEqual && name.equals(LVD.name) && expression.equals(LVD.expression);
     }
 
- @Override
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

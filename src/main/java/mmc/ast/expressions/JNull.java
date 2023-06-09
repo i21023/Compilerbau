@@ -13,10 +13,16 @@ public class JNull implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JNull jNull = (JNull) o;
-        return type.equals(jNull.type);
+        if (type == null && jNull.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(jNull.type)) {
+            typeIsEqual = true;
+        }
+        return typeIsEqual;
     }
 
     @Override

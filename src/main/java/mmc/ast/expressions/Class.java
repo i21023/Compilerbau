@@ -17,10 +17,16 @@ public class Class implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Class oClass = (Class) o;
-        return name.equals(oClass.name) && type.equals(oClass.type);
+        if (type == null && oClass.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(oClass.type)) {
+            typeIsEqual = true;
+        }
+        return name.equals(oClass.name) && typeIsEqual;
     }
 
     @Override

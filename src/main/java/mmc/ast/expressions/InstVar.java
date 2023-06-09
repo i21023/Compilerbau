@@ -26,10 +26,16 @@ public class InstVar implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InstVar instVar = (InstVar) o;
-        return name.equals(instVar.name) && expression.equals(instVar.expression) && type.equals(instVar.type) && isStatic == instVar.isStatic;
+        if (type == null && instVar.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(instVar.type)) {
+            typeIsEqual = true;
+        }
+        return name.equals(instVar.name) && expression.equals(instVar.expression) && typeIsEqual && isStatic == instVar.isStatic;
     }
 
     @Override

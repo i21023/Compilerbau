@@ -92,7 +92,7 @@ public class AstTests {
         Method method = new Method(BasicType.VOID, "changeX", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(
                         Arrays.asList(new Assign(new LocalOrFieldVar("x"),
-                                new IntExpr(30), null)))), AccessModifier.PUBLIC, false);
+                                new IntExpr(30))))), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
@@ -102,8 +102,9 @@ public class AstTests {
         Program prog = new Program(Arrays.asList(classDecl));
 
         //Vergleich mit Parser muss hierhin
+
         try {
-            CharStream file = Resources.getFileInput("C:\\Users\\Micha\\Documents\\GitHub\\MachMalCompiler\\Compilerbau\\src\\test\\java\\ressources\\Testcases\\FieldVarClassMutable.java");
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/FieldVarClassMutable.java");
             SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
 
             Program program = astGenerator.generateSyntaxTree(file);

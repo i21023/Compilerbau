@@ -26,10 +26,16 @@ public class New implements IStatementExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         New oNew = (New) o;
-        return arguments.equals(oNew.arguments)&&type.equals(oNew.type)&&name.equals(oNew.name);
+        if (type == null && oNew.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(oNew.type)) {
+            typeIsEqual = true;
+        }
+        return arguments.equals(oNew.arguments) && typeIsEqual && name.equals(oNew.name);
 
     }
 

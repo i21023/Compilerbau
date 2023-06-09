@@ -36,11 +36,17 @@ public class Assign implements IStatementExpression {
     }
 
     @Override
-    public boolean equals(Object o){
-        if(this==o)return true;
-        if(o==null||getClass()!=o.getClass())return false;
+    public boolean equals(Object o) {
+        boolean typeIsEqual = false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Assign assign = (Assign) o;
-        return leftExpr.equals(assign.leftExpr)&&rightExpr.equals(assign.rightExpr)&&operator.equals(assign.operator)&&type.equals(assign.type);
+        if (type == null && assign.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(assign.type)) {
+            typeIsEqual = true;
+        }
+        return leftExpr.equals(assign.leftExpr) && rightExpr.equals(assign.rightExpr) && operator.equals(assign.operator) && typeIsEqual;
     }
 
     @Override

@@ -21,10 +21,16 @@ public class Crement implements IStatementExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Crement crement = (Crement) o;
-        return expression.equals(crement.expression) && operator.equals(crement.operator) && type.equals(crement.type);
+        if (type == null && crement.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(crement.type)) {
+            typeIsEqual = true;
+        }
+        return expression.equals(crement.expression) && operator.equals(crement.operator) && typeIsEqual;
     }
 
     @Override

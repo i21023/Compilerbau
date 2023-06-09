@@ -18,10 +18,16 @@ public class Unary implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Unary unary = (Unary) o;
-        return operator.equals(unary.operator) && expression.equals(unary.expression) && type.equals(unary.type);
+        if (type == null && unary.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(unary.type)) {
+            typeIsEqual = true;
+        }
+        return operator.equals(unary.operator) && expression.equals(unary.expression) && typeIsEqual;
     }
 
     @Override

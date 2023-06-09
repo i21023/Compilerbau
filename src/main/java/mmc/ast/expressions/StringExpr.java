@@ -18,10 +18,16 @@ public class StringExpr implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StringExpr SE = (StringExpr) o;
-        return type.equals(SE.type) && value.equals(SE.value);
+        if (type == null && SE.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(SE.type)) {
+            typeIsEqual = true;
+        }
+        return typeIsEqual && value.equals(SE.value);
     }
 
     @Override

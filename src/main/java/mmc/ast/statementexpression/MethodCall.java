@@ -31,11 +31,17 @@ public class MethodCall implements IStatementExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MethodCall methodCall = (MethodCall) o;
+        if (type == null && methodCall.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(methodCall.type)) {
+            typeIsEqual = true;
+        }
         return methodOwnerPrefix.equals(methodCall.methodOwnerPrefix) && name.equals(methodCall.name)
-                && arguments.equals(methodCall.arguments) && type.equals(methodCall.type) && isStatic == methodCall.isStatic;
+                && arguments.equals(methodCall.arguments) && typeIsEqual && isStatic == methodCall.isStatic;
     }
 
     @Override

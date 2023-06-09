@@ -22,10 +22,17 @@ public class While implements IStatement {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         While loop = (While) o;
-        return expression.equals(loop.expression) && statement.equals(loop.statement) && type.equals(loop.type);
+        if (type == null && loop.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(loop.type)) {
+            typeIsEqual = true;
+        }
+
+        return expression.equals(loop.expression) && statement.equals(loop.statement) && typeIsEqual;
     }
 
     @Override

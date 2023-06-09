@@ -45,11 +45,17 @@ public class Method implements Visitable {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Method method = (Method) o;
-        return type.equals(method.type) && name.equals(method.name) && parameters.equals(method.parameters)
-                && statement.equals(method.statement) && accessModifier.equals(method.accessModifier) && block.equals(method.block) && isStatic == method.isStatic;
+        if (type == null && method.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(method.type)) {
+            typeIsEqual = true;
+        }
+        return typeIsEqual && name.equals(method.name) && parameters.equals(method.parameters)
+                && statement.equals(method.statement) && accessModifier.equals(method.accessModifier) /*&& block.equals(method.block)*/ && isStatic == method.isStatic;
     }
 
     @Override

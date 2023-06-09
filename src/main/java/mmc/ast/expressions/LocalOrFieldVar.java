@@ -32,10 +32,17 @@ public class LocalOrFieldVar implements IExpression {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LocalOrFieldVar LOFV = (LocalOrFieldVar) o;
-        return name.equals(LOFV.name) && type.equals(LOFV.type) && isStatic == LOFV.isStatic;
+        if (type == null && LOFV.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(LOFV.type)) {
+            typeIsEqual = true;
+        }
+
+        return name.equals(LOFV.name) && typeIsEqual && isStatic == LOFV.isStatic;
     }
 
     @Override

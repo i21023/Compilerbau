@@ -51,10 +51,16 @@ public class Field implements Visitable {
 
     @Override
     public boolean equals(Object o) {
+        boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Field field = (Field) o;
-        return type.equals(field.type) && name.equals(field.name) && accessModifier.equals(field.accessModifier) && isStatic == field.isStatic && expression.equals(field.expression);
+        if (type == null && field.type == null) {
+            typeIsEqual = true;
+        } else if (type.equals(field.type)) {
+            typeIsEqual = true;
+        }
+        return typeIsEqual && name.equals(field.name) && accessModifier.equals(field.accessModifier) && isStatic == field.isStatic && expression.equals(field.expression);
     }
 
     @Override
