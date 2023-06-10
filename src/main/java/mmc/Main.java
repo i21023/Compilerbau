@@ -3,6 +3,9 @@ package mmc;
 import mmc.compiler.ICompiler;
 import mmc.compiler.Compiler;
 
+//ToDo: Uml aktualisieren? AST und TAST trennen?
+//ToDo: Readme schreiben
+
 public class Main {
     public static void main(String[] args) {
 
