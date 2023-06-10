@@ -31,7 +31,7 @@ public class Method implements Visitable {
         isStatic = pIsStatic;
     }
 
-    public Method(AccessModifier pAccessModifier, Type pType, String pName, ArrayList<Parameter> pParameters, Block pBlock) {
+    public Method(AccessModifier pAccessModifier, Type pType, String pName, List<Parameter> pParameters, Block pBlock) {
         type = pType;
         name = pName;
         parameters = pParameters;
@@ -55,7 +55,7 @@ public class Method implements Visitable {
             typeIsEqual = true;
         }
         return typeIsEqual && name.equals(method.name) && parameters.equals(method.parameters)
-                && statement.equals(method.statement) && accessModifier.equals(method.accessModifier) /*&& block.equals(method.block)*/ && isStatic == method.isStatic;
+                && block.equals(method.block) && accessModifier.equals(method.accessModifier) /*&& block.equals(method.block)*/ && isStatic == method.isStatic;
     }
 
     @Override

@@ -12,9 +12,12 @@ public class StatementBlockAdapter {
 
         List<IStatement> statementList = new ArrayList<>();
 
-        if(statementBlock.statement()!= null){
+        if (statementBlock.statement() != null) {
             statementBlock.statement().forEach(statement -> {
-                statementList.addAll(StatementAdapter.adapt(statement));
+                if (statement.local_var_decl() != null) {
+                    statementList.addAll(((Block) StatementAdapter.adapt(statement)).statements);
+                }
+                statementList.add(StatementAdapter.adapt(statement));
             });
         }
 

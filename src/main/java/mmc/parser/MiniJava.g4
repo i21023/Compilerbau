@@ -18,9 +18,9 @@ method_type: VOID | type;
 statement_block: LEFT_BRACE statement* RIGHT_BRACE; //Block
 statement: statement_block | local_var_decl SEMICOLON | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
 local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a = 3; a = b; a = a + b; a = ( a - b )
-if_else_statement: IF LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block else_statement?; // example if ( expr ) { statement }
-else_statement: ELSE statement_block; // example else { statement }
-while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement_block; // example while ( expr ) { statement }
+if_else_statement: IF LEFT_BRACKET logical_expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
+else_statement: ELSE statement; // example else { statement }
+while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
 for_statement: FOR LEFT_BRACKET for_init? SEMICOLON logical_expr? SEMICOLON for_statement_expr? RIGHT_BRACKET statement;
 for_init: for_statement_expr | local_var_decl;
 for_statement_expr: statement_expr (COMMA statement_expr)*;

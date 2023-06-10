@@ -1,6 +1,7 @@
 package mmc.parser.adapter.statements;
 
 import mmc.ast.expressions.IExpression;
+import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;
 import mmc.ast.statements.If;
 import mmc.parser.adapter.expressions.LogicalExprAdapter;
@@ -12,11 +13,11 @@ public class IfElseStatementAdapter {
 
         IExpression logicalExpression = LogicalExprAdapter.adapt(ifElseStatement.logical_expr());
 
-        IStatement iStatement = StatementBlockAdapter.adapt(ifElseStatement.statement_block());
+        IStatement iStatement = StatementAdapter.adapt(ifElseStatement.statement());
 
         IStatement elseIStatement = null;
         if (ifElseStatement.else_statement() != null) {
-            elseIStatement = StatementBlockAdapter.adapt(ifElseStatement.else_statement().statement_block());
+            elseIStatement = StatementAdapter.adapt(ifElseStatement.else_statement().statement());
         }
 
         return new If(iStatement, elseIStatement, logicalExpression);

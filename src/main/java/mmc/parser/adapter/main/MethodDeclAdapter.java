@@ -46,7 +46,7 @@ public class MethodDeclAdapter {
 
         if (methodDeclContext.parameter_list() != null) {
             if (methodDeclContext.parameter_list().COMMA() != null && methodDeclContext.parameter_list().COMMA().size() > 0) {
-                for (int i = 0; i < methodDeclContext.parameter_list().COMMA().size(); i++) {
+                for (int i = 0; i <= methodDeclContext.parameter_list().COMMA().size(); i++) {
                     Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(i)),
                             methodDeclContext.parameter_list().ID(i).getText());
                     parameterList.add(parameter);
@@ -60,6 +60,6 @@ public class MethodDeclAdapter {
 
         Block block = StatementBlockAdapter.adapt(methodDeclContext.statement_block());
 
-        return new Method(type, name, parameterList, block, accessModifier, staticFlag);
+        return new Method(accessModifier, type, name, parameterList, block);
     }
 }

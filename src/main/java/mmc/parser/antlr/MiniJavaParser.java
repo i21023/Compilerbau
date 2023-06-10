@@ -1115,8 +1115,8 @@ public class MiniJavaParser extends Parser {
 			return getRuleContext(Logical_exprContext.class,0);
 		}
 		public TerminalNode RIGHT_BRACKET() { return getToken(MiniJavaParser.RIGHT_BRACKET, 0); }
-		public Statement_blockContext statement_block() {
-			return getRuleContext(Statement_blockContext.class,0);
+		public StatementContext statement() {
+			return getRuleContext(StatementContext.class,0);
 		}
 		public Else_statementContext else_statement() {
 			return getRuleContext(Else_statementContext.class,0);
@@ -1143,7 +1143,6 @@ public class MiniJavaParser extends Parser {
 	public final If_else_statementContext if_else_statement() throws RecognitionException {
 		If_else_statementContext _localctx = new If_else_statementContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_if_else_statement);
-		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -1156,17 +1155,17 @@ public class MiniJavaParser extends Parser {
 			setState(234);
 			match(RIGHT_BRACKET);
 			setState(235);
-			statement_block();
+			statement();
 			setState(237);
 			_errHandler.sync(this);
-			_la = _input.LA(1);
-			if (_la==ELSE) {
+			switch ( getInterpreter().adaptivePredict(_input,25,_ctx) ) {
+			case 1:
 				{
 				setState(236);
 				else_statement();
 				}
+				break;
 			}
-
 			}
 		}
 		catch (RecognitionException re) {
@@ -1183,8 +1182,8 @@ public class MiniJavaParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class Else_statementContext extends ParserRuleContext {
 		public TerminalNode ELSE() { return getToken(MiniJavaParser.ELSE, 0); }
-		public Statement_blockContext statement_block() {
-			return getRuleContext(Statement_blockContext.class,0);
+		public StatementContext statement() {
+			return getRuleContext(StatementContext.class,0);
 		}
 		public Else_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1214,7 +1213,7 @@ public class MiniJavaParser extends Parser {
 			setState(239);
 			match(ELSE);
 			setState(240);
-			statement_block();
+			statement();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1236,8 +1235,8 @@ public class MiniJavaParser extends Parser {
 			return getRuleContext(Logical_exprContext.class,0);
 		}
 		public TerminalNode RIGHT_BRACKET() { return getToken(MiniJavaParser.RIGHT_BRACKET, 0); }
-		public Statement_blockContext statement_block() {
-			return getRuleContext(Statement_blockContext.class,0);
+		public StatementContext statement() {
+			return getRuleContext(StatementContext.class,0);
 		}
 		public While_statementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1273,7 +1272,7 @@ public class MiniJavaParser extends Parser {
 			setState(245);
 			match(RIGHT_BRACKET);
 			setState(246);
-			statement_block();
+			statement();
 			}
 		}
 		catch (RecognitionException re) {
@@ -3558,15 +3557,15 @@ public class MiniJavaParser extends Parser {
 		"\u00e2\u0001\u0000\u0000\u0000\u00e4\u00e5\u0001\u0000\u0000\u0000\u00e5"+
 		"\u0013\u0001\u0000\u0000\u0000\u00e6\u00e4\u0001\u0000\u0000\u0000\u00e7"+
 		"\u00e8\u0005*\u0000\u0000\u00e8\u00e9\u0005\"\u0000\u0000\u00e9\u00ea"+
-		"\u0003:\u001d\u0000\u00ea\u00eb\u0005#\u0000\u0000\u00eb\u00ed\u0003\u000e"+
-		"\u0007\u0000\u00ec\u00ee\u0003\u0016\u000b\u0000\u00ed\u00ec\u0001\u0000"+
-		"\u0000\u0000\u00ed\u00ee\u0001\u0000\u0000\u0000\u00ee\u0015\u0001\u0000"+
-		"\u0000\u0000\u00ef\u00f0\u0005+\u0000\u0000\u00f0\u00f1\u0003\u000e\u0007"+
-		"\u0000\u00f1\u0017\u0001\u0000\u0000\u0000\u00f2\u00f3\u0005,\u0000\u0000"+
-		"\u00f3\u00f4\u0005\"\u0000\u0000\u00f4\u00f5\u0003:\u001d\u0000\u00f5"+
-		"\u00f6\u0005#\u0000\u0000\u00f6\u00f7\u0003\u000e\u0007\u0000\u00f7\u0019"+
-		"\u0001\u0000\u0000\u0000\u00f8\u00f9\u0005-\u0000\u0000\u00f9\u00fb\u0005"+
-		"\"\u0000\u0000\u00fa\u00fc\u0003\u001c\u000e\u0000\u00fb\u00fa\u0001\u0000"+
+		"\u0003:\u001d\u0000\u00ea\u00eb\u0005#\u0000\u0000\u00eb\u00ed\u0003\u0010"+
+		"\b\u0000\u00ec\u00ee\u0003\u0016\u000b\u0000\u00ed\u00ec\u0001\u0000\u0000"+
+		"\u0000\u00ed\u00ee\u0001\u0000\u0000\u0000\u00ee\u0015\u0001\u0000\u0000"+
+		"\u0000\u00ef\u00f0\u0005+\u0000\u0000\u00f0\u00f1\u0003\u0010\b\u0000"+
+		"\u00f1\u0017\u0001\u0000\u0000\u0000\u00f2\u00f3\u0005,\u0000\u0000\u00f3"+
+		"\u00f4\u0005\"\u0000\u0000\u00f4\u00f5\u0003:\u001d\u0000\u00f5\u00f6"+
+		"\u0005#\u0000\u0000\u00f6\u00f7\u0003\u0010\b\u0000\u00f7\u0019\u0001"+
+		"\u0000\u0000\u0000\u00f8\u00f9\u0005-\u0000\u0000\u00f9\u00fb\u0005\""+
+		"\u0000\u0000\u00fa\u00fc\u0003\u001c\u000e\u0000\u00fb\u00fa\u0001\u0000"+
 		"\u0000\u0000\u00fb\u00fc\u0001\u0000\u0000\u0000\u00fc\u00fd\u0001\u0000"+
 		"\u0000\u0000\u00fd\u00ff\u0005$\u0000\u0000\u00fe\u0100\u0003:\u001d\u0000"+
 		"\u00ff\u00fe\u0001\u0000\u0000\u0000\u00ff\u0100\u0001\u0000\u0000\u0000"+

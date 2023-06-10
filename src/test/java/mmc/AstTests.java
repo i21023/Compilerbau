@@ -3,11 +3,24 @@ package mmc;
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.Operator;
-import mmc.ast.expressions.*;
-import mmc.ast.main.*;
+import mmc.ast.expressions.Binary;
+import mmc.ast.expressions.BoolExpr;
+import mmc.ast.expressions.IntExpr;
+import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.ast.main.ClassDecl;
+import mmc.ast.main.Constructor;
+import mmc.ast.main.Field;
+import mmc.ast.main.Method;
+import mmc.ast.main.Parameter;
+import mmc.ast.main.Program;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
-import mmc.ast.statements.*;
+import mmc.ast.statements.Block;
+import mmc.ast.statements.IStatement;
+import mmc.ast.statements.If;
+import mmc.ast.statements.LocalVarDecl;
+import mmc.ast.statements.Return;
+import mmc.ast.statements.While;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
@@ -15,13 +28,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ressources.helpers.Resources;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class AstTests {
 
@@ -129,10 +140,9 @@ public class AstTests {
     public void ClassWithIfTest() {
         ArrayList<Parameter> MethodParam = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b")));
-        Block MethodBody = new Block(Arrays.asList(
-                new If(new Block(Arrays.asList(new Return(new BoolExpr(true))))
-                        , new Block(Arrays.asList(new Return(new BoolExpr(false))))
-                        , new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
+        Block MethodBody = new Block(Arrays.asList(new If(new Block(Arrays.asList(new Return(new BoolExpr(true))))
+                , new Block(Arrays.asList(new Return(new BoolExpr(false))))
+                , new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
         ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "isEqual", MethodParam, MethodBody)));
         ClassDecl classes = new ClassDecl("ClassIf", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
