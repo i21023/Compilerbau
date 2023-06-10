@@ -41,6 +41,7 @@ crement_statement: (pre_cre_op (ID | inst_var )) | ((ID | inst_var ) suf_cre_op)
 inst_var: (THIS DOT ID) | ((THIS DOT)? (ID DOT)+ ID); // example this.a
 
 //expression
+//ToDo: ggf. Mehrdeutigkeit bei INT-Werten auflösen?
 expr: basic_expr | binary_expr;
 basic_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr RIGHT_BRACKET | add_sub_op INT | literal;
 binary_expr: logical_expr | calculate_expr; //| string_concat_expr; //example a + b; 3 + 3 - a; "Countdown: " + a

@@ -6,6 +6,8 @@ import mmc.compiler.Compiler;
 public class Main {
     public static void main(String[] args) {
 
+        //ToDo: Dialog für Ausführung einfügen
+
         if (args.length == 0) {
             System.out.println("Bitte Datei eingeben.");
             return;
