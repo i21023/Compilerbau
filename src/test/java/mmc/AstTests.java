@@ -3,12 +3,10 @@ package mmc;
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.Operator;
-import mmc.ast.expressions.Binary;
-import mmc.ast.expressions.BoolExpr;
-import mmc.ast.expressions.IntExpr;
-import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.Crement;
 import mmc.ast.statements.*;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
@@ -152,6 +150,40 @@ public class AstTests {
 
         }
     }
+
+    @Test
+    @DisplayName("ClassWhile")
+    public void ClassWhileTest() {
+        ArrayList<Parameter> MethodParam = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
+                new Parameter(BasicType.INT, "b")));
+        Block MethodBody = new Block(Arrays.asList(new LocalVarDecl("c", BasicType.INT, new IntExpr(0)),
+                new If(new Block(Arrays.asList(new Return(new IntExpr(0))))
+                        , new Block()
+                        , new Binary(Operator.OR,
+                        new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new IntExpr(0)),
+                        new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0)))),
+                new While(new Binary(Operator.NOTEQUAL, new LocalOrFieldVar("b"), new IntExpr(1)),
+                        new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), Operator.PLUSASSIGN, new LocalOrFieldVar("a"), null),
+                                new Crement(null, new LocalOrFieldVar("b"), Operator.DECSUF)))),
+                new Return(new LocalOrFieldVar("c"))));
+        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "mult", MethodParam, MethodBody)));
+        ClassDecl classes = new ClassDecl("ClassWhile", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassWhile.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
 
     @Test
     @DisplayName("Class with FieldVars and Method")
