@@ -2,12 +2,14 @@ package mmc;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
+import mmc.ast.Operator;
+import mmc.ast.expressions.Binary;
+import mmc.ast.expressions.BoolExpr;
 import mmc.ast.expressions.IntExpr;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
-import mmc.ast.statements.Block;
-import mmc.ast.statements.IStatement;
+import mmc.ast.statements.*;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
@@ -52,23 +54,76 @@ public class AstTests {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("ClassWithMethodTest")
     public void ClassWithMethodTest() {
         ClassDecl classDecl = new ClassDecl("ClassMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
                 new Method(BasicType.VOID, "testMethod", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC,
                         false))), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassMethod.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
     }
+
+    @Test
+    @DisplayName("ClassWithMethodParamTest")
+    public void ClassWithMethodParamTest() {
+        ArrayList<Parameter> MethodParam = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
+                new Parameter(BasicType.INT, "b")));
+        ClassDecl classDecl = new ClassDecl("ClassMethodParam", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
+                new Method(BasicType.VOID, "paramMethod", MethodParam, new Block(), AccessModifier.PUBLIC,
+                        false))), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassMethodParam.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
 
     @Test
     @DisplayName("Constructor")
     public void ClassConstructorTest() throws IOException {
-        ArrayList<Constructor> con = new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(new ArrayList<IStatement>()),
-                new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "x"))),
+        ArrayList<Constructor> con = new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(
+                new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(5))))),
+                new ArrayList<Parameter>(),
                 AccessModifier.PUBLIC)));
 
-        ClassDecl classDecl = new ClassDecl("ContructorWithParam", new ArrayList<Field>(), new ArrayList<Method>(),
+        ClassDecl classDecl = new ClassDecl("ClassContsructor", new ArrayList<Field>(), new ArrayList<Method>(),
                 con);
         Program prog = new Program(Arrays.asList(classDecl));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassContsructor.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
     }
 
     @Test
@@ -76,7 +131,26 @@ public class AstTests {
     public void ClassWithIfTest() {
         ArrayList<Parameter> MethodParam = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b")));
-        //ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL,"isEqual",)))
+        Block MethodBody = new Block(Arrays.asList(
+                new If(new Block(Arrays.asList(new Return(new BoolExpr(true))))
+                        , new Block(Arrays.asList(new Return(new BoolExpr(false))))
+                        , new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
+        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "isEqual", MethodParam, MethodBody)));
+        ClassDecl classes = new ClassDecl("ClassIf", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassIf.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
     }
 
     @Test
