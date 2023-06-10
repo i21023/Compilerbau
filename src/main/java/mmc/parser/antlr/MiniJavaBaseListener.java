@@ -413,18 +413,6 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterString_concat_expr(MiniJavaParser.String_concat_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitString_concat_expr(MiniJavaParser.String_concat_exprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterLogical_op(MiniJavaParser.Logical_opContext ctx) { }
 	/**
 	 * {@inheritDoc}

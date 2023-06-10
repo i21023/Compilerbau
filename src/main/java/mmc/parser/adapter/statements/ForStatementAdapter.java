@@ -48,9 +48,9 @@ public class ForStatementAdapter {
         }
         Block updateStatement = new Block(updateStatements);
 
-        Block statementBlock = StatementBlockAdapter.adapt(forStatement.statement_block());
+        Block statement = new Block(StatementAdapter.adapt(forStatement.statement()));
 
-        return new For(initStatement, logicalExpression, updateStatement, statementBlock);
+        return new For(initStatement, logicalExpression, updateStatement, statement);
     }
 
 }

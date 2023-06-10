@@ -1,3 +1,4 @@
+/*
 package mmc.parser.adapter.expressions;
 
 import mmc.ast.Operator;
@@ -6,7 +7,7 @@ import mmc.ast.expressions.CharExpr;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.expressions.StringExpr;
-import mmc.parser.adapter.InstVarAdapter;
+import mmc.parser.adapter.expressions.InstVarAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 public class StringConcatAdapter {
@@ -30,4 +31,4 @@ public class StringConcatAdapter {
             }
         }
     }
-}
+}*/

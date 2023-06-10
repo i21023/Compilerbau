@@ -8,23 +8,17 @@ import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.IStatement;
-import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
-import mmc.compiler.SyntaxTreeGeneratorImpl;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ressources.helpers.Classwriter;
 import ressources.helpers.Resources;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -45,7 +39,7 @@ public class AstTests {
         Program prog = new Program(classDecls);
         //try {
         //CharStream file = Resources.getFileInput("C:\\Users\\Micha\\Documents\\GitHub\\MachMalCompiler\\Compilerbau\\src\\test\\java\\ressources\\Testcases\\FieldVarClassMutable.java");
-        SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
+        ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
         Program program = astGenerator.generateSyntaxTree(file);
 
@@ -105,7 +99,7 @@ public class AstTests {
 
         try {
             CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/FieldVarClassMutable.java");
-            SyntaxTreeGenerator astGenerator = new SyntaxTreeGeneratorImpl();
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
 

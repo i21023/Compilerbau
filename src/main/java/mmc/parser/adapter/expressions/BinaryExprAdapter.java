@@ -9,10 +9,11 @@ public class BinaryExprAdapter {
 
         if (binaryExprContext.logical_expr() != null) {
             return LogicalExprAdapter.adapt(binaryExprContext.logical_expr());
-        } else if (binaryExprContext.calculate_expr() != null){
+        } else { // if (binaryExprContext.calculate_expr() != null){
             return CalculateExprAdapter.adapt(binaryExprContext.calculate_expr());
-        } else {
-            return StringConcatAdapter.adapt(binaryExprContext.string_concat_expr());
         }
+        /* } else {
+            return StringConcatAdapter.adapt(binaryExprContext.string_concat_expr());
+        }*/
     }
 }

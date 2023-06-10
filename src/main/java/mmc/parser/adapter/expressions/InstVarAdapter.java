@@ -1,4 +1,4 @@
-package mmc.parser.adapter;
+package mmc.parser.adapter.expressions;
 
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.InstVar;

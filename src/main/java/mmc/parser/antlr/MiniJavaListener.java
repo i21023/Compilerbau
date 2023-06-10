@@ -338,16 +338,6 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#string_concat_expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterString_concat_expr(MiniJavaParser.String_concat_exprContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#string_concat_expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitString_concat_expr(MiniJavaParser.String_concat_exprContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#logical_op}.
 	 * @param ctx the parse tree
 	 */

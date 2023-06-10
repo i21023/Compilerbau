@@ -5,7 +5,7 @@ import mmc.ast.expressions.Binary;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.statementexpression.Assign;
-import mmc.parser.adapter.InstVarAdapter;
+import mmc.parser.adapter.expressions.InstVarAdapter;
 import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 

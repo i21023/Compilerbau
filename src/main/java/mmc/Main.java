@@ -1,7 +1,7 @@
 package mmc;
 
+import mmc.compiler.ICompiler;
 import mmc.compiler.Compiler;
-import mmc.compiler.CompilerImpl;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,7 +11,7 @@ public class Main {
             return;
         }
         if (args.length == 1 && args[0].endsWith(".java")) {
-            Compiler compiler = new CompilerImpl();
+            ICompiler compiler = new Compiler();
             compiler.compile(args[0], "");
         }
         else {

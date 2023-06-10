@@ -4,7 +4,7 @@ import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.expressions.This;
 import mmc.ast.statementexpression.MethodCall;
-import mmc.parser.adapter.InstVarAdapter;
+import mmc.parser.adapter.expressions.InstVarAdapter;
 import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
