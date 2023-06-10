@@ -10,6 +10,7 @@ import mmc.semantikcheck.TypeCheckResult;
 import java.util.List;
 
 public class MethodCall implements IStatementExpression {
+    //ToDo: Absprache, wie wir Systemaufrufe (System.out.println etc.) parsen sollen für Typcheck und Codegen
     public IExpression methodOwnerPrefix;
     public String name;
     public List<IExpression> arguments;
