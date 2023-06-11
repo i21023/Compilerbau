@@ -66,13 +66,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         method.parameters.forEach(parameter -> localVars.add(parameter.name));
 
         methodVisitor.visitCode();
-        method.statement.accept(this);
+        method.block.accept(this);
 
-        if (method.statement instanceof Block block) {
-            if (!(block.statements.get(block.statements.size() - 1) instanceof Return)) {
+            if (!(method.block.statements.get(method.block.statements.size() - 1) instanceof Return)) {
                 new Return(BasicType.VOID, null).accept(this);
             }
-        }
 
         methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();

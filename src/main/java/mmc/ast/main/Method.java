@@ -22,11 +22,11 @@ public class Method implements Visitable {
     private Block block;
     public boolean isStatic;
 
-    public Method(Type pType, String pName, List<Parameter> pParameters, IStatement pStatement, AccessModifier pAccessModifier, boolean pIsStatic) {
+    public Method(Type pType, String pName, List<Parameter> pParameters, Block pBlock, AccessModifier pAccessModifier, boolean pIsStatic) {
         type = pType;
         name = pName;
         parameters = pParameters;
-        statement = pStatement;
+        block = pBlock;
         accessModifier = pAccessModifier;
         isStatic = pIsStatic;
     }

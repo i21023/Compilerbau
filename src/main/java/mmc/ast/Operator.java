@@ -3,17 +3,17 @@ package mmc.ast;
 public enum Operator {
     //assign operators:
     ASSIGN,
-    PLUSASSIGN,
-    MINUSASSIGN,
-    MULTASSIGN,
-    DIVASSIGN,
-    MODASSIGN,
+    PLUSASSIGN, // +=
+    MINUSASSIGN, // -=
+    MULTASSIGN, // *=
+    DIVASSIGN, // /=
+    MODASSIGN, // %=
 
     //crement operators
-    INCPRE,
-    INCSUF,
-    DECPRE,
-    DECSUF,
+    INCPRE, // ++x;
+    INCSUF, // x++;
+    DECPRE, // --x;
+    DECSUF, // x--;
 
     //arithmetic operators:
     PLUS,
@@ -32,8 +32,8 @@ public enum Operator {
 
     //logical operators:
     NOT,
-    SINGLEAND,
-    SINGLEOR,
+    SINGLEAND, // &
+    SINGLEOR, // |
     AND,
     OR
 }

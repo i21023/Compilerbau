@@ -29,19 +29,7 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
-        Method method = new Method(BasicType.INT, "loop", new ArrayList<Parameter>(),
-                new Block(new ArrayList<IStatement>(Arrays.asList(
-                        new LocalVarDecl("x", BasicType.INT, new IntExpr(5)),
-                        new While(new Binary(Operator.LESS, new LocalOrFieldVar("x"), new IntExpr(0)),
-                                new Assign(new LocalOrFieldVar("x"), new Binary(Operator.MINUS, new LocalOrFieldVar("x"), new IntExpr(1)), null)
-                        ), new Return(BasicType.INT, new LocalOrFieldVar("x"))))), AccessModifier.PUBLIC, false);
 
-
-        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "f", AccessModifier.PUBLIC, new IntExpr(0), false))), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>());
-
-        Program prog = new Program(Arrays.asList(classDecl));
-        Program pr = generateTypedast(prog);
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
@@ -184,7 +172,7 @@ public class SemanticCheck implements SemanticVisitor {
         currentMethodReturnType = toCheck.getType();
         currentNullType = currentMethodReturnType; // Solange nicht in Assign oder MethodCall dieser Typ
         // gesetzt ist, ist dieser der Rückgabewert der Methode
-        var result = toCheck.statement.accept(this);
+        var result = toCheck.block.accept(this);
         valid = valid && result.isValid();
         currentScope.popScope(); //Stack runter nehmen
 
