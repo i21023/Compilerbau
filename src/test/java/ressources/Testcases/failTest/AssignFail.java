@@ -1,8 +1,8 @@
-package ressources.testcases.failTest;
+package ressources.Testcases.failTest;
 
 public class AssignFail {
-    public int foo(){
-        int x =1;
+    public int foo() {
+        int x = 1;
         //x= true;
         return x;
     }

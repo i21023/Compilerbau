@@ -395,4 +395,41 @@ public class AstTests {
         }
     }
 
+    @Test
+    @DisplayName("BooleanOperator")
+    public void BooleanOperatorTest() {
+        ArrayList<Field> Fields = new ArrayList<Field>(Arrays.asList(
+                new Field(BasicType.BOOL, "bool1", AccessModifier.PRIVATE, new BoolExpr(true), false),
+                new Field(BasicType.BOOL, "bool2", AccessModifier.PRIVATE, new BoolExpr(false), false)));
+        Block Method1Body = new Block(Arrays.asList(
+                new If(
+                        new Block(Arrays.asList(new Return(new BoolExpr(true)))), new Block(Arrays.asList(new Return(new BoolExpr(false)))),
+                        new Binary(Operator.SINGLEAND, new LocalOrFieldVar("bool1"), new LocalOrFieldVar("bool2")))));
+
+        Block Method2Body = new Block(Arrays.asList(
+                new If(
+                        new Block(Arrays.asList(new Return(new BoolExpr(true)))), new Block(Arrays.asList(new Return(new BoolExpr(false)))),
+                        new Binary(Operator.SINGLEOR, new LocalOrFieldVar("bool1"), new LocalOrFieldVar("bool2")))));
+
+
+        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "OpAnd", new ArrayList<Parameter>(), Method1Body);
+        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "OpOr", new ArrayList<Parameter>(), Method2Body);
+        ClassDecl classes = new ClassDecl("BooleanOperator", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/BooleanOperator.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+            //Fehler konnte nicht gefunden werden
+
+        }
+    }
+
 }
