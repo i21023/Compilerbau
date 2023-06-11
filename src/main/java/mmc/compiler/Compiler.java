@@ -48,19 +48,6 @@ public class Compiler implements ICompiler {
 
                 Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
-                /*Method method = new Method( BasicType.INT, "foo", new ArrayList<Parameter>(),
-                        new Block(new ArrayList<IStatement>(Arrays.asList(
-                                new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
-                                new MethodCall(new InstVar("out", new Class("java/lang/System", new ReferenceType("java/lang/System")), new ReferenceType("java/io/PrintStream"), true), "println", new ArrayList<>(Arrays.asList(new StringExpr("Hallo1234"))), BasicType.VOID),
-                                new Return( BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
-
-
-                ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                        new ArrayList<Constructor>());
-
-
-                Program prog = new Program(Arrays.asList(classDecl));*/
-
                 SemanticCheck tAst = new SemanticCheck();
                 Program tAstProgram = tAst.generateTypedast(program);
 
