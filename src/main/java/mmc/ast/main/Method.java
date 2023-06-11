@@ -19,7 +19,7 @@ public class Method implements Visitable {
     public List<Parameter> parameters;
     public IStatement statement;
     public AccessModifier accessModifier;
-    private Block block;
+    public Block block;
     public boolean isStatic;
 
     public Method(Type pType, String pName, List<Parameter> pParameters, Block pBlock, AccessModifier pAccessModifier, boolean pIsStatic) {

@@ -143,7 +143,7 @@ public class TastTests {
     public void WhileTest() {
         Block WhileBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
         While WhileStmt = new While(new BoolExpr(true), WhileBlock);
-        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), WhileStmt, AccessModifier.PUBLIC, false);
+        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(WhileStmt))), AccessModifier.PUBLIC, false);
         ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
@@ -159,7 +159,7 @@ public class TastTests {
         For ForStmt = new For(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
                 new Binary(Operator.LESSEQUAL, new LocalOrFieldVar("i"), new IntExpr(10)),
                 new Crement(null, new LocalOrFieldVar("i"), Operator.INCSUF), ForBlock);
-        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), ForStmt, AccessModifier.PUBLIC, false);
+        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(ForStmt))), AccessModifier.PUBLIC, false);
         ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
@@ -175,7 +175,7 @@ public class TastTests {
 
         Block IfBlock = new Block(Arrays.asList(new Return(new BoolExpr(true))));
         If Ifstm = new If(IfBlock, new Block(), new Binary(Operator.EQUAL, new IntExpr(3), new StringExpr("Hallo")));
-        Method method = new Method(BasicType.BOOL, "Fails", new ArrayList<Parameter>(), Ifstm, AccessModifier.PUBLIC, false);
+        Method method = new Method(BasicType.BOOL, "Fails", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(Ifstm))), AccessModifier.PUBLIC, false);
         ClassDecl classDecl = new ClassDecl("FailTestIf", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
@@ -195,7 +195,7 @@ public class TastTests {
         boolean HasFailed = false;
         Block WhileBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
         While WhileStmt = new While(new Binary(Operator.EQUAL, new IntExpr(5), new BoolExpr(false)), WhileBlock);
-        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), WhileStmt, AccessModifier.PUBLIC, false);
+        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(WhileStmt))), AccessModifier.PUBLIC, false);
         ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
 
         Program prog = new Program(Arrays.asList(classDecl));
