@@ -167,13 +167,13 @@ public class AstTests {
                 new Parameter(BasicType.INT, "b")));
         Block MethodBody = new Block(Arrays.asList(new LocalVarDecl("c", BasicType.INT, new IntExpr(0)),
                 new If(new Block(Arrays.asList(new Return(new IntExpr(0))))
-                        , new Block()
+                        , null
                         , new Binary(Operator.OR,
                         new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new IntExpr(0)),
                         new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0)))),
                 new While(new Binary(Operator.NOTEQUAL, new LocalOrFieldVar("b"), new IntExpr(1)),
-                        new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), Operator.PLUSASSIGN, new LocalOrFieldVar("a"), null),
-                                new Crement(null, new LocalOrFieldVar("b"), Operator.DECSUF)))),
+                        new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")), null),
+                                new Crement(BasicType.INT, new LocalOrFieldVar("b"), Operator.DECSUF)))),
                 new Return(new LocalOrFieldVar("c"))));
         ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "mult", MethodParam, MethodBody)));
         ClassDecl classes = new ClassDecl("ClassWhile", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
