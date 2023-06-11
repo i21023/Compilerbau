@@ -12,6 +12,7 @@ import mmc.ast.main.Parameter;
 import mmc.ast.main.Program;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
+import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statements.*;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
@@ -309,6 +310,89 @@ public class AstTests {
 
         }
 
+    }
+
+    @Test
+    @DisplayName("ClassIFLocalVar")
+    public void ClassWithIfLocalVarTest() {
+
+        Block MethodBody = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(3)),
+                new LocalVarDecl("b", BasicType.INT, new IntExpr(3)),
+                new If(new Block(Arrays.asList(new Return(new BoolExpr(true))))
+                        , new Block(Arrays.asList(new Return(new BoolExpr(false))))
+                        , new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
+        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "isEqual", new ArrayList<Parameter>(), MethodBody)));
+        ClassDecl classes = new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassIfLokalVar.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Test
+    @DisplayName("MethodCallTest")
+    public void MethodCallTest() {
+
+        Block Method1Body = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(1)), new Return(new LocalOrFieldVar("a"))));
+        Block Method2Body = new Block(Arrays.asList(new Return(new Binary(Operator.PLUS, new LocalOrFieldVar("b"), new MethodCall(new This(), "getA", new ArrayList<>())))));
+
+        Method method1 = new Method(AccessModifier.PRIVATE, BasicType.INT, "getA", new ArrayList<Parameter>(), Method1Body);
+        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "addConstant", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "b"))), Method2Body);
+        ClassDecl classes = new ClassDecl("MethodCall", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/MethodCall.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Test
+    @DisplayName("Rekursion")
+    public void RekursionTest() {
+        ArrayList<Parameter> params = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+        Block Method1Body = new Block(Arrays.asList(
+                new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))),
+                        null,
+                        new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
+                new Return(new MethodCall(new This(), "addRek", new ArrayList<IExpression>(Arrays.asList(
+                        new Crement(BasicType.INT, new LocalOrFieldVar("a"), Operator.INCSUF),
+                        new Crement(BasicType.INT, new LocalOrFieldVar("b"), Operator.DECSUF)))))));
+
+        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.INT, "addRek", params, Method1Body);
+        ClassDecl classes = new ClassDecl("Rekursion", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/Rekursion.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
     }
 
 }

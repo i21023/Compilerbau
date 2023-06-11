@@ -227,7 +227,7 @@ public class TastTests {
     }
 
     @Test
-    @DisplayName("ClassWithCommentsTest")
+    @DisplayName("ClassWithMultipleMethods")
     public void ClassWithMultipleMethods() {
         ArrayList<Method> methods = new ArrayList<Method>();
         Method method1 = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
@@ -253,9 +253,9 @@ public class TastTests {
 
             ArrayList<Method> methodsTast = new ArrayList<Method>();
             Method method1Tast = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
-            Method method2Tast = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))));
-            Method method3Tast = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))));
-            Method method4Tast = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))));
+            Method method2Tast = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.INT, new IntExpr(1))), BasicType.INT));
+            Method method3Tast = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(true))), BasicType.BOOL));
+            Method method4Tast = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.CHAR, new CharExpr('c'))), BasicType.CHAR));
             methodsTast.add(method1Tast);
             methodsTast.add(method2Tast);
             methodsTast.add(method3Tast);
