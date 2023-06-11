@@ -90,8 +90,7 @@ public class AstTests {
         ArrayList<Parameter> MethodParam = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b")));
         ClassDecl classDecl = new ClassDecl("ClassMethodParam", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
-                new Method(BasicType.VOID, "paramMethod", MethodParam, new Block(), AccessModifier.PUBLIC,
-                        false))), new ArrayList<Constructor>());
+                new Method(AccessModifier.PUBLIC, BasicType.VOID, "paramMethod", MethodParam, new Block()))), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classDecl));
 
         try {
@@ -199,10 +198,9 @@ public class AstTests {
     @DisplayName("Class with FieldVars and Method")
     public void FieldVarClassMutableTest() {
 
-        Method method = new Method(BasicType.VOID, "changeX", new ArrayList<Parameter>(),
-                new Block(new ArrayList<IStatement>(
-                        Arrays.asList(new Assign(new LocalOrFieldVar("x"),
-                                new IntExpr(30))))), AccessModifier.PUBLIC, false);
+        Method method = new Method(AccessModifier.PUBLIC, BasicType.VOID, "changeX", new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
+                Arrays.asList(new Assign(new LocalOrFieldVar("x"),
+                        new IntExpr(30))))));
 
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
