@@ -3,10 +3,7 @@ package mmc;
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.Operator;
-import mmc.ast.expressions.Binary;
-import mmc.ast.expressions.BoolExpr;
-import mmc.ast.expressions.IntExpr;
-import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.ast.expressions.*;
 import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Constructor;
 import mmc.ast.main.Field;
@@ -15,12 +12,7 @@ import mmc.ast.main.Parameter;
 import mmc.ast.main.Program;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
-import mmc.ast.statements.Block;
-import mmc.ast.statements.IStatement;
-import mmc.ast.statements.If;
-import mmc.ast.statements.LocalVarDecl;
-import mmc.ast.statements.Return;
-import mmc.ast.statements.While;
+import mmc.ast.statements.*;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
@@ -62,12 +54,35 @@ public class AstTests {
         //}
     }
 
+    /*@Test
+    @DisplayName("ClassWithCommentsTest")
+    public void ClassWithComments() {
+        ClassDecl classDecl = new ClassDecl("ClassComments", new ArrayList<Field>(),
+                new ArrayList<Method>(), new ArrayList<Constructor>());
+        ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
+        classDecls.add(classDecl);
+        Program prog = new Program(classDecls);
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassComments.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }*/
+
     @Test
     @DisplayName("ClassWithMethodTest")
     public void ClassWithMethodTest() {
         ClassDecl classDecl = new ClassDecl("ClassMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
-                new Method(BasicType.VOID, "testMethod", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC,
-                        false))), new ArrayList<Constructor>());
+                new Method(AccessModifier.PUBLIC, BasicType.VOID, "testMethod", new ArrayList<Parameter>(), new Block()
+                ))), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classDecl));
 
         try {
@@ -225,4 +240,75 @@ public class AstTests {
         }
 
     }
+
+    @Test
+    @DisplayName("ClassWithCommentsTest")
+    public void ClassWithMultipleMethods() {
+        ArrayList<Method> methods = new ArrayList<Method>();
+        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
+        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))));
+        Method method3 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))));
+        Method method4 = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))));
+        methods.add(method1);
+        methods.add(method2);
+        methods.add(method3);
+        methods.add(method4);
+
+        ClassDecl classDecl = new ClassDecl("ClassWithMultipleMethods", new ArrayList<Field>(),
+                methods, new ArrayList<Constructor>());
+        ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
+        classDecls.add(classDecl);
+        Program prog = new Program(classDecls);
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassWithMultipleMethods.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Test
+    @DisplayName("For-Loop Test")
+    public void ForLoopTest() {
+        Block MethodBody = new Block(new ArrayList<IStatement>(
+                Arrays.asList(new LocalVarDecl("c", BasicType.INT, new LocalOrFieldVar("a")),
+                        new For(new Block(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)))),
+                                new Binary(Operator.LESS, new LocalOrFieldVar("i"), new LocalOrFieldVar("b")),
+                                new Block(Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("i"), Operator.INCSUF))),
+                                new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")))))))));
+        ArrayList<Parameter> Parameters = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+
+        Method method = new Method(AccessModifier.PUBLIC, BasicType.VOID, "testFor", Parameters, MethodBody);
+
+
+        ClassDecl classDecl = new ClassDecl("ClassFor", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
+                "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        //Vergleich mit Parser muss hierhin
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassFor.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
 }

@@ -1,7 +1,7 @@
 package ressources.Testcases;
 
 public class ClassMethod {
-    public void testMethod()
-    {
+    public void testMethod() {
+        //hi
     }
 }
