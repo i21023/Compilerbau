@@ -56,8 +56,8 @@ public class MiniJavaParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'package'", "'class'", "'!='", "'<'", "'>'", "'<='", "'>='", "'|'", 
-			"'&'", "'||'", "'&&'", "'+'", "'-'", "'*'", "'/'", "'++'", "'--'", "'+='", 
+			null, "'package'", "'class'", "'|'", "'&'", "'||'", "'&&'", "'!='", "'<'", 
+			"'>'", "'<='", "'>='", "'+'", "'-'", "'*'", "'/'", "'++'", "'--'", "'+='", 
 			"'-='", "'*='", "'/='", "'%='", "'int'", "'boolean'", "'char'", "'String[] args'", 
 			null, "'static'", "'void'", "'new'", "'this'", "'{'", "'}'", "'('", "')'", 
 			"';'", "','", "'=='", "'='", "'.'", "'!'", "'if'", "'else'", "'while'", 
