@@ -10,9 +10,9 @@ import mmc.parser.antlr.MiniJavaParser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassDeclAdapter {
+public class PublicClassDeclAdapter {
 
-    public static ClassDecl adapt(MiniJavaParser.Class_declContext classdeclContext) {
+    public static ClassDecl adapt(MiniJavaParser.Public_class_declContext classdeclContext) {
 
         List<Constructor> constructorDecls = new ArrayList<>();
         List<Method> methodDecls = new ArrayList<>();
@@ -25,7 +25,7 @@ public class ClassDeclAdapter {
         classdeclContext.method_decl().forEach(
                 methodDecl -> methodDecls.add(MethodDeclAdapter.adapt(methodDecl)));
 
-        AccessModifier accessModifier = AccessModifier.PACKAGE_PRIVATE;
+        AccessModifier accessModifier = AccessModifier.PUBLIC;
 
         return new ClassDecl(classdeclContext.ID().getText(), fieldDecls, methodDecls, constructorDecls, accessModifier);
     }

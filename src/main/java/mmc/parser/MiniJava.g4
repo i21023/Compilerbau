@@ -1,12 +1,14 @@
 grammar MiniJava;
 
 //Declarations
-program: ('package' ID ('.' ID )* SEMICOLON)* class_decl*;
+program: ('package' ID ('.' ID )* SEMICOLON)? public_class_decl;
 //Class
-class_decl: ACCES_MOD? 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
+public_class_decl: 'public class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE class_decl* | class_decl+;
+class_decl: 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
 ///Class objects
 const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
-method_decl: ACCES_MOD? STATIC? method_type ID LEFT_BRACKET (parameter_list? | main?) RIGHT_BRACKET statement_block;
+method_decl: main_method_decl | ACCES_MOD? STATIC? method_type ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
+main_method_decl: 'public static void main(String[] args)' statement_block;
 field_decl: ACCES_MOD? STATIC? type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)* SEMICOLON;
 //example int a = 5, b = 6, c;
 
@@ -79,7 +81,6 @@ STATIC: 'static';
 VOID: 'void';
 NEW: 'new';
 THIS: 'this';
-main: 'String[] args';
 
 //signs
 LEFT_BRACE: '{';

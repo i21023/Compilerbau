@@ -1,42 +1,45 @@
 package mmc.ast.main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mmc.Visitable;
 import mmc.ast.AccessModifier;
-import mmc.ast.Type;
 import mmc.codegen.visitors.IClassCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+
+import java.util.List;
 
 public class ClassDecl implements Visitable {
     public String name;
     public List<Field> fields;
     public List<Method> methods;
     public List<Constructor> constructors;
+    public AccessModifier accessModifier;
 
-    public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors)
-    {
-        name=pName;
-        fields=pFiedls;
-        methods=pMethods;
-        constructors=pConstructors;
+    public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier) {
+        name = pName;
+        fields = pFiedls;
+        methods = pMethods;
+        constructors = pConstructors;
+        accessModifier = pAccessModifier;
+    }
+
+    public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors) {
+        name = pName;
+        fields = pFiedls;
+        methods = pMethods;
+        constructors = pConstructors;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if(this==o)return true;
-        if(o==null||getClass()!=o.getClass())return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ClassDecl Class = (ClassDecl) o;
-        return name.equals(Class.name)&&fields.equals(Class.fields)&&methods.equals(Class.methods)&&constructors.equals(Class.constructors);
+        return name.equals(Class.name) && fields.equals(Class.fields) && methods.equals(Class.methods) && constructors.equals(Class.constructors);
     }
 
 
- @Override
+    @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
         return visitor.typeCheck(this);
     }

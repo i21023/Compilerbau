@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MethodCallStatementAdapter {
+
     public static MethodCall adapt(MiniJavaParser.Method_call_statementContext methodCallStatement) {
 
         IExpression methodOwnerPrefix = new This();
