@@ -105,7 +105,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitCode();
 
         fields.forEach(field -> {
-            new Assign(new LocalOrFieldVar(field.name, field.type, field.isStatic), field.expression, null).accept(this);
+            new Assign(new LocalOrFieldVar(field.name, field.type, field.isStatic), field.expression, field.type).accept(this);
         });
 
         methodVisitor.visitInsn(Opcodes.RETURN);
@@ -567,7 +567,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                         else
                             methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
                     } else if (fieldVars.containsKey(leftExpr.name)) {
-                        if (!leftExpr.isStatic) {
                             if (!leftExpr.isStatic) {
                                 methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
 
@@ -596,7 +595,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     }
                     //TODO: Instvar
                 }
-            }
+
                 case PLUSASSIGN -> {
                     new Assign(assign.leftExpr, new Binary(Operator.PLUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
                 }

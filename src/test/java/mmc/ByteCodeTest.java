@@ -13,6 +13,7 @@ import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -411,6 +412,17 @@ public class ByteCodeTest {
 
 
                 Program prog = new Program(Arrays.asList(classDecl));
+    }
+
+    @Test
+    public void initStaticReferenceFieldVar(){
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(
+                Arrays.asList(new Field(new ReferenceType("java/lang/String"), "a", AccessModifier.PUBLIC, new StringExpr("Test"), false))
+        ), new ArrayList<Method>(),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(Arrays.asList(classDecl));
     }
 
 }
