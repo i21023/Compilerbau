@@ -11,6 +11,8 @@ import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.compiler.ISyntaxTreeGenerator;
+import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +44,9 @@ public class TastTests {
         ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
         classDecls.add(classDecl);
         Program testTast = new Program(classDecls);
+        Program testTast2 = new Program(classDecls);
         Program tast = generateTypedast(testTast);
+        assertEquals(testTast2, tast);
 
     }
 
@@ -58,18 +62,18 @@ public class TastTests {
         Program prog = new Program(Testclass);
 
         Program tast = generateTypedast(prog);
-        Type typ = tast.classes.get(0).methods.get(0).type;
-        assertEquals(BasicType.BOOL, typ);
+
+        assertEquals(prog, tast);
     }
 
     @Test
     @DisplayName("Class with FieldVars and Method")
     public void FieldVarClassMutableTest() {
 
-        Method method = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(),
-                new Block(new ArrayList<IStatement>(
-                        Arrays.asList(new LocalVarDecl("y",
-                                BasicType.INT, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
+        Method method = new Method(AccessModifier.PUBLIC, BasicType.INT, "getY",
+                new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
+                Arrays.asList(new LocalVarDecl("y",
+                        BasicType.INT, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))));
 
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
@@ -77,9 +81,18 @@ public class TastTests {
 
         Program prog = new Program(Arrays.asList(classDecl));
 
+        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "getY",
+                new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
+                Arrays.asList(new LocalVarDecl("y",
+                        BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y"))))));
+
+
+        ClassDecl classDecl2 = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method2)),
+                new ArrayList<Constructor>());
+
         Program tast = generateTypedast(prog);
-        Type typ = tast.classes.get(0).methods.get(0).type;
-        assertEquals(BasicType.INT, typ);
+        Program testTast = new Program(Arrays.asList(classDecl2));
+        assertEquals(testTast, tast);
 
     }
 
@@ -94,7 +107,7 @@ public class TastTests {
 
         Program tast = generateTypedast(prog);
 
-        assertEquals(BasicType.INT, tast.classes.get(0).fields.get(0).type);
+        assertEquals(prog, tast);
     }
 
     @Test
@@ -113,7 +126,7 @@ public class TastTests {
 
         Program tast = generateTypedast(prog);
 
-        assertEquals(BasicType.INT, tast.classes.get(0).methods.get(0).type);
+        assertEquals(prog, tast);
     }
 
     @Test
@@ -135,7 +148,7 @@ public class TastTests {
 
         Program tast = generateTypedast(prog);
 
-        assertEquals(BasicType.INT, tast.classes.get(0).methods.get(0).type);
+        assertEquals(prog, tast);
     }
 
     @Test
@@ -149,6 +162,7 @@ public class TastTests {
         Program prog = new Program(Arrays.asList(classDecl));
 
         Program tast = generateTypedast(prog);
+        assertEquals(prog, tast);
 
     }
 
@@ -165,6 +179,8 @@ public class TastTests {
         Program prog = new Program(Arrays.asList(classDecl));
 
         Program tast = generateTypedast(prog);
+        assertEquals(prog, tast);
+
 
     }
 
@@ -202,10 +218,101 @@ public class TastTests {
 
         try {
             Program tast = generateTypedast(prog);
+            assertEquals(prog, tast);
         } catch (Exception e) {
             HasFailed = true;
         }
         assertEquals(true, HasFailed);
+
+    }
+
+    @Test
+    @DisplayName("ClassWithCommentsTest")
+    public void ClassWithMultipleMethods() {
+        ArrayList<Method> methods = new ArrayList<Method>();
+        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
+        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))));
+        Method method3 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))));
+        Method method4 = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))));
+        methods.add(method1);
+        methods.add(method2);
+        methods.add(method3);
+        methods.add(method4);
+
+        ClassDecl classDecl = new ClassDecl("ClassWithMultipleMethods", new ArrayList<Field>(),
+                methods, new ArrayList<Constructor>());
+        ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
+        classDecls.add(classDecl);
+        Program prog = new Program(classDecls);
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassWithMultipleMethods.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = generateTypedast(prog);
+
+            ArrayList<Method> methodsTast = new ArrayList<Method>();
+            Method method1Tast = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
+            Method method2Tast = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))));
+            Method method3Tast = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))));
+            Method method4Tast = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))));
+            methodsTast.add(method1Tast);
+            methodsTast.add(method2Tast);
+            methodsTast.add(method3Tast);
+            methodsTast.add(method4Tast);
+
+            ClassDecl classDeclTast = new ClassDecl("ClassWithMultipleMethods", new ArrayList<Field>(),
+                    methodsTast, new ArrayList<Constructor>());
+            ArrayList<ClassDecl> classDeclsTast = new ArrayList<ClassDecl>();
+            classDeclsTast.add(classDeclTast);
+            Program testTast = new Program(classDeclsTast);
+
+
+            assertEquals(testTast, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    //Tests mit Parser
+    @Test
+    @DisplayName("ParserWithMultipleMethods")
+    public void ParserWithMultipleMethods() {
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassWithMultipleMethods.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+            Program prog = generateTypedast(program);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    @Test
+    @DisplayName("ParserWithMultipleMethods")
+    public void ParserFieldVars() {
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/FieldVarClassMutable.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+            Program prog = generateTypedast(program);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
 
     }
 
