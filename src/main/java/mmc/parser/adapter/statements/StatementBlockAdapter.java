@@ -17,7 +17,9 @@ public class StatementBlockAdapter {
                 if (statement.local_var_decl() != null) {
                     statementList.addAll(((Block) StatementAdapter.adapt(statement)).statements);
                 }
-                statementList.add(StatementAdapter.adapt(statement));
+                else {
+                    statementList.add(StatementAdapter.adapt(statement));
+                }
             });
         }
 
