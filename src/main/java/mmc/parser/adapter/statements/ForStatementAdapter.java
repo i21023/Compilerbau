@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ForStatementAdapter {
-
+    //ToDo: Parser: Habe nochmal was im Parser gefunden ForLoopTest AstTests Zeile 279 da wird in dem For aus ClassFor das i++ in UpdateStatement als Cremet(LocalOrFieldVar("i"),DECSUF,INT) geparsed aber es sollte ja ein INCSUF sein oder?
     public static For adapt(MiniJavaParser.For_statementContext forStatement) {
 
         List<IStatement> initStatements = new ArrayList<>();

@@ -20,7 +20,7 @@ method_type: VOID | type;
 statement_block: LEFT_BRACE statement* RIGHT_BRACE; //Block
 statement: statement_block | local_var_decl SEMICOLON | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
 local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a = 3; a = b; a = a + b; a = ( a - b )
-//ToDo: Keine Deklarationen bei If, For oder While ohne Block
+//ToDo: Parser: Keine Deklarationen bei If, For oder While ohne Block
 if_else_statement: IF LEFT_BRACKET logical_expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement; // example else { statement }
 while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
@@ -44,11 +44,11 @@ crement_statement: (pre_cre_op (ID | inst_var )) | ((ID | inst_var ) suf_cre_op)
 inst_var: (THIS DOT ID) | ((THIS DOT)? (ID DOT)+ ID); // example this.a
 
 //expression
-//ToDo: ggf. Mehrdeutigkeit bei INT-Werten auflösen?
+//ToDo: Parser: ggf. Mehrdeutigkeit bei INT-Werten auflösen?
 expr: basic_expr | binary_expr;
 basic_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr RIGHT_BRACKET | add_sub_op INT | literal;
 binary_expr: logical_expr | calculate_expr; //| string_concat_expr; //example a + b; 3 + 3 - a; "Countdown: " + a
-//ToDo: == etc. muss stärker binden als || etc.
+//ToDo: Parser: == etc. muss stärker binden als || etc.
 logical_expr: basic_expr logical_op expr;// (a +b ) == c; c == (a+b)
 calculate_expr: calculate_expr add_sub_op mul_div_expr | mul_div_expr;
 mul_div_expr: mul_div_expr mul_div_op value_calculate_expr | value_calculate_expr;
