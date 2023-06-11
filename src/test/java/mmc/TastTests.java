@@ -84,7 +84,7 @@ public class TastTests {
         Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "getY",
                 new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
                 Arrays.asList(new LocalVarDecl("y",
-                        BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y"))))));
+                        BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y", BasicType.INT)))), BasicType.INT));
 
 
         ClassDecl classDecl2 = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method2)),

@@ -15,6 +15,10 @@ public class Block implements IStatement {
     public Block(List<IStatement> statements) {
         this.statements = statements;
     }
+    public Block(List<IStatement> statements, Type pType) {
+        this.statements = statements;
+        type = pType;
+    }
 
     public Block() {
         statements = new ArrayList<>();
