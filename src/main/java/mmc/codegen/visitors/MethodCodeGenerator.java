@@ -27,8 +27,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     private final ClassWriter classWriter;
     private MethodVisitor methodVisitor;
     private String currentClassName;
-    private String lastCalledClassName;
-
     private Map<String, Type> fieldVars;
     private Stack<String> localVars;
     private boolean isStaticMethod;
@@ -237,11 +235,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitLabel(start);
 
         //condition
-        pushOnStack = true;
-        forStmt.condition.accept(this);
-        pushOnStack = false;
-
-        methodVisitor.visitJumpInsn(Opcodes.IFEQ, end); //if condition evaluates to false
+        if (forStmt.condition != null) {
+            pushOnStack = true;
+            forStmt.condition.accept(this);
+            pushOnStack = false;
+            methodVisitor.visitJumpInsn(Opcodes.IFEQ, end); //if condition evaluates to false
+        }
 
         forStmt.statementBlock.accept(this);
 
@@ -481,13 +480,13 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     @Override
     public void visit(InstVar instVar) {
         instVar.expression.accept(this);
-        lastCalledClassName = ((ReferenceType) instVar.expression.getType()).type;
+        String owner = ((ReferenceType) instVar.expression.getType()).type;
 
         if (!instVar.isStatic) {
-            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, lastCalledClassName, instVar.name,
+            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, owner, instVar.name,
                     GeneratorHelpFunctions.getDescriptor(null, instVar.type));
         } else {
-            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, lastCalledClassName, instVar.name,
+            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, owner, instVar.name,
                     GeneratorHelpFunctions.getDescriptor(null, instVar.type));
         }
     }
@@ -547,7 +546,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(This thisExpr) {
-        lastCalledClassName = currentClassName;
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
     }
 
@@ -596,7 +594,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                         }
 
                     }
-                } else{
+                } else {
 
                     InstVar leftExpr = (InstVar) assign.leftExpr;
 
@@ -710,114 +708,180 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     @Override
     public void visit(Crement crement) {
 
-        switch (crement.operator) {
+        int vartype = 0; // localvar
 
-            case INCPRE -> {
-                doCrement(crement, 1);
-                if (pushOnStack) {
-                    crement.expression.accept(this);
-                }
-
-            }
-            case INCSUF -> {
-                if (pushOnStack) {
-                    crement.expression.accept(this);
-                }
-                doCrement(crement, 1);
-            }
-            case DECPRE -> {
-                doCrement(crement, -1);
-                if (pushOnStack) {
-                    crement.expression.accept(this);
-                }
-            }
-            case DECSUF -> {
-                if (pushOnStack) {
-                    crement.expression.accept(this);
-                }
-                doCrement(crement, -1);
-            }
-            default -> {
-                throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
+        if (crement.expression instanceof LocalOrFieldVar l) {
+            if (!localVars.contains(l.name)) {
+                vartype = 1; //fieldvar
             }
         }
+        else {
+            vartype = 2; //instvar
+        }
+
+            switch (crement.operator) {
+
+                case INCPRE -> {
+                    switch(vartype){
+                        case 0 -> crementLocalVar(crement, true, true);
+                        case 1 -> crementFieldVar(crement, true, true);
+                        case 2 -> crementInstVar(crement, true, true);
+                    }
+                }
+                case INCSUF -> {
+                    switch(vartype){
+                        case 0 -> crementLocalVar(crement, true, false);
+                        case 1 -> crementFieldVar(crement, true, false);
+                        case 2 -> crementInstVar(crement, true, false);
+                    }
+                }
+                case DECPRE -> {
+                    switch(vartype){
+                        case 0 -> crementLocalVar(crement, false, true);
+                        case 1 -> crementFieldVar(crement, false, true);
+                        case 2 -> crementInstVar(crement, false, true);
+                    }
+                }
+                case DECSUF -> {
+                    switch(vartype){
+                        case 0 -> crementLocalVar(crement, false, false);
+                        case 1 -> crementFieldVar(crement, false, false);
+                        case 2 -> crementInstVar(crement, false, false);
+                    }
+                }
+                default -> throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
+            }
+        }
+
+    public void crementLocalVar(Crement crement, boolean amount, boolean pre){
+
+        String name = ((LocalOrFieldVar) crement.expression).name;
+
+        if(!pre && pushOnStack){
+            crement.expression.accept(this);
+        }
+
+        if(amount)
+            methodVisitor.visitIincInsn(localVars.indexOf(name), 1);
+        else
+            methodVisitor.visitIincInsn(localVars.indexOf(name), -1);
+
+        if(pre && pushOnStack){
+            crement.expression.accept(this);
+        }
+
+    }
+
+    public void crementFieldVar(Crement crement, boolean amount, boolean pre) {
+
+        String name = ((LocalOrFieldVar) crement.expression).name;
+
+        if (!((LocalOrFieldVar) crement.expression).isStatic) {
+            methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+            methodVisitor.visitInsn(Opcodes.DUP);
+            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+
+            if (!pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP_X1);
+            }
+
+            if (amount) {
+                methodVisitor.visitInsn(Opcodes.ICONST_1);
+            } else {
+                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            }
+            methodVisitor.visitInsn(Opcodes.IADD);
+
+            if (pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP_X1);
+            }
+
+            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+        } else {
+            //methodVisitor.visitInsn(Opcodes.DUP);
+            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+
+            if (!pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP);
+            }
+
+            if (amount) {
+                methodVisitor.visitInsn(Opcodes.ICONST_1);
+            } else {
+                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            }
+            methodVisitor.visitInsn(Opcodes.IADD);
+
+            if (pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP);
+            }
+
+            methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+        }
+    }
+
+    public void crementInstVar(Crement crement, boolean amount, boolean pre) {
+
+        InstVar instVar = (InstVar) crement.expression;
+
+        ReferenceType owner = (ReferenceType) instVar.expression.getType();
+
+        if (((InstVar) crement.expression).isStatic) {
+            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+
+            if (!pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP);
+            }
+
+            if (amount) {
+                methodVisitor.visitInsn(Opcodes.ICONST_1);
+            } else {
+                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            }
+            methodVisitor.visitInsn(Opcodes.IADD);
+
+            if (pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP);
+            }
+
+            methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+
+        } else {
+
+            ((InstVar) crement.expression).expression.accept(this);
+            methodVisitor.visitInsn(Opcodes.DUP);
+
+            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, owner.type, instVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+
+            if (!pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP_X1);
+            }
+
+            if (amount) {
+                methodVisitor.visitInsn(Opcodes.ICONST_1);
+            } else {
+                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            }
+            methodVisitor.visitInsn(Opcodes.IADD);
+
+            if (pre && pushOnStack) {
+                methodVisitor.visitInsn(Opcodes.DUP_X1);
+            }
+
+            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, owner.type, instVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+        }
+
     }
 
     @Override
     public void visit(Class classz) {
         // do nothing
-    }
-
-    public void doCrement(Crement crement, int amount) {
-        if (crement.expression instanceof LocalOrFieldVar) {
-            String name = ((LocalOrFieldVar) crement.expression).name;
-
-            if (localVars.contains(name)) { //LocalVar
-                methodVisitor.visitIincInsn(localVars.indexOf(name), amount);
-            } else { //FieldVar
-                if (!((LocalOrFieldVar) crement.expression).isStatic) {
-                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-                    methodVisitor.visitInsn(Opcodes.DUP);
-                    methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, name,
-                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
-                    if (amount == 1) {
-                        methodVisitor.visitInsn(Opcodes.ICONST_1);
-                    } else {
-                        methodVisitor.visitInsn(Opcodes.ICONST_M1);
-                    }
-                    methodVisitor.visitInsn(Opcodes.IADD);
-                    methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, name,
-                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
-                } else {
-                    //methodVisitor.visitInsn(Opcodes.DUP);
-                    methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, name,
-                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
-                    if (amount == 1) {
-                        methodVisitor.visitInsn(Opcodes.ICONST_1);
-                    } else {
-                        methodVisitor.visitInsn(Opcodes.ICONST_M1);
-                    }
-                    methodVisitor.visitInsn(Opcodes.IADD);
-                    methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, name,
-                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
-                }
-
-            }
-        } else { //InstVar
-
-            InstVar instVar = (InstVar) crement.expression;
-
-            ReferenceType owner = (ReferenceType) instVar.expression.getType();
-
-            if (((InstVar) crement.expression).isStatic) {
-                methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
-                if (amount == 1) {
-                    methodVisitor.visitInsn(Opcodes.ICONST_1);
-                } else {
-                    methodVisitor.visitInsn(Opcodes.ICONST_M1);
-                }
-                methodVisitor.visitInsn(Opcodes.IADD);
-                methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
-            } else {
-                ((InstVar) crement.expression).expression.accept(this);
-                methodVisitor.visitInsn(Opcodes.DUP);
-
-                methodVisitor.visitFieldInsn(Opcodes.GETFIELD, owner.type, instVar.name,
-                        GeneratorHelpFunctions.getDescriptor(null, instVar.type));
-
-                if (amount == 1) {
-                    methodVisitor.visitInsn(Opcodes.ICONST_1);
-                } else {
-                    methodVisitor.visitInsn(Opcodes.ICONST_M1);
-                }
-                methodVisitor.visitInsn(Opcodes.IADD);
-
-                methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, owner.type, instVar.name,
-                        GeneratorHelpFunctions.getDescriptor(null, instVar.type));
-            }
-        }
-
-
     }
 
 }
