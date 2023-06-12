@@ -24,6 +24,7 @@ local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a 
 if_else_statement: IF LEFT_BRACKET logical_expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement; // example else { statement }
 while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
+//ToDo: Parser: For überarbeiten bzgl der drei Blöcke: 1. Block: alle Statements statementexpressions
 for_statement: FOR LEFT_BRACKET for_init? SEMICOLON logical_expr? SEMICOLON for_statement_expr? RIGHT_BRACKET statement;
 for_init: for_statement_expr | local_var_decl;
 for_statement_expr: statement_expr (COMMA statement_expr)*;
