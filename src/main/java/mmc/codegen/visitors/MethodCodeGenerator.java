@@ -312,7 +312,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     Label notEQ = new Label();
                     Label end = new Label();
                     //compare values on the Stack
-                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+                    if(binary.expression1.getType() instanceof BasicType){
+                        methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+                    }
+                    else{
+                        methodVisitor.visitJumpInsn(Opcodes.IF_ACMPNE, notEQ);
+                    }
 
                     //if equal evaluates true
                     methodVisitor.visitInsn(Opcodes.ICONST_1);
@@ -328,8 +333,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     Label notEQ = new Label();
                     Label end = new Label();
                     //compare values on the Stack
-                    methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
-
+                    if(binary.expression1.getType() instanceof BasicType) {
+                        methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+                    }
+                    else{
+                        methodVisitor.visitJumpInsn(Opcodes.IF_ACMPNE, notEQ);
+                    }
                     //if equal evaluates true
                     methodVisitor.visitInsn(Opcodes.ICONST_0);
                     methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
