@@ -1,5 +1,6 @@
 package mmc.ast.statementexpression;
 
+import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.codegen.visitors.IMethodCodeVisitor;
@@ -12,17 +13,18 @@ import java.util.List;
 public class New implements IStatementExpression {
     public List<IExpression> arguments;
     public Type type;
-    private String name;
+    public String name;
 
     public New(String pName, List<IExpression> pExpressions) {
         arguments = pExpressions;
         name = pName;
+        type = new ReferenceType(pName);
     }
 
-    public New(List<IExpression> pExpressions, Type pType) {
+    /*public New(List<IExpression> pExpressions, Type pType) {
         type = pType;
         arguments = pExpressions;
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

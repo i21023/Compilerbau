@@ -18,6 +18,10 @@ public class Crement implements IStatementExpression {
         operator = pOperator;
         type = pType;
     }
+    public Crement(IExpression expression, Operator operator) {
+        this.expression = expression;
+        this.operator = operator;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -35,7 +39,7 @@ public class Crement implements IStatementExpression {
 
     @Override
     public TypeCheckResult accept(SemanticVisitor visitor) {
-        return null;
+        return visitor.typeCheck(this);
     }
 
     @Override

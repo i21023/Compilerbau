@@ -29,19 +29,7 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
-        Method method = new Method(BasicType.INT, "loop", new ArrayList<Parameter>(),
-                new Block(new ArrayList<IStatement>(Arrays.asList(
-                        new LocalVarDecl("x", BasicType.INT, new IntExpr(5)),
-                        new While(new Binary(Operator.LESS, new LocalOrFieldVar("x"), new IntExpr(0)),
-                                new Assign(new LocalOrFieldVar("x"), new Binary(Operator.MINUS, new LocalOrFieldVar("x"), new IntExpr(1)), null)
-                        ), new Return(BasicType.INT, new LocalOrFieldVar("x"))))), AccessModifier.PUBLIC, false);
 
-
-        ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "f", AccessModifier.PUBLIC, new IntExpr(0), false))), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>());
-
-        Program prog = new Program(Arrays.asList(classDecl));
-        Program pr = generateTypedast(prog);
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
@@ -135,10 +123,18 @@ public class SemanticCheck implements SemanticVisitor {
             typeExist = programmClasses.containsKey(fieldType.type);
         }
 
+        //Für Zuweisungen, schauen ob Zuweisung zum DatenTyp passt
+        if(toCheck.expression != null && toCheck.type instanceof BasicType){
+            var expressionResult = toCheck.expression.accept(this);
+            if(toCheck.type != expressionResult.getType()){
+                errors.add(new Exception("Field expected " + toCheck.type + " but got " + expressionResult.getType()));
+                valid = false;
+            }
+
+        }
         valid = valid && typeExist;
         return new TypeCheckResult(valid, toCheck.getType());
     }
-
 
     @Override
     public TypeCheckResult typeCheck(Constructor toCheck) {
@@ -225,6 +221,19 @@ public class SemanticCheck implements SemanticVisitor {
         currentNullType = leftExpr.getType();
         var rightExpr = rExpr.accept(this);
 
+        //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
+        if(toCheck.operator != Operator.ASSIGN){
+            if(leftExpr.getType() != INT && rightExpr.getType() != INT){
+                errors.add(new Exception("Mismatch types in Assign-Statement: Both Types net to be Integer and not"
+                        + leftExpr.getType() + " and "
+                        + rightExpr.getType()));
+                valid = false;
+            }
+        }
+        else{
+            toCheck.type = lExpr.getType();
+        }
+
         //int a = "Hello";
         if (!Objects.equals(lExpr.getType(), rExpr.getType())) {
             errors.add(new Exception("Mismatch types in Assign-Statement: cannot convert from "
@@ -237,7 +246,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         valid = valid && leftExpr.isValid() && rightExpr.isValid();
         currentNullType = null;
-        return new TypeCheckResult(valid, currentNullType); //Hat keine Typ deswegen null zurück geben
+        return new TypeCheckResult(valid, null); //Hat keine Typ deswegen null zurück geben
     }
 
     @Override
@@ -267,9 +276,9 @@ public class SemanticCheck implements SemanticVisitor {
         valid = valid && isConditionBool.isValid();
 
         //Schauen ob das in der While Schleife ein Bool ist
-        boolean isEqual = Objects.equals(BOOL, isConditionBool.getType());
+        boolean isBool = Objects.equals(BOOL, isConditionBool.getType());
 
-        if (!isEqual) { //Wenn kein bool enthalten ist
+        if (!isBool) { //Wenn kein bool enthalten ist
             errors.add(
                     new Exception(
                             "While Condition expected " + BOOL + " but got " + isConditionBool.getType()));
@@ -279,7 +288,7 @@ public class SemanticCheck implements SemanticVisitor {
         //Check Block/Statement
         var statementResult = toCheck.statement.accept(this);
         toCheck.type = statementResult.getType();
-        valid = valid && isConditionBool.isValid() && statementResult.isValid() && isEqual;
+        valid = valid && isConditionBool.isValid() && statementResult.isValid() && isBool;
         return new TypeCheckResult(valid, statementResult.getType());
     }
 
@@ -288,15 +297,26 @@ public class SemanticCheck implements SemanticVisitor {
         var valid = true;
 
         currentScope.pushScope();
-        var initResult = toCheck.initStatement.accept(this);
-        var conditionResult = toCheck.condition.accept(this);
-        var updateResult = toCheck.updateStatement.accept(this);
 
-        valid = valid && initResult.isValid() && conditionResult.isValid() && updateResult.isValid();
+        //alle Statements durchgehen
+        for(var initStatement : toCheck.initStatements){
+            var initResult = initStatement.accept(this);
+            valid = valid && initResult.isValid();
+        }
+
+        for(var updateStatements : toCheck.updateStatements){
+            var updateResult = updateStatements.accept(this);
+            valid = valid && updateResult.isValid();
+        }
+
+        var conditionResult = toCheck.condition.accept(this);
+        valid = valid && conditionResult.isValid();
 
         var bodyResult = toCheck.statementBlock.accept(this);
         currentScope.popScope();
+
         valid = valid && bodyResult.isValid();
+
         toCheck.type = bodyResult.getType();
         return new TypeCheckResult(valid, bodyResult.getType());
     }
@@ -362,12 +382,13 @@ public class SemanticCheck implements SemanticVisitor {
         valid = valid && ifResult.isValid();
 
         // Condition überprüfen
-        valid = valid && toCheck.expression.accept(this).isValid();
+        var expressionResult = toCheck.expression.accept(this);
+        valid = valid && expressionResult.isValid();
         boolean isBool = Objects.equals(BasicType.BOOL,toCheck.expression.getType());
         if (!isBool) {
             errors.add(
                     new Exception(
-                            "If Condition expected " + BasicType.BOOL + " but got " + toCheck.expression.getType()));
+                            "If Condition expected " + BasicType.BOOL + " but got " + expressionResult.getType()));
             valid = false;
         }
 
@@ -640,89 +661,99 @@ public class SemanticCheck implements SemanticVisitor {
     }
 
     @Override
-    public TypeCheckResult typeCheck(Binary binary) { //einfaches und und oder einfügen hier
+    public TypeCheckResult typeCheck(Binary toCheck) { //einfaches und und oder einfügen hier
 
         var valid = true;
 
-        var lResult = binary.expression1.accept(this);
+        var lResult = toCheck.expression1.accept(this);
         var oldNullType = currentNullType;
-        currentNullType = binary.expression1.getType();
-        var rResult = binary.expression2.accept(this);
+        currentNullType = toCheck.expression1.getType();
+        var rResult = toCheck.expression2.accept(this);
         currentNullType = oldNullType;
 
-        final Type lType = binary.expression1.getType();
-        final Type rType = binary.expression2.getType();
+        Type lType = toCheck.expression1.getType();
+        Type rType = toCheck.expression2.getType();
 
         var errorToThrow = new Exception(
-                "The Operator: " + binary.operator + " is undefined for the argument types: "
+                "The Operator: " + toCheck.operator + " is undefined for the argument types: "
                         + lType + ", " + rType);
 
         // Following vars are there to determine the type of the binary expression
-        Operator operator = binary.operator;
+        Operator operator = toCheck.operator;
 
-        boolean isCompareOperator = (binary.operator == Operator.EQUAL
+        boolean isCompareOperator = (toCheck.operator == Operator.EQUAL
                 || operator == Operator.NOTEQUAL || operator == Operator.LESS
                 || operator == Operator.LESSEQUAL || operator == Operator.GREATER
                 || operator == Operator.GREATEREQUAL);
 
         boolean isLogicalOperator = (operator == Operator.AND || operator == Operator.OR);
+        boolean isBinaryOperator = (operator == Operator.SINGLEAND || operator == Operator.SINGLEOR);
         boolean isArithmeticOperator = (operator == Operator.PLUS || operator == Operator.MINUS
                 || operator == Operator.MULT || operator == Operator.DIV || operator == Operator.MOD);
 
         boolean isSame = lType.equals(rType);
         boolean lIsReference = lType instanceof ReferenceType;
         boolean oneIsNull = lResult.getType() == null ^ rResult.getType() == null;
-        // Unser Compiler kann ja nur BaseType-Operatoren verarbeiten und auch nur 2
-        // gleiche Typen
+
+        //Nur zwei gleiche Typen vergleichen
         if (isSame && !lIsReference) { // Wenn 2 gleiche BaseTypes miteinander verglichen werden
             var lBaseType = (BasicType) lType;
             switch (lBaseType) {
                 case BOOL -> {
-                    if (!isLogicalOperator && !isCompareOperator) {
+                    if (!isLogicalOperator && !isCompareOperator && !isBinaryOperator) {
                         errors.add(errorToThrow);
                         valid = false;
                     } else {
-                        binary.type = BOOL;
+                        toCheck.type = BOOL;
                     }
                 }
                 case INT -> {
-                    if (!isArithmeticOperator && !isCompareOperator) {
+                    if (!isArithmeticOperator && !isCompareOperator && !isBinaryOperator) {
                         errors.add(errorToThrow);
                         valid = false;
                     } else {
-                        binary.type = (isArithmeticOperator ? INT : BOOL);
+                        if(isArithmeticOperator){
+                            //variable = (condition ? valueIfTrue : valueIfFalse);
+                            toCheck.type = (isArithmeticOperator ? INT : BOOL);
+                        }else if(isBinaryOperator){
+                            toCheck.type = INT;
+                        }
+
                     }
                 }
                 default -> {
                     errors.add(errorToThrow);
-                    binary.type = VOID;
+                    toCheck.type = VOID;
                     valid = false;
                 }
             }
         } else if ((isSame || oneIsNull) && lIsReference) {// Wenn 2 Objekte miteinander verglichen werden
             if (operator == Operator.EQUAL || operator == Operator.NOTEQUAL) {
-                binary.type = BOOL;
+                toCheck.type = BOOL;
             } else {
                 errors.add(errorToThrow);
                 valid = false;
             }
-        } else if (isCompareOperator && (Objects.equals(lType, CHAR)
+        }
+        // 1=='a'
+        else if (isCompareOperator && (Objects.equals(lType, CHAR)
                 && Objects.equals(rType, INT)
                 || Objects.equals(rType, CHAR)
-                && Objects.equals(lType, INT))) { // Wenn
-            // z.B.
-            // 1=='a'...
-            binary.type = BOOL;
+                && Objects.equals(lType, INT))) {
+            toCheck.type = BOOL;
         } else {
             errors.add(errorToThrow);
-            binary.type = VOID;
+            toCheck.type = VOID;
             valid = false;
         }
 
         valid = valid && lResult.isValid() && rResult.isValid();
 
-        return new TypeCheckResult(valid, binary.getType());
+        return new TypeCheckResult(valid, toCheck.getType());
+
+
     }
+
 
     @Override
     public TypeCheckResult typeCheck(IntExpr toCheck) {
