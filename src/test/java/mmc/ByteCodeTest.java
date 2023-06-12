@@ -226,7 +226,8 @@ public class ByteCodeTest {
         Method method = new Method(BasicType.INT, "foo", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(Arrays.asList(
                         new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
-                        new For(new LocalVarDecl("j", BasicType.INT, new IntExpr(0)), new Binary(Operator.LESS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(10)), new Assign(new LocalOrFieldVar("j", BasicType.INT), new Binary(Operator.PLUS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(1)), BasicType.INT),
+                        new For(new ArrayList<>(Arrays.asList(new LocalVarDecl("j", BasicType.INT, new IntExpr(0)))), new Binary(Operator.LESS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(10)),
+                                new ArrayList<>(Arrays.asList(new Assign(new LocalOrFieldVar("j", BasicType.INT), new Binary(Operator.PLUS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(1)), BasicType.INT))),
                                 new Block(new ArrayList<>(Arrays.asList(
                                         new Assign(new LocalOrFieldVar("i", BasicType.INT), new Binary(Operator.PLUS, new LocalOrFieldVar("i", BasicType.INT), new LocalOrFieldVar("j", BasicType.INT)), BasicType.INT)
                                 ))), null),
@@ -272,7 +273,7 @@ public class ByteCodeTest {
                         new LocalVarDecl("i", BasicType.INT),
                         new LocalVarDecl("kwd", BasicType.INT, new IntExpr(500)),
                         new Assign(new LocalOrFieldVar("i", BasicType.INT), new IntExpr(0), BasicType.INT),
-                        new For(new LocalVarDecl("j", BasicType.INT, new IntExpr(0)), new Binary(Operator.LESS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(10)), new Crement(BasicType.INT, new LocalOrFieldVar("j"), Operator.INCSUF),
+                        new For(new ArrayList<>(Arrays.asList(new LocalVarDecl("j", BasicType.INT, new IntExpr(0)))), new Binary(Operator.LESS, new LocalOrFieldVar("j", BasicType.INT), new IntExpr(10)), new ArrayList<>(Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("j"), Operator.INCSUF))),
                                 new Block(new ArrayList<>(Arrays.asList(
                                         new Assign(new LocalOrFieldVar("i", BasicType.INT), new Binary(Operator.PLUS, new LocalOrFieldVar("i", BasicType.INT), new LocalOrFieldVar("j", BasicType.INT)), BasicType.INT)
                                 ))), null),

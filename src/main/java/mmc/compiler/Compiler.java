@@ -53,32 +53,11 @@ public class Compiler implements ICompiler {
 
                 Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
-                Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                        new LocalVarDecl("p", new ReferenceType("Bar"), new New(new ArrayList<>(), new ReferenceType("Bar"))),
-                        new Assign(new InstVar("i", new Class("Bar", new ReferenceType("Bar")), BasicType.INT, true), new IntExpr(10), BasicType.INT),
-                        new MethodCall(
-                                new InstVar("out",
-                                        new Class("java/lang/System",
-                                                new ReferenceType("java/lang/System")),
-                                        new ReferenceType("java/io/PrintStream"), true), "println",
-                                new ArrayList<>(Arrays.asList(
-                                        new InstVar("i", new Class("Bar", new ReferenceType("Bar")), BasicType.INT, true))
-                ), BasicType.VOID),
-                        new MethodCall(new LocalOrFieldVar("p", new ReferenceType("Bar"), false), "foo", new ArrayList<>(), BasicType.VOID)
-                        ))));
-
-
-                ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                        new ArrayList<Constructor>());
-
-                program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
-
                 SemanticCheck tAst = new SemanticCheck();
-                //Program tAstProgram = tAst.generateTypedast(program);
+                Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
-                HashMap<String, byte[]> code = programVisitor.getBytecode(program);
-
+                HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
 
                 String finalOutDir = outDir;
                 code.forEach((x, y) -> {

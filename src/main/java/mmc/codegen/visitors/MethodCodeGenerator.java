@@ -232,10 +232,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
         //init statement
         //don't call block or else the declared variables will not be available in for body
-        if (forStmt.initStatement instanceof Block block) {
-            block.statements.forEach(statement -> statement.accept(this));
-        }
-        forStmt.initStatement.accept(this);
+        forStmt.initStatements.forEach(statement -> statement.accept(this));
 
         methodVisitor.visitLabel(start);
 
@@ -248,10 +245,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
         forStmt.statementBlock.accept(this);
 
-        if (forStmt.updateStatement instanceof Block block) {
-            block.statements.forEach(statement -> statement.accept(this));
-        }
-        forStmt.updateStatement.accept(this);
+        forStmt.updateStatements.forEach(statement -> statement.accept(this));
 
         methodVisitor.visitJumpInsn(Opcodes.GOTO, start);
 
