@@ -19,14 +19,14 @@ public class CrementStatementAdapter {
         }
 
         Operator operator;
-        if (crementStatement.pre_cre_op() != null){
-            if (crementStatement.pre_cre_op().getText() == "++"){
+        if (crementStatement.pre_cre_op() != null) {
+            if (crementStatement.pre_cre_op().getText().equals("++")) {
                 operator = Operator.INCPRE;
             } else {
                 operator = Operator.DECPRE;
             }
         } else {
-            if (crementStatement.suf_cre_op().getText() == "++"){
+            if (crementStatement.suf_cre_op().getText().equals("++")) {
                 operator = Operator.INCSUF;
             } else {
                 operator = Operator.DECSUF;

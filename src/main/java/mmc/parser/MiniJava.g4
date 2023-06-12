@@ -38,10 +38,10 @@ method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
 new_statement: NEW ID LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
 assign_statement: (inst_var | ID) assign_op expr; // example this.a = c + 3; x += 3;
-crement_statement: (pre_cre_op (ID | inst_var )) | ((ID | inst_var ) suf_cre_op); //example a++; ++a
+crement_statement: (pre_cre_op (ID | inst_var)) | ((ID | inst_var) suf_cre_op); //example a++; ++a
 
 //Instanciate variable
-inst_var: (THIS DOT ID) | ((THIS DOT)? (ID DOT)+ ID); // example this.a
+inst_var: ((THIS | new_statement) DOT ID) | (((THIS DOT) | (new_statement DOT))? (ID DOT)+ ID); // example this.a
 
 //expression
 //ToDo: Parser: ggf. Mehrdeutigkeit bei INT-Werten auflösen?
