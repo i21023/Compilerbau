@@ -1,4 +1,4 @@
-package ressources.testcases.failTest;
+package ressources.Testcases.failTest;
 
 public class WrongReturnType {
     public int foo(int a)

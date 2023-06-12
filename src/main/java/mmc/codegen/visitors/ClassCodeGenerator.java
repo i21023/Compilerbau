@@ -54,16 +54,16 @@ public class ClassCodeGenerator implements IClassCodeVisitor{
                 constructor.statement.statements.add(0, new Assign(new LocalOrFieldVar(field.name),
                         field.expression, null));
             });
-            constructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames));
+            constructor.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name));
         });
 
         //add static fieldVar initializations in class initialization method
         if(partitionedFieldList.get(true).size() > 0){
-            new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames).classConstructor(partitionedFieldList.get(true));
+            new MethodCodeGenerator(classWriter, fieldVars, classDecl.name).classConstructor(partitionedFieldList.get(true));
         }
 
         //Generate Method ByteCode
-        classDecl.methods.forEach(method -> method.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name, classNames)));
+        classDecl.methods.forEach(method -> method.accept(new MethodCodeGenerator(classWriter, fieldVars, classDecl.name)));
 
     }
 

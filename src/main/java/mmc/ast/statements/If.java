@@ -36,7 +36,13 @@ public class If implements IStatement {
         } else if (type.equals(oIf.type)) {
             typeIsEqual = true;
         }
-        return expression.equals(oIf.expression) && blockIf.equals(oIf.blockIf) && blockElse.equals(oIf.blockElse) && typeIsEqual;
+        boolean elseBlockIsEqual = false;
+        if (this.blockElse == null && oIf.blockElse == null) {
+            elseBlockIsEqual = true;
+        } else if (blockElse.equals(oIf.blockElse)) {
+            elseBlockIsEqual = true;
+        }
+        return expression.equals(oIf.expression) && blockIf.equals(oIf.blockIf) && elseBlockIsEqual && typeIsEqual;
     }
 
     @Override
