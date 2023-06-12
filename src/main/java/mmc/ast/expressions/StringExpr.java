@@ -8,7 +8,7 @@ import mmc.semantikcheck.TypeCheckResult;
 
 public class StringExpr implements IExpression {
 
-    public final String value;
+    public String value;
     private Type type;
 
     public StringExpr(String pString) {
