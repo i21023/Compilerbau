@@ -1,12 +1,17 @@
 package mmc.compiler;
 
+import mmc.Main;
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
+import mmc.ast.Operator;
 import mmc.ast.ReferenceType;
 import mmc.ast.expressions.*;
 import mmc.ast.expressions.Class;
 import mmc.ast.main.*;
+import mmc.ast.statementexpression.Assign;
+import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
+import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
 import mmc.semantikcheck.SemanticCheck;
@@ -53,7 +58,6 @@ public class Compiler implements ICompiler {
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
                 HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
-
 
                 String finalOutDir = outDir;
                 code.forEach((x, y) -> {

@@ -8,25 +8,27 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
+import java.util.List;
+
 public class For implements IStatement {
 
-    public IStatement initStatement;
+    public List<IStatement> initStatements;
     public IExpression condition;
-    public IStatement updateStatement;
+    public List<IStatementExpression> updateStatements;
     public Block statementBlock;
     public Type type;
 
-    public For(IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock) {
-        this.initStatement = initExpr;
+    public For(List<IStatement> initExpr, IExpression logicalCondition, List<IStatementExpression> updateExpr, Block statementBlock) {
+        this.initStatements = initExpr;
         this.condition = logicalCondition;
-        this.updateStatement = updateExpr;
+        this.updateStatements = updateExpr;
         this.statementBlock = statementBlock;
     }
 
-    public For(IStatement initExpr, IExpression logicalCondition, IStatement updateExpr, Block statementBlock, Type pType) {
-        this.initStatement = initExpr;
+    public For(List<IStatement> initExpr, IExpression logicalCondition, List<IStatementExpression> updateExpr, Block statementBlock, Type pType) {
+        this.initStatements = initExpr;
         this.condition = logicalCondition;
-        this.updateStatement = updateExpr;
+        this.updateStatements = updateExpr;
         this.statementBlock = statementBlock;
         this.type = pType;
     }
@@ -42,7 +44,7 @@ public class For implements IStatement {
         } else if (type.equals(oFor.type)) {
             typeIsEqual = true;
         }
-        return initStatement.equals(oFor.initStatement) && condition.equals(oFor.condition) && updateStatement.equals((oFor.updateStatement))
+        return initStatements.equals(oFor.initStatements) && condition.equals(oFor.condition) && updateStatements.equals((oFor.updateStatements))
                 && statementBlock.equals(oFor.statementBlock) && typeIsEqual;
     }
 

@@ -280,9 +280,9 @@ public class AstTests {
     public void ForLoopTest() {
         Block MethodBody = new Block(new ArrayList<IStatement>(
                 Arrays.asList(new LocalVarDecl("c", BasicType.INT, new LocalOrFieldVar("a")),
-                        new For(new Block(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)))),
+                        new For(new ArrayList<>(Arrays.asList(new Block(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)))))),
                                 new Binary(Operator.LESS, new LocalOrFieldVar("i"), new LocalOrFieldVar("b")),
-                                new Block(Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("i"), Operator.INCSUF))),
+                                new ArrayList(Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("i"), Operator.INCSUF))),
                                 new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")))))))));
         ArrayList<Parameter> Parameters = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
 

@@ -170,9 +170,9 @@ public class TastTests {
     @DisplayName("For-Test")
     public void ForTest() {
         Block ForBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
-        For ForStmt = new For(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)),
+        For ForStmt = new For(new ArrayList<>(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)))),
                 new Binary(Operator.LESSEQUAL, new LocalOrFieldVar("i"), new IntExpr(10)),
-                new Crement(null, new LocalOrFieldVar("i"), Operator.INCSUF), ForBlock);
+                new ArrayList<>(Arrays.asList(new Crement(null, new LocalOrFieldVar("i"), Operator.INCSUF))), ForBlock);
         Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(ForStmt))), AccessModifier.PUBLIC, false);
         ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
 
