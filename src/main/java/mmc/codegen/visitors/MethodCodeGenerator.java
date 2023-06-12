@@ -27,8 +27,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     private final ClassWriter classWriter;
     private MethodVisitor methodVisitor;
     private String currentClassName;
-    private String lastCalledClassName;
-
     private Map<String, Type> fieldVars;
     private Stack<String> localVars;
     private boolean isStaticMethod;
@@ -482,13 +480,13 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     @Override
     public void visit(InstVar instVar) {
         instVar.expression.accept(this);
-        lastCalledClassName = ((ReferenceType) instVar.expression.getType()).type;
+        String owner = ((ReferenceType) instVar.expression.getType()).type;
 
         if (!instVar.isStatic) {
-            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, lastCalledClassName, instVar.name,
+            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, owner, instVar.name,
                     GeneratorHelpFunctions.getDescriptor(null, instVar.type));
         } else {
-            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, lastCalledClassName, instVar.name,
+            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, owner, instVar.name,
                     GeneratorHelpFunctions.getDescriptor(null, instVar.type));
         }
     }
@@ -548,7 +546,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(This thisExpr) {
-        lastCalledClassName = currentClassName;
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
     }
 

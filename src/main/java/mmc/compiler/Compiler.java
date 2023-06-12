@@ -51,33 +51,13 @@ public class Compiler implements ICompiler {
                 InputStream inputStream = new FileInputStream(file);
                 ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
-                //Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
-
-                Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                        new LocalVarDecl("p", BasicType.INT, new Crement( BasicType.INT, new InstVar("i", new New(new ArrayList<>(), new ReferenceType("Bar")), BasicType.INT, false), Operator.INCPRE)),
-                        new Crement(BasicType.INT, new LocalOrFieldVar("p", BasicType.INT, false), Operator.DECPRE),
-                        new MethodCall(
-                                new InstVar("out",
-                                        new Class("java/lang/System",
-                                                new ReferenceType("java/lang/System")),
-                                        new ReferenceType("java/io/PrintStream"), true), "println",
-                                new ArrayList<>(Arrays.asList(
-                                        new LocalOrFieldVar("p", BasicType.INT, false))
-                                ), BasicType.VOID))
-
-                )));
-
-                ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                        new ArrayList<Constructor>());
-
-                Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
-
+                Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
                 SemanticCheck tAst = new SemanticCheck();
-                //Program tAstProgram = tAst.generateTypedast(program);
+                Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
-                HashMap<String, byte[]> code = programVisitor.getBytecode(program);
+                HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
 
                 String finalOutDir = outDir;
                 code.forEach((x, y) -> {

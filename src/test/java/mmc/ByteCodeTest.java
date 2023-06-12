@@ -574,5 +574,41 @@ public class ByteCodeTest {
         Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
     }
 
+    public void inlineNewInstVarWithCrement(){
+
+/*        class Test{
+
+            public static void main(String[] args){
+                int p = ++new Bar().i;
+                ++p;
+                System.out.println(p);
+            }
+
+        }
+
+        class Bar{
+            public static int i = 0;
+        }*/
+
+        Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
+                new LocalVarDecl("p", BasicType.INT, new Crement( BasicType.INT, new InstVar("i", new New(new ArrayList<>(), new ReferenceType("Bar")), BasicType.INT, false), Operator.INCPRE)),
+                new Crement(BasicType.INT, new LocalOrFieldVar("p", BasicType.INT, false), Operator.DECPRE),
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new LocalOrFieldVar("p", BasicType.INT, false))
+                        ), BasicType.VOID))
+
+        )));
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+    }
+
 }
 
