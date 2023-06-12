@@ -394,28 +394,28 @@ public class ByteCodeTest {
     }
 
     @Test
-    public void printlnTest(){
-        Method method = new Method( BasicType.VOID, "foo", new ArrayList<Parameter>(),
-                        new Block(new ArrayList<IStatement>(Arrays.asList(
-                                new MethodCall(
-                                        new InstVar("out",
-                                                new Class("java/lang/System",
-                                                        new ReferenceType("java/lang/System")),
-                                                new ReferenceType("java/io/PrintStream"), true), "println",
-                                        new ArrayList<>(Arrays.asList(
-                                                new StringExpr("Hallo1234"))), BasicType.VOID)
-                        ))), AccessModifier.PUBLIC, false);
+    public void printlnTest() {
+        Method method = new Method(BasicType.VOID, "foo", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(Arrays.asList(
+                        new MethodCall(
+                                new InstVar("out",
+                                        new Class("java/lang/System",
+                                                new ReferenceType("java/lang/System")),
+                                        new ReferenceType("java/io/PrintStream"), true), "println",
+                                new ArrayList<>(Arrays.asList(
+                                        new StringExpr("Hallo1234"))), BasicType.VOID)
+                ))), AccessModifier.PUBLIC, false);
 
 
-                ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                        new ArrayList<Constructor>());
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
 
 
-                Program prog = new Program(Arrays.asList(classDecl));
+        Program prog = new Program(Arrays.asList(classDecl));
     }
 
     @Test
-    public void initStaticReferenceFieldVar(){
+    public void initStaticReferenceFieldVar() {
 
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(
                 Arrays.asList(new Field(new ReferenceType("java/lang/String"), "a", AccessModifier.PUBLIC, new StringExpr("Test"), false))
@@ -423,6 +423,154 @@ public class ByteCodeTest {
                 new ArrayList<Constructor>());
 
         Program program = new Program(Arrays.asList(classDecl));
+    }
+
+    @Test
+    public void fibonacciTest() {
+        /*public class Test{
+
+            public int fib(int n){
+                if(n == 0 || n == 1)
+                    return n;
+                else
+                    return fib(n-1) + fib(n-2);
+            }
+        }*/
+
+        Method method = new Method(BasicType.INT, "fib", new ArrayList<Parameter>(Arrays.asList(
+                new Parameter(BasicType.INT, "n")
+        )),
+                new Block(new ArrayList<IStatement>(Arrays.asList(
+                        new If(new Return(BasicType.INT, new LocalOrFieldVar("n", BasicType.INT, false)),
+                                new Return(BasicType.INT, new Binary(Operator.PLUS,
+                                        new MethodCall(new This(new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
+                                                new Binary(Operator.MINUS, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(1), BasicType.INT))), BasicType.INT),
+                                        new MethodCall(new This(new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
+                                                new Binary(Operator.MINUS, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(2), BasicType.INT))), BasicType.INT))),
+                                new Binary(Operator.OR,
+                                        new Binary(Operator.EQUAL, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(0)),
+                                        new Binary(Operator.EQUAL, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(1))
+                                )),
+
+                        new Return(BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+    }
+
+    @Test
+    public void fibWithMainFunc() {
+        /*public class Test{
+
+            public int fib(int n){
+                if(n == 0 || n == 1)
+                    return n;
+                else
+                    return fib(n-1) + fib(n-2);
+            }
+
+            public static void main(String[]args){
+                Test test = new Test();
+                System.out.println(test.fib(30));
+            }
+        }*/
+
+        Method method = new Method(BasicType.INT, "fib", new ArrayList<Parameter>(Arrays.asList(
+                new Parameter(BasicType.INT, "n")
+        )),
+                new Block(new ArrayList<IStatement>(Arrays.asList(
+                        new If(new Return(BasicType.INT, new LocalOrFieldVar("n", BasicType.INT, false)),
+                                new Return(BasicType.INT, new Binary(Operator.PLUS,
+                                        new MethodCall(new This(new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
+                                                new Binary(Operator.MINUS, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(1), BasicType.INT))), BasicType.INT),
+                                        new MethodCall(new This(new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
+                                                new Binary(Operator.MINUS, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(2), BasicType.INT))), BasicType.INT))),
+                                new Binary(Operator.OR,
+                                        new Binary(Operator.EQUAL, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(0)),
+                                        new Binary(Operator.EQUAL, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(1))
+                                )),
+                        new Return(BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
+
+        Method method1 = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
+                new LocalVarDecl("test", new ReferenceType("Test"), new New(new ArrayList<>(), new ReferenceType("Test"))),
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new MethodCall(new LocalOrFieldVar("test", new ReferenceType("Test"), false), "fib", new ArrayList<>(Arrays.asList(new IntExpr(30))), BasicType.INT))), BasicType.VOID)
+        ))));
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method, method1)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+    }
+
+
+    public void incrementInstVar() {
+
+        //Class Bar needs to be in the same folder
+        /*class Bar{
+            public static int i = 0;
+            public int j = 1;
+        }*/
+
+        Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
+                new LocalVarDecl("p", new ReferenceType("Bar"), new New(new ArrayList<>(), new ReferenceType("Bar"))),
+                new LocalVarDecl("a", BasicType.INT, new Crement(BasicType.INT, new InstVar("j", new LocalOrFieldVar("p", new ReferenceType("Bar"), false), BasicType.INT, false), Operator.INCPRE)),
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new LocalOrFieldVar("a", BasicType.INT, false))), BasicType.VOID)
+        ))));
+
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+    }
+
+    public void assignStaticInstVar() {
+
+        //Class Bar needs to be in the same folder
+        /*
+        class Bar{
+            public static int i = 0;
+            public int j = 1;
+
+            public void foo(){
+            System.out.println(i);
+            }
+        }
+        */
+
+        Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
+                new LocalVarDecl("p", new ReferenceType("Bar"), new New(new ArrayList<>(), new ReferenceType("Bar"))),
+                new Assign(new InstVar("i", new Class("Bar", new ReferenceType("Bar")), BasicType.INT, true), new IntExpr(10), BasicType.INT),
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new InstVar("i", new Class("Bar", new ReferenceType("Bar")), BasicType.INT, true))
+                        ), BasicType.VOID),
+                new MethodCall(new LocalOrFieldVar("p", new ReferenceType("Bar"), false), "foo", new ArrayList<>(), BasicType.VOID)
+        ))));
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
     }
 
 }

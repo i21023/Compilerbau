@@ -6,10 +6,7 @@ import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.expressions.*;
 import mmc.ast.expressions.Class;
-import mmc.ast.main.Constructor;
-import mmc.ast.main.Field;
-import mmc.ast.main.Method;
-import mmc.ast.main.Parameter;
+import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
@@ -31,7 +28,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     private MethodVisitor methodVisitor;
     private String currentClassName;
     private String lastCalledClassName;
-    private List<String> classNames;
 
     private Map<String, Type> fieldVars;
     private Stack<String> localVars;
@@ -40,11 +36,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     private boolean pushOnStack = false;
 
 
-    public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String currentClassName, List<String> classNames) {
+    public MethodCodeGenerator(ClassWriter cw, Map<String, Type> fieldVars, String currentClassName) {
         this.classWriter = cw;
         this.fieldVars = fieldVars;
         this.currentClassName = currentClassName;
-        this.classNames = classNames;
         localVars = new Stack<>();
     }
 
@@ -68,13 +63,26 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitCode();
         method.block.accept(this);
 
-            if (!(method.block.statements.get(method.block.statements.size() - 1) instanceof Return)) {
-                new Return(BasicType.VOID, null).accept(this);
-            }
+        if (!(method.block.statements.get(method.block.statements.size() - 1) instanceof Return)) {
+            new Return(BasicType.VOID, null).accept(this);
+        }
 
         methodVisitor.visitMaxs(0, 0);
         methodVisitor.visitEnd();
 
+    }
+
+    @Override
+    public void visit(MainMethod mainMethod) {
+        methodVisitor = classWriter.visitMethod(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
+        methodVisitor.visitCode();
+        mainMethod.block.accept(this);
+
+        if (!(mainMethod.block.statements.get(mainMethod.block.statements.size() - 1) instanceof Return)) {
+            new Return(BasicType.VOID, null).accept(this);
+        }
+        methodVisitor.visitMaxs(0, 0);
+        methodVisitor.visitEnd();
     }
 
     @Override
@@ -165,7 +173,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
             localVars.push(localVarDecl.name);
             return;
         }
+        pushOnStack = true;
         localVarDecl.expression.accept(this);
+        pushOnStack = false;
         if (localVarDecl.type instanceof BasicType) {
             methodVisitor.visitVarInsn(Opcodes.ISTORE, localVars.size());
         } else {
@@ -567,192 +577,253 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                         else
                             methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
                     } else if (fieldVars.containsKey(leftExpr.name)) {
-                            if (!leftExpr.isStatic) {
-                                methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+                        if (!leftExpr.isStatic) {
+                            methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
 
-                                pushOnStack = true;
-                                assign.rightExpr.accept(this);
-                                pushOnStack = pushOnStackState;
+                            pushOnStack = true;
+                            assign.rightExpr.accept(this);
+                            pushOnStack = pushOnStackState;
 
-                                if (pushOnStack) { //if used as expression
-                                    methodVisitor.visitInsn(Opcodes.DUP_X1);
-                                }
-
-                                methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
-                                        GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
-                            } else {
-                                assign.rightExpr.accept(this);
-
-                                if (pushOnStack) {
-                                    methodVisitor.visitInsn(Opcodes.DUP);
-                                }
-
-                                methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, leftExpr.name,
-                                        GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+                            if (pushOnStack) { //if used as expression
+                                methodVisitor.visitInsn(Opcodes.DUP_X1);
                             }
 
+                            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
+                                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
+                        } else {
+                            assign.rightExpr.accept(this);
+
+                            if (pushOnStack) {
+                                methodVisitor.visitInsn(Opcodes.DUP);
+                            }
+
+                            methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, leftExpr.name,
+                                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
                         }
+
                     }
-                    //TODO: Instvar
-                }
+                } else{
 
-                case PLUSASSIGN -> {
-                    new Assign(assign.leftExpr, new Binary(Operator.PLUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
-                }
+                    InstVar leftExpr = (InstVar) assign.leftExpr;
 
-                case MINUSASSIGN -> {
-                    new Assign(assign.leftExpr, new Binary(Operator.MINUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
-                }
+                    ReferenceType owner = (ReferenceType) leftExpr.expression.getType();
 
-                case MULTASSIGN -> {
-                    new Assign(assign.leftExpr, new Binary(Operator.MULT, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
-                }
+                    if (!leftExpr.isStatic) {
+                        leftExpr.expression.accept(this);
 
-                case DIVASSIGN -> {
-                    new Assign(assign.leftExpr, new Binary(Operator.DIV, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
-                }
+                        pushOnStack = true;
+                        assign.rightExpr.accept(this);
+                        pushOnStack = pushOnStackState;
 
-                case MODASSIGN -> {
-                    new Assign(assign.leftExpr, new Binary(Operator.MOD, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
-                }
+                        if (pushOnStack) { //if used as expression
+                            methodVisitor.visitInsn(Opcodes.DUP_X1);
+                        }
 
-                default -> {
-                    throw new IllegalArgumentException("Unexpected Operator: " + assign.operator);
+                        methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, owner.type, leftExpr.name,
+                                GeneratorHelpFunctions.getDescriptor(null, leftExpr.type));
+
+                    } else {
+                        assign.rightExpr.accept(this);
+
+                        if (pushOnStack) {
+                            methodVisitor.visitInsn(Opcodes.DUP);
+                        }
+
+                        methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, owner.type, leftExpr.name,
+                                GeneratorHelpFunctions.getDescriptor(null, leftExpr.type));
+                    }
+
                 }
+                //TODO: Instvar
             }
 
+            case PLUSASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.PLUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case MINUSASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.MINUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case MULTASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.MULT, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case DIVASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.DIV, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            case MODASSIGN -> {
+                new Assign(assign.leftExpr, new Binary(Operator.MOD, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+            }
+
+            default -> {
+                throw new IllegalArgumentException("Unexpected Operator: " + assign.operator);
+            }
         }
 
+    }
 
-        @Override
-        public void visit (MethodCall methodCall){
 
-            boolean pushOnStackState = pushOnStack;
+    @Override
+    public void visit(MethodCall methodCall) {
 
-            pushOnStack = true;
-            methodCall.methodOwnerPrefix.accept(this);
-            methodCall.arguments.forEach(argument -> argument.accept(this));
-            pushOnStack = pushOnStackState;
+        boolean pushOnStackState = pushOnStack;
 
-            String type = methodCall.methodOwnerPrefix.getType() instanceof ReferenceType ref ? ref.type : null;
+        pushOnStack = true;
+        methodCall.methodOwnerPrefix.accept(this);
+        methodCall.arguments.forEach(argument -> argument.accept(this));
+        pushOnStack = pushOnStackState;
 
-            if (type == null)
-                throw new IllegalArgumentException("Unexpected: " + methodCall.methodOwnerPrefix.getType());
+        String type = methodCall.methodOwnerPrefix.getType() instanceof ReferenceType ref ? ref.type : null;
 
-            if (methodCall.isStatic) {
-                methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
-            } else {
-                methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
-            }
-            if (!pushOnStack && methodCall.type != BasicType.VOID) {
-                methodVisitor.visitInsn(Opcodes.POP);
-            }
+        if (type == null)
+            throw new IllegalArgumentException("Unexpected: " + methodCall.methodOwnerPrefix.getType());
+
+        if (methodCall.isStatic) {
+            methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
+        } else {
+            methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
+        }
+        if (!pushOnStack && methodCall.type != BasicType.VOID) {
+            methodVisitor.visitInsn(Opcodes.POP);
+        }
+    }
+
+    @Override
+    public void visit(New newCall) {
+
+        boolean pushOnStackState = pushOnStack;
+
+        if (!(newCall.type instanceof ReferenceType)) {
+            throw new IllegalArgumentException("Cannot call new on a primitive datatype");
         }
 
-        @Override
-        public void visit (New newCall){
+        String type = ((ReferenceType) newCall.type).type;
+        methodVisitor.visitTypeInsn(Opcodes.NEW, type);
 
-            boolean pushOnStackState = pushOnStack;
-
-            if (!(newCall.type instanceof ReferenceType)) {
-                throw new IllegalArgumentException("Cannot call new on a primitive datatype");
-            }
-
-            String type = ((ReferenceType) newCall.type).type;
-            methodVisitor.visitTypeInsn(Opcodes.NEW, type);
-
-            if (pushOnStack) { //Don't put reference on stack when called as statement
-                methodVisitor.visitInsn(Opcodes.DUP);
-            }
-
-            pushOnStack = true;
-            newCall.arguments.forEach(argument -> argument.accept(this));
-            pushOnStack = pushOnStackState;
-
-            methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, type, "<init>", GeneratorHelpFunctions.getDescriptor(newCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), BasicType.VOID), false);
+        if (pushOnStack) { //Don't put reference on stack when called as statement
+            methodVisitor.visitInsn(Opcodes.DUP);
         }
 
-        @Override
-        public void visit (Crement crement){
+        pushOnStack = true;
+        newCall.arguments.forEach(argument -> argument.accept(this));
+        pushOnStack = pushOnStackState;
 
-            switch (crement.operator) {
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, type, "<init>", GeneratorHelpFunctions.getDescriptor(newCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), BasicType.VOID), false);
+    }
 
-                case INCPRE -> {
-                    doCrement(crement, 1);
-                    if (pushOnStack) {
-                        crement.expression.accept(this);
-                    }
+    @Override
+    public void visit(Crement crement) {
 
+        switch (crement.operator) {
+
+            case INCPRE -> {
+                doCrement(crement, 1);
+                if (pushOnStack) {
+                    crement.expression.accept(this);
                 }
-                case INCSUF -> {
-                    if (pushOnStack) {
-                        crement.expression.accept(this);
-                    }
-                    doCrement(crement, 1);
+
+            }
+            case INCSUF -> {
+                if (pushOnStack) {
+                    crement.expression.accept(this);
                 }
-                case DECPRE -> {
-                    doCrement(crement, -1);
-                    if (pushOnStack) {
-                        crement.expression.accept(this);
-                    }
-                }
-                case DECSUF -> {
-                    if (pushOnStack) {
-                        crement.expression.accept(this);
-                    }
-                    doCrement(crement, -1);
-                }
-                default -> {
-                    throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
+                doCrement(crement, 1);
+            }
+            case DECPRE -> {
+                doCrement(crement, -1);
+                if (pushOnStack) {
+                    crement.expression.accept(this);
                 }
             }
+            case DECSUF -> {
+                if (pushOnStack) {
+                    crement.expression.accept(this);
+                }
+                doCrement(crement, -1);
+            }
+            default -> {
+                throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
+            }
         }
+    }
 
     @Override
     public void visit(Class classz) {
-
+        // do nothing
     }
 
-    public void doCrement (Crement crement,int amount){
-            if (crement.expression instanceof LocalOrFieldVar) {
-                String name = ((LocalOrFieldVar) crement.expression).name;
+    public void doCrement(Crement crement, int amount) {
+        if (crement.expression instanceof LocalOrFieldVar) {
+            String name = ((LocalOrFieldVar) crement.expression).name;
 
-                if (localVars.contains(name)) { //LocalVar
-                    methodVisitor.visitIincInsn(localVars.indexOf(name), amount);
-                } else { //FieldVar
-                    if (!((LocalOrFieldVar) crement.expression).isStatic) {
-                        methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
-                        methodVisitor.visitInsn(Opcodes.DUP);
-                        methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, name,
-                                GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
-                        if (amount == 1) {
-                            methodVisitor.visitInsn(Opcodes.ICONST_1);
-                        } else {
-                            methodVisitor.visitInsn(Opcodes.ICONST_M1);
-                        }
-                        methodVisitor.visitInsn(Opcodes.IADD);
-                        methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, name,
-                                GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+            if (localVars.contains(name)) { //LocalVar
+                methodVisitor.visitIincInsn(localVars.indexOf(name), amount);
+            } else { //FieldVar
+                if (!((LocalOrFieldVar) crement.expression).isStatic) {
+                    methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
+                    methodVisitor.visitInsn(Opcodes.DUP);
+                    methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                    if (amount == 1) {
+                        methodVisitor.visitInsn(Opcodes.ICONST_1);
                     } else {
-                        //methodVisitor.visitInsn(Opcodes.DUP);
-                        methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, name,
-                                GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
-                        if (amount == 1) {
-                            methodVisitor.visitInsn(Opcodes.ICONST_1);
-                        } else {
-                            methodVisitor.visitInsn(Opcodes.ICONST_M1);
-                        }
-                        methodVisitor.visitInsn(Opcodes.IADD);
-                        methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, name,
-                                GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                        methodVisitor.visitInsn(Opcodes.ICONST_M1);
                     }
-
+                    methodVisitor.visitInsn(Opcodes.IADD);
+                    methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                } else {
+                    //methodVisitor.visitInsn(Opcodes.DUP);
+                    methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+                    if (amount == 1) {
+                        methodVisitor.visitInsn(Opcodes.ICONST_1);
+                    } else {
+                        methodVisitor.visitInsn(Opcodes.ICONST_M1);
+                    }
+                    methodVisitor.visitInsn(Opcodes.IADD);
+                    methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, name,
+                            GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
                 }
-            } else { //InstVar
 
             }
+        } else { //InstVar
 
+            InstVar instVar = (InstVar) crement.expression;
 
+            ReferenceType owner = (ReferenceType) instVar.expression.getType();
+
+            if (((InstVar) crement.expression).isStatic) {
+                methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+                if (amount == 1) {
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+                } else {
+                    methodVisitor.visitInsn(Opcodes.ICONST_M1);
+                }
+                methodVisitor.visitInsn(Opcodes.IADD);
+                methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+            } else {
+                ((InstVar) crement.expression).expression.accept(this);
+                methodVisitor.visitInsn(Opcodes.DUP);
+
+                methodVisitor.visitFieldInsn(Opcodes.GETFIELD, owner.type, instVar.name,
+                        GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+
+                if (amount == 1) {
+                    methodVisitor.visitInsn(Opcodes.ICONST_1);
+                } else {
+                    methodVisitor.visitInsn(Opcodes.ICONST_M1);
+                }
+                methodVisitor.visitInsn(Opcodes.IADD);
+
+                methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, owner.type, instVar.name,
+                        GeneratorHelpFunctions.getDescriptor(null, instVar.type));
+            }
         }
 
+
     }
+
+}

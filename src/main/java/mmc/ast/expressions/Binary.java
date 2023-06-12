@@ -18,6 +18,13 @@ public class Binary implements IExpression {
         expression2 = pExpression2;
     }
 
+    public Binary(Operator pOperator, IExpression pExpression1, IExpression pExpression2, Type pType) {
+        operator = pOperator;
+        expression1 = pExpression1;
+        expression2 = pExpression2;
+        type = pType;
+    }
+
     @Override
     public boolean equals(Object o) {
         boolean typeIsEqual = false;
