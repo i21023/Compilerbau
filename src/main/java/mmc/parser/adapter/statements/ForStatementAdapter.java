@@ -1,6 +1,7 @@
 package mmc.parser.adapter.statements;
 
 import mmc.ast.expressions.IExpression;
+import mmc.ast.statementexpression.IStatementExpression;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.For;
 import mmc.ast.statements.IStatement;
@@ -28,14 +29,13 @@ public class ForStatementAdapter {
         } else if (forStatement.for_init().local_var_decl() != null) {
             initStatements.addAll(LocalVarDeclAdapter.adapt(forStatement.for_init().local_var_decl()));
         }
-        Block initStatement = new Block(initStatements);
 
         IExpression logicalExpression = null;
         if (forStatement.logical_expr() != null) {
             logicalExpression = LogicalExprAdapter.adapt(forStatement.logical_expr());
         }
 
-        List<IStatement> updateStatements = new ArrayList<>();
+        List<IStatementExpression> updateStatements = new ArrayList<>();
         if (forStatement.for_statement_expr() != null) {
             if (forStatement.for_statement_expr().COMMA() != null
                     && forStatement.for_statement_expr().COMMA().size() > 0) {
@@ -46,11 +46,10 @@ public class ForStatementAdapter {
                 updateStatements.add(StatementExprAdapter.adapt(forStatement.for_statement_expr().statement_expr(0)));
             }
         }
-        Block updateStatement = new Block(updateStatements);
 
         IStatement statement = StatementAdapter.adapt(forStatement.statement());
 
-        return new For(initStatement, logicalExpression, updateStatement, new Block(List.of(statement)));
+        return new For(initStatements, logicalExpression, updateStatements, new Block(List.of(statement)));
     }
 
 }
