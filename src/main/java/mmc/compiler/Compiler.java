@@ -57,9 +57,10 @@ public class Compiler implements ICompiler {
                 //Program tAstProgram = tAst.generateTypedast(program);
 
 
-                Method method = new Method(BasicType.VOID, "foo", new ArrayList<Parameter>(),
+                Method method = new Method(BasicType.BOOL, "foo", new ArrayList<Parameter>(),
                         new Block(new ArrayList<IStatement>(Arrays.asList(
-                                new Assign(new LocalOrFieldVar("a", new ReferenceType("java/lang/String"), true), new StringExpr("Hal"), new ReferenceType("java/lang/String"))
+                                new If(new Return(BasicType.BOOL, new BoolExpr(true)), new Return(BasicType.BOOL, new BoolExpr(false)),
+                                        new Binary(Operator.NOTEQUAL, new JNull(), new StringExpr("Hallo")))
                         ))), AccessModifier.PUBLIC, false);
 
                 ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(Arrays.asList(
