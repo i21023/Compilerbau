@@ -243,7 +243,7 @@ public class AstTests {
     }
 
     @Test
-    @DisplayName("ClassWithCommentsTest")
+    @DisplayName("ClassWithMultipleMethodsTest")
     public void ClassWithMultipleMethods() {
         ArrayList<Method> methods = new ArrayList<Method>();
         Method method1 = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
@@ -414,7 +414,7 @@ public class AstTests {
 
         Method method1 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "OpAnd", new ArrayList<Parameter>(), Method1Body);
         Method method2 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "OpOr", new ArrayList<Parameter>(), Method2Body);
-        ClassDecl classes = new ClassDecl("BooleanOperator", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)), new ArrayList<Constructor>());
+        ClassDecl classes = new ClassDecl("BooleanOperator", Fields, new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
         try {
@@ -427,7 +427,113 @@ public class AstTests {
             assertEquals(prog, program);
         } catch (IOException e) {
             e.printStackTrace();
-            //Fehler konnte nicht gefunden werden
+
+        }
+    }
+
+    @Test
+    @DisplayName("ReturnMethodTest")
+    public void ReturnMethodTest() {
+
+
+        Block MethodBody = new Block(Arrays.asList(new Return(new Binary(Operator.PLUS, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
+
+
+        Method method = new Method(AccessModifier.PUBLIC, BasicType.INT, "add", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
+                new Parameter(BasicType.INT, "b"))), MethodBody);
+        ClassDecl classes = new ClassDecl("ReturnMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ReturnMethod.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Test
+    @DisplayName("LocalVarGetTest")
+    public void LocalVarGetTest() {
+
+
+        Block MethodBody = new Block(Arrays.asList(new LocalVarDecl("y", BasicType.INT, new IntExpr(30)), new Return(new LocalOrFieldVar("y"))));
+
+
+        Method method = new Method(AccessModifier.PUBLIC, BasicType.INT, "getY", new ArrayList<Parameter>(), MethodBody);
+        ClassDecl classes = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/LocalVarGet.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Test
+    @DisplayName("FieldVarClassTest")
+    public void FieldVarClassTest() {
+
+        ClassDecl classes = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "x", AccessModifier.PRIVATE, new IntExpr(5), false))), new ArrayList<Method>(), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/FieldVarClass.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    @Test
+    @DisplayName("ArithmetikClassTest")
+    public void ArithmetikClassTest() {
+        ArrayList<Parameter> params = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.INT, "add", params, new Block(Arrays.asList(
+                new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
+                new Return(new MethodCall(new This(), "add", new ArrayList<IExpression>(Arrays.asList(
+                        new Binary(Operator.PLUS, new LocalOrFieldVar("a"), new IntExpr(1)), new Binary(Operator.MINUS, new LocalOrFieldVar("b"), new IntExpr(1)))))))));
+        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "mul", params, new Block(Arrays.asList(
+                new If(new Block(Arrays.asList(new Return(new IntExpr(0)))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
+                new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(1))),
+                new Return(new MethodCall(new This(), "add", new ArrayList<IExpression>(Arrays.asList(
+                        new LocalOrFieldVar("a"), new MethodCall(new This(), "mul", new ArrayList<IExpression>(Arrays.asList(
+                                new LocalOrFieldVar("a"), new Binary(Operator.MINUS, new LocalOrFieldVar("b"), new IntExpr(1))
+                        ))))))))));
+
+        ClassDecl classes = new ClassDecl("ArithmetikClass", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
+        Program prog = new Program(Arrays.asList(classes));
+
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ArithmetikClass.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+
+
+            assertEquals(prog, program);
+        } catch (IOException e) {
+            e.printStackTrace();
 
         }
     }

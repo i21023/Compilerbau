@@ -205,7 +205,7 @@ public class ByteCodeTest {
     public void newTest() {
         Method method = new Method(BasicType.VOID, "foo", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(Arrays.asList(
-                        new LocalVarDecl("stringvar", new ReferenceType("java/lang/String"), new New(new ArrayList<>(), new ReferenceType("java/lang/String"))),
+                        new LocalVarDecl("stringvar", new ReferenceType("java/lang/String"), new New("java/lang/String", new ArrayList<>())),
                         new Return(BasicType.VOID, null)))), AccessModifier.PUBLIC, false);
 
 
@@ -250,7 +250,7 @@ public class ByteCodeTest {
     public void stringTest() {
         Method method = new Method(new ReferenceType("java/lang/String"), "foo", new ArrayList<Parameter>(),
                 new Block(new ArrayList<IStatement>(Arrays.asList(
-                        new LocalVarDecl("i", new ReferenceType("java/lang/String"), new New(new ArrayList<>(Arrays.asList(new StringExpr("Test"))), new ReferenceType("java/lang/String"))),
+                        new LocalVarDecl("i", new ReferenceType("java/lang/String"), new New("java/lang/String", new ArrayList<>(Arrays.asList(new StringExpr("Test"))))),
                         new Return(new ReferenceType("java/lang/String"), new LocalOrFieldVar("i", new ReferenceType("java/lang/String")))))), AccessModifier.PUBLIC, false);
 
         ClassDecl classDecl = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
@@ -496,7 +496,7 @@ public class ByteCodeTest {
                         new Return(BasicType.INT, new LocalOrFieldVar("i", BasicType.INT))))), AccessModifier.PUBLIC, false);
 
         Method method1 = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                new LocalVarDecl("test", new ReferenceType("Test"), new New(new ArrayList<>(), new ReferenceType("Test"))),
+                new LocalVarDecl("test", new ReferenceType("Test"), new New("Test", new ArrayList<>())),
                 new MethodCall(
                         new InstVar("out",
                                 new Class("java/lang/System",
@@ -522,7 +522,7 @@ public class ByteCodeTest {
         }*/
 
         Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                new LocalVarDecl("p", new ReferenceType("Bar"), new New(new ArrayList<>(), new ReferenceType("Bar"))),
+                new LocalVarDecl("p", new ReferenceType("Bar"), new New("Bar", new ArrayList<>())),
                 new LocalVarDecl("a", BasicType.INT, new Crement(BasicType.INT, new InstVar("j", new LocalOrFieldVar("p", new ReferenceType("Bar"), false), BasicType.INT, false), Operator.INCPRE)),
                 new MethodCall(
                         new InstVar("out",
@@ -555,7 +555,7 @@ public class ByteCodeTest {
         */
 
         Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                new LocalVarDecl("p", new ReferenceType("Bar"), new New(new ArrayList<>(), new ReferenceType("Bar"))),
+                new LocalVarDecl("p", new ReferenceType("Bar"), new New("Bar", new ArrayList<>())),
                 new Assign(new InstVar("i", new Class("Bar", new ReferenceType("Bar")), BasicType.INT, true), new IntExpr(10), BasicType.INT),
                 new MethodCall(
                         new InstVar("out",
@@ -574,7 +574,7 @@ public class ByteCodeTest {
         Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
     }
 
-    public void inlineNewInstVarWithCrement(){
+    public void inlineNewInstVarWithCrement() {
 
 /*        class Test{
 
@@ -591,7 +591,7 @@ public class ByteCodeTest {
         }*/
 
         Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                new LocalVarDecl("p", BasicType.INT, new Crement( BasicType.INT, new InstVar("i", new New(new ArrayList<>(), new ReferenceType("Bar")), BasicType.INT, false), Operator.INCPRE)),
+                new LocalVarDecl("p", BasicType.INT, new Crement(BasicType.INT, new InstVar("i", new New("Bar", new ArrayList<>()), BasicType.INT, false), Operator.INCPRE)),
                 new Crement(BasicType.INT, new LocalOrFieldVar("p", BasicType.INT, false), Operator.DECPRE),
                 new MethodCall(
                         new InstVar("out",
