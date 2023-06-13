@@ -24,7 +24,7 @@ public class LocalVarDeclAdapter {
                 String name = localVarDecl.ID(i).getText();
 
                 IExpression expression = null;
-                if (localVarDecl.ASSIGN() != null) {
+                if (localVarDecl.ASSIGN() != null && localVarDecl.ASSIGN().size() > 0) {
                     expression = ExpressionAdapter.adapt(localVarDecl.expr(i));
                 }
 
@@ -37,7 +37,7 @@ public class LocalVarDeclAdapter {
             String name = localVarDecl.ID(0).getText();
 
             IExpression expression = null;
-            if (localVarDecl.ASSIGN() != null) {
+            if (localVarDecl.ASSIGN() != null && localVarDecl.ASSIGN().size() > 0) {
                 expression = ExpressionAdapter.adapt(localVarDecl.expr(0));
             }
 
