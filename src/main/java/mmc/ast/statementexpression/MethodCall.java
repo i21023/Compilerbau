@@ -30,6 +30,14 @@ public class MethodCall implements IStatementExpression {
         type = pType;
     }
 
+    public MethodCall(IExpression pExpression, String pName, List<IExpression> pExpressions, Type pType, boolean pIsStatic) {
+        methodOwnerPrefix = pExpression;
+        name = pName;
+        arguments = pExpressions;
+        type = pType;
+        isStatic = pIsStatic;
+    }
+
     @Override
     public boolean equals(Object o) {
         boolean typeIsEqual = false;

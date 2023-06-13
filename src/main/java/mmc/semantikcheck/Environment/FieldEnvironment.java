@@ -11,9 +11,12 @@ public class FieldEnvironment {
     private AccessModifier accessModifier;
     private Type type;
 
+    private boolean isStatic;
+
     public FieldEnvironment(Field field) {
         accessModifier = field.accessModifier;
         type = field.getType();
+        isStatic = field.isStatic;
     }
 
     public AccessModifier getAccessModifier() {
@@ -23,4 +26,5 @@ public class FieldEnvironment {
     public Type getType() {
         return type;
     }
+    public boolean getIsStatic(){ return isStatic; }
 }

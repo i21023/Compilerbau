@@ -13,10 +13,12 @@ public class MethodEnvironment {
     private AccessModifier accessModifier;
     private Type type;
     private List<Type> parameterTypes;
+    private boolean isStatic;
 
     public MethodEnvironment(Method method) {
         this.accessModifier = method.accessModifier;
         this.type = method.getType();
+        this.isStatic = method.isStatic;
         this.parameterTypes = method.parameters.stream().map(Parameter::getType)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -31,6 +33,10 @@ public class MethodEnvironment {
     
     public List<Type> getParameterTypes() {
         return parameterTypes;
+    }
+
+    public boolean getIsStatic(){
+        return isStatic;
     }
 
 

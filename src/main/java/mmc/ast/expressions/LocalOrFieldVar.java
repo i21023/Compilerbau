@@ -14,11 +14,6 @@ public class LocalOrFieldVar implements IExpression {
         name = pName;
     }
 
-    public LocalOrFieldVar(Type pType, String pName) {
-        name = pName;
-        type = type;
-    }
-
     public LocalOrFieldVar(String pName, Type pType) {
         name = pName;
         type = pType;

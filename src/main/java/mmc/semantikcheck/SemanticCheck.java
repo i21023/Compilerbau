@@ -374,7 +374,6 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(If toCheck) {
-
         var valid = true;
 
         //if Block überprüfen
@@ -460,7 +459,6 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(New toCheck) { //Nochmal schauen
-
         var valid = true;
 
         var newClass = toCheck.getType();
@@ -510,8 +508,8 @@ public class SemanticCheck implements SemanticVisitor {
         }
         try {
             var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
-            var returnType = method.getType();
-            toCheck.type = returnType;
+            toCheck.type = method.getType();
+            toCheck.isStatic = method.getIsStatic();
             return new TypeCheckResult(valid, null);
 
         } catch (java.lang.Exception e) {
@@ -609,13 +607,14 @@ public class SemanticCheck implements SemanticVisitor {
             return new TypeCheckResult(true, localVar);
         }
 
-        // Schauen ob sie in der Klasse deklariert ist
+        // Schauen ob sie in der Klasse deklariert ist, Feld bekommen welches aufgerufen wird
         try {
             var fieldVar = CheckType.getFieldInType(toCheck.name,
                     new ReferenceType(getClass.name), programEnvironment, getClass);
 
             if (fieldVar != null) {
                 toCheck.type = fieldVar.getType();
+                toCheck.isStatic = fieldVar.getIsStatic();
                 return new TypeCheckResult(true, fieldVar.getType());
             }
         } catch (java.lang.Exception e) {
@@ -632,7 +631,8 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(InstVar toCheck) {
         var valid = true;
 
-        var checkResult = toCheck.expression.accept(this); // Hier steht der typ drinne von dem der identifier ist...
+        //Typ herausfinden
+        var checkResult = toCheck.expression.accept(this);
         var type = checkResult.getType();
         if (type instanceof BasicType) {
             errors.add(new Exception(
@@ -643,12 +643,15 @@ public class SemanticCheck implements SemanticVisitor {
 
             var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass);
 
-            // Check if the identifier exists in current Type
+            // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {
                 errors.add(
                         new Exception("Field: " + toCheck.name + " not found in Class: " + type));
                 valid = false;
             }
+
+            toCheck.isStatic = nextInstVar.getIsStatic();
+
             valid = valid && checkResult.isValid();
             var newType = nextInstVar == null ? null : nextInstVar.getType();
             toCheck.type = newType;
@@ -674,11 +677,15 @@ public class SemanticCheck implements SemanticVisitor {
         Type lType = toCheck.expression1.getType();
         Type rType = toCheck.expression2.getType();
 
+        boolean isSame = lType.equals(rType);
+        boolean lIsReference = lType instanceof ReferenceType;
+        boolean oneIsNull = lResult.getType() == null ^ rResult.getType() == null;
+
         var errorToThrow = new Exception(
                 "The Operator: " + toCheck.operator + " is undefined for the argument types: "
                         + lType + ", " + rType);
 
-        // Following vars are there to determine the type of the binary expression
+        //Die Operatoren, welche wir unterstützen
         Operator operator = toCheck.operator;
 
         boolean isCompareOperator = (toCheck.operator == Operator.EQUAL
@@ -691,9 +698,6 @@ public class SemanticCheck implements SemanticVisitor {
         boolean isArithmeticOperator = (operator == Operator.PLUS || operator == Operator.MINUS
                 || operator == Operator.MULT || operator == Operator.DIV || operator == Operator.MOD);
 
-        boolean isSame = lType.equals(rType);
-        boolean lIsReference = lType instanceof ReferenceType;
-        boolean oneIsNull = lResult.getType() == null ^ rResult.getType() == null;
 
         //Nur zwei gleiche Typen vergleichen
         if (isSame && !lIsReference) { // Wenn 2 gleiche BaseTypes miteinander verglichen werden
@@ -717,6 +721,8 @@ public class SemanticCheck implements SemanticVisitor {
                             toCheck.type = (isArithmeticOperator ? INT : BOOL);
                         }else if(isBinaryOperator){
                             toCheck.type = INT;
+                        }else if(isCompareOperator){
+                            toCheck.type = BOOL;
                         }
 
                     }

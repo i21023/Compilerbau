@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 
 public class CheckType {
     public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass) {
-        if (type instanceof ReferenceType) {
+        if (type instanceof ReferenceType) { //Wenn mein Typ kein BasicType ist
             var objectClass = (ReferenceType) type;
-            var declaredClassnames = context.getClasses();
-            var classContext = declaredClassnames.get(objectClass.type);
+            var declaredClassnames = context.getClasses(); //Alle Klassen holen
+            var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
             var field = classContext.getFields().get(identifier);
             if (field == null) {
                 return null;
