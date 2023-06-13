@@ -48,6 +48,10 @@ public class CheckType {
         var declaredClassnames = ev.getClasses();
         var classContext = declaredClassnames.get(objectClass.type);
         var constructors = classContext.getConstructors();
+        if(constructors.isEmpty()){
+            ConstructorEnvironment constructorEnvironment = new ConstructorEnvironment(new Constructor());
+            constructors.add(constructorEnvironment);
+        }
         for (var constructor : constructors) {
             if (constructor.getParameterTypes().size() == newDecl.arguments.size()) {
                 boolean isSame = true;

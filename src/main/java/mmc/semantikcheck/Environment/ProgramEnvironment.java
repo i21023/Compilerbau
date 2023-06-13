@@ -28,14 +28,6 @@ public class ProgramEnvironment {
         });
     }
 
-
-    public String getMain() {
-        if (mains.size() == 1) {
-            return mains.get(0);
-        }
-        return null;
-    }
-
     public HashMap<String, ClassEnvironment> getClasses() {
         return classes;
     }

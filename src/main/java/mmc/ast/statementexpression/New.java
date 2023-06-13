@@ -21,11 +21,6 @@ public class New implements IStatementExpression {
         type = new ReferenceType(pName);
     }
 
-    /*public New(List<IExpression> pExpressions, Type pType) {
-        type = pType;
-        arguments = pExpressions;
-    }*/
-
     @Override
     public boolean equals(Object o) {
         boolean typeIsEqual = false;

@@ -51,28 +51,13 @@ public class Compiler implements ICompiler {
                 InputStream inputStream = new FileInputStream(file);
                 ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
-                //Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
+                Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
-                //SemanticCheck tAst = new SemanticCheck();
-                //Program tAstProgram = tAst.generateTypedast(program);
-
-
-                Method method = new Method(BasicType.BOOL, "foo", new ArrayList<Parameter>(),
-                        new Block(new ArrayList<IStatement>(Arrays.asList(
-                                new If(new Return(BasicType.BOOL, new BoolExpr(true)), new Return(BasicType.BOOL, new BoolExpr(false)),
-                                        new Binary(Operator.NOTEQUAL, new JNull(), new StringExpr("Hallo")))
-                        ))), AccessModifier.PUBLIC, false);
-
-                ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(Arrays.asList(
-                        new Field(new ReferenceType("java/lang/String"), "a", AccessModifier.PUBLIC, new New(new ArrayList<>(Arrays.asList(new StringExpr("Wel"))), new ReferenceType("java/lang/String")), true)
-                )), new ArrayList<Method>(Arrays.asList(method)),
-                        new ArrayList<Constructor>());
-
-                Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
-
+                SemanticCheck tAst = new SemanticCheck();
+                Program tAstProgram = tAst.generateTypedast(program);
 
                 ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
-                HashMap<String, byte[]> code = programVisitor.getBytecode(program);
+                HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
 
                 String finalOutDir = outDir;
                 code.forEach((x, y) -> {
