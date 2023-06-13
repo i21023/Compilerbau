@@ -17,7 +17,6 @@ public class Method implements Visitable {
     public Type type;
     public String name;
     public List<Parameter> parameters;
-    public IStatement statement;
     public AccessModifier accessModifier;
     public Block block;
     public boolean isStatic;
@@ -29,14 +28,6 @@ public class Method implements Visitable {
         block = pBlock;
         accessModifier = pAccessModifier;
         isStatic = pIsStatic;
-    }
-
-    public Method(AccessModifier pAccessModifier, Type pType, String pName, List<Parameter> pParameters, Block pBlock) {
-        type = pType;
-        name = pName;
-        parameters = pParameters;
-        accessModifier = pAccessModifier;
-        block = pBlock;
     }
 
     public Type getType() {

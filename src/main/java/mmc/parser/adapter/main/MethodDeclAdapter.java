@@ -64,7 +64,7 @@ public class MethodDeclAdapter {
 
             Block block = StatementBlockAdapter.adapt(methodDeclContext.statement_block());
 
-            return new Method(accessModifier, type, name, parameterList, block);
+            return new Method(type, name, parameterList, block, accessModifier, staticFlag);
         }
     }
 }
