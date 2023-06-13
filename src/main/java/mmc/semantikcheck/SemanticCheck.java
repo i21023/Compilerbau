@@ -718,7 +718,7 @@ public class SemanticCheck implements SemanticVisitor {
                     } else {
                         if(isArithmeticOperator){
                             //variable = (condition ? valueIfTrue : valueIfFalse);
-                            toCheck.type = (isArithmeticOperator ? INT : BOOL);
+                            toCheck.type = INT;
                         }else if(isBinaryOperator){
                             toCheck.type = INT;
                         }else if(isCompareOperator){
