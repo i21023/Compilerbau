@@ -139,16 +139,15 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         pushOnStack = true;
         ifStmt.expression.accept(this);
         pushOnStack = false;
-        methodVisitor.visitInsn(Opcodes.ICONST_1);
 
         if (ifStmt.blockElse == null) {
-            methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+            methodVisitor.visitJumpInsn(Opcodes.IFEQ, notEQ);
 
             ifStmt.blockIf.accept(this);
 
             methodVisitor.visitLabel(notEQ);
         } else {
-            methodVisitor.visitJumpInsn(Opcodes.IF_ICMPNE, notEQ);
+            methodVisitor.visitJumpInsn(Opcodes.IFEQ, notEQ);
 
             //If Block
             ifStmt.blockIf.accept(this);
