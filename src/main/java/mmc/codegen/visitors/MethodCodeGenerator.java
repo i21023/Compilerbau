@@ -566,6 +566,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         switch (assign.operator) {
             case ASSIGN -> {
                 if (assign.leftExpr instanceof LocalOrFieldVar leftExpr) {
+                    //LocalVar
                     if (localVars.contains(leftExpr.name)) {
                         assign.rightExpr.accept(this);
 
@@ -578,6 +579,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                         else
                             methodVisitor.visitVarInsn(Opcodes.ASTORE, localVars.indexOf(leftExpr.name));
                     } else if (fieldVars.containsKey(leftExpr.name)) {
+                        //FieldVar
                         if (!leftExpr.isStatic) {
                             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
 
@@ -592,7 +594,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                             methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, leftExpr.name,
                                     GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(leftExpr.name)));
                         } else {
+                            pushOnStack = true;
                             assign.rightExpr.accept(this);
+                            pushOnStack = pushOnStackState;
 
                             if (pushOnStack) {
                                 methodVisitor.visitInsn(Opcodes.DUP);
@@ -624,7 +628,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                                 GeneratorHelpFunctions.getDescriptor(null, leftExpr.type));
 
                     } else {
+                        pushOnStack = true;
                         assign.rightExpr.accept(this);
+                        pushOnStack = pushOnStackState;
 
                         if (pushOnStack) {
                             methodVisitor.visitInsn(Opcodes.DUP);
