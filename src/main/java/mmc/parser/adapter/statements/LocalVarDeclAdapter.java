@@ -19,7 +19,7 @@ public class LocalVarDeclAdapter {
         if (localVarDecl.COMMA() != null && localVarDecl.COMMA().size() > 0) {
             List<IStatement> localVarDecls = new ArrayList<>();
 
-            for (int i = 0; i < localVarDecl.COMMA().size(); i++) {
+            for (int i = 0; i <= localVarDecl.COMMA().size(); i++) {
 
                 String name = localVarDecl.ID(i).getText();
 
