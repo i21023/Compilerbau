@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class CheckType {
-    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass) {
+    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, boolean isStatic) {
         if (type instanceof ReferenceType) { //Wenn mein Typ kein BasicType ist
             var objectClass = (ReferenceType) type;
             var declaredClassnames = context.getClasses(); //Alle Klassen holen
@@ -23,6 +23,15 @@ public class CheckType {
             var field = classContext.getFields().get(identifier);
             if (field == null) {
                 return null;
+            }
+            if(field.getIsStatic() != isStatic){
+                if(isStatic){
+                    throw new Exception(
+                            "Cannot make a static reference to the non-static field" + objectClass.type);
+                }else{
+                    throw new Exception(
+                            "The static field " + identifier + " should be accessed in a static way" );
+                }
             }
             var am = field.getAccessModifier();
             if (am == AccessModifier.PRIVATE) {
@@ -71,7 +80,7 @@ public class CheckType {
         throw new Exception("No declared Constructor with Arguments for this Type " + newDecl.getType());
     }
 
-    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
+    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass, boolean isStatic) {
         boolean failedBecauseNotVisible = false;
 
         if (type instanceof ReferenceType) {
@@ -91,7 +100,7 @@ public class CheckType {
                 throw new Exception("No declared Method " + toCheck.name + " with Arguments: "
                         + toCheck.type + " in Type " + type);
             }
-            for (var method : methods) { //Für jede Methode Parameter checken
+            for (var method : methods) { //Für jede Methode Parameter checken Polymorphy
                 if (method.getParameterTypes().size() == toCheck.arguments.size()) { //Schauen ob beim Methode Call alle Parameter mitgegeben wurden
                     boolean isSame = true;
                     for (int i = 0; i < method.getParameterTypes().size(); i++) {
@@ -114,7 +123,7 @@ public class CheckType {
                         } else {
                             canAccess = true;
                         }
-                        if (canAccess) {
+                        if (canAccess && method.getIsStatic() == isStatic) {
                             foundMethods.add(method);
                         }
                     }

@@ -27,9 +27,17 @@ public class SemanticCheck implements SemanticVisitor {
     public ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
     public ArrayList<String> getFields = new ArrayList<>();
 
+    private boolean isStatic;
+
 
     public static void main(String[] args) {
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(
+                Arrays.asList(new Field(new ReferenceType("java/lang/String"), "a", AccessModifier.PUBLIC, new StringExpr("Test"), false))
+        ), new ArrayList<Method>(),
+                new ArrayList<Constructor>());
 
+        Program program = new Program(Arrays.asList(classDecl));
+        generateTypedast(program);
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
@@ -93,6 +101,7 @@ public class SemanticCheck implements SemanticVisitor {
         //Methoden überprüfen
         for (Method method : toCheck.methods) {
             //Für jede Methode durchgehen und schauen
+            //schauen ob isStatic
             valid = method.accept(this).isValid() && valid;
         }
 
@@ -207,9 +216,7 @@ public class SemanticCheck implements SemanticVisitor {
         boolean valid = true;
 
         IExpression lExpr = toCheck.leftExpr;
-        var oldNullType = currentNullType;
         IExpression rExpr = toCheck.rightExpr;
-        currentNullType = oldNullType;
 
         //a = a;
         if (lExpr.equals(rExpr)) {
@@ -509,7 +516,11 @@ public class SemanticCheck implements SemanticVisitor {
             valid = valid && parameter.accept(this).isValid();
         }
         try {
-            var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
+            boolean isStatic = false;
+            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar) {
+                isStatic = ((LocalOrFieldVar) toCheck.methodOwnerPrefix).isStatic;
+            }
+            var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass, isStatic);
             toCheck.type = method.getType();
             toCheck.isStatic = method.getIsStatic();
             return new TypeCheckResult(valid, null);
@@ -612,7 +623,7 @@ public class SemanticCheck implements SemanticVisitor {
         // Schauen ob sie in der Klasse deklariert ist, Feld bekommen welches aufgerufen wird
         try {
             var fieldVar = CheckType.getFieldInType(toCheck.name,
-                    new ReferenceType(getClass.name), programEnvironment, getClass);
+                    new ReferenceType(getClass.name), programEnvironment, getClass, false);
 
             if (fieldVar != null) {
                 toCheck.type = fieldVar.getType();
@@ -623,15 +634,22 @@ public class SemanticCheck implements SemanticVisitor {
             errors.add(new Exception(e.getMessage()));
             return new TypeCheckResult(false, null);
         }
-        errors.add(new Exception(
-                "Variable: " + toCheck.name + " is not declared in this scope"));
-        return new TypeCheckResult(false, null);
+        try {
+            var progEnvironment = programEnvironment.getClass(toCheck);
+            toCheck.type = new ReferenceType(toCheck.name);
+            toCheck.isStatic = true;
+            return new TypeCheckResult(true, new ReferenceType(toCheck.name));
+        }catch (java.lang.Exception i) {
+            errors.add(new Exception(i.getMessage()));
+            return new TypeCheckResult(false, null);
+        }
     }
 
 
     @Override
     public TypeCheckResult typeCheck(InstVar toCheck) {
         var valid = true;
+
 
         //Typ herausfinden
         var checkResult = toCheck.expression.accept(this);
@@ -642,8 +660,11 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
         try {
-
-            var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass);
+            boolean isStatic = false;
+            if(toCheck.expression instanceof LocalOrFieldVar) {
+                isStatic = ((LocalOrFieldVar) toCheck.expression).isStatic;
+            }
+            var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass, isStatic);
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {
@@ -726,7 +747,6 @@ public class SemanticCheck implements SemanticVisitor {
                         }else if(isCompareOperator){
                             toCheck.type = BOOL;
                         }
-
                     }
                 }
                 default -> {

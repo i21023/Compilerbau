@@ -3,8 +3,10 @@ package mmc.semantikcheck.Environment;
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.ReferenceType;
+import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.main.*;
 import mmc.ast.statements.Block;
+import mmc.semantikcheck.Exception;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,15 @@ public class ProgramEnvironment {
             }
         });
     }
+
+    public ClassEnvironment getClass(LocalOrFieldVar localFieldVar){
+        var classes = getClasses().get(localFieldVar.name);
+        if(classes == null){
+            throw new Exception("");
+        }
+        return classes;
+    }
+
 
     public HashMap<String, ClassEnvironment> getClasses() {
         return classes;
