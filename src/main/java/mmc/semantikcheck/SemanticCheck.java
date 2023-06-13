@@ -378,6 +378,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         //if Block überprüfen
         var ifResult = toCheck.blockIf.accept(this);
+        var ifBlockType = ifResult.getType();
         valid = valid && ifResult.isValid();
 
         // Condition überprüfen
@@ -398,27 +399,28 @@ public class SemanticCheck implements SemanticVisitor {
             valid = valid && elseBlockResult.isValid();
             var elseBlockType = elseBlockResult.getType();
 
+
             // Folgendes if else ist für die Bestimmung des Rückgabetyps
-            if (ifResult == null && elseBlockType != null) {
+            if (ifBlockType == null && elseBlockType != null) {
                 //Falls if keinen return Typ nehmen wir den Typ von else
                 toCheck.type = elseBlockType;
-            } else if (ifResult != null && elseBlockType == null) {
+            } else if (ifBlockType != null && elseBlockType == null) {
                 //Falls else keinen return Typ nehmen wir den Typ von if
                 toCheck.type = ifResult.getType();
 
-            } else if (ifResult != null && elseBlockType != null) {
+            } else if (ifBlockType != null && elseBlockType != null) {
                 // Typen müssen übereinstimmen
-                if (!Objects.equals(elseBlockType, ifResult)) {
+                if (!Objects.equals(elseBlockType, ifBlockType)) {
                     errors.add(new Exception(
-                            "Type mismatch: cannot convert from " + elseBlockType + " to " + ifResult.getType()));
+                            "Type mismatch: cannot convert from " + elseBlockType + " to " + ifBlockType));
                     valid = false;
                 } else {
-                    toCheck.type = ifResult.getType();
+                    toCheck.type = ifBlockType;
                     //Falls der Typ gleich ist, wählt er den Typ vom if Block
                 }
             }
         } else {
-            toCheck.type = ifResult.getType(); //Wenn kein else ist if der Typ der weitergegeben wird
+            toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
         }
 
         return new TypeCheckResult(valid, toCheck.getType());

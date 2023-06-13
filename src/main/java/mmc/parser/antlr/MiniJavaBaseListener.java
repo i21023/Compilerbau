@@ -1,4 +1,4 @@
-// Generated from java-escape by ANTLR 4.11.1
+// Generated from D:/Daten/Coding/Java/Compilerbau/src/main/java/mmc/parser\MiniJava.g4 by ANTLR 4.12.0
 package mmc.parser.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;

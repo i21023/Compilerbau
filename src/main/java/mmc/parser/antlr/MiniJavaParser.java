@@ -1,4 +1,4 @@
-// Generated from java-escape by ANTLR 4.11.1
+// Generated from D:/Daten/Coding/Java/Compilerbau/src/main/java/mmc/parser\MiniJava.g4 by ANTLR 4.12.0
 package mmc.parser.antlr;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
 public class MiniJavaParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.11.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.12.0", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -113,7 +113,7 @@ public class MiniJavaParser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "java-escape"; }
+	public String getGrammarFileName() { return "MiniJava.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -282,7 +282,7 @@ public class MiniJavaParser extends Parser {
 				setState(108);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while (((_la) & ~0x3f) == 0 && ((1L << _la) & 9007201368670224L) != 0) {
+				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 9007201368670224L) != 0)) {
 					{
 					setState(106);
 					_errHandler.sync(this);
@@ -421,7 +421,7 @@ public class MiniJavaParser extends Parser {
 			setState(133);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 9007201368670224L) != 0) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 9007201368670224L) != 0)) {
 				{
 				setState(131);
 				_errHandler.sync(this);
@@ -520,7 +520,7 @@ public class MiniJavaParser extends Parser {
 			setState(144);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 9007199489622016L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 9007199489622016L) != 0)) {
 				{
 				setState(143);
 				parameter_list();
@@ -635,7 +635,7 @@ public class MiniJavaParser extends Parser {
 				setState(160);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if (((_la) & ~0x3f) == 0 && ((1L << _la) & 9007199489622016L) != 0) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 9007199489622016L) != 0)) {
 					{
 					setState(159);
 					parameter_list();
@@ -1023,7 +1023,7 @@ public class MiniJavaParser extends Parser {
 			setState(214);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 9262301220438016L) != 0) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 9262301220438016L) != 0)) {
 				{
 				{
 				setState(211);
@@ -1504,7 +1504,7 @@ public class MiniJavaParser extends Parser {
 			setState(269);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 9007205932859392L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 9007205932859392L) != 0)) {
 				{
 				setState(268);
 				for_init();
@@ -1516,7 +1516,7 @@ public class MiniJavaParser extends Parser {
 			setState(273);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0)) {
 				{
 				setState(272);
 				logical_expr();
@@ -1528,7 +1528,7 @@ public class MiniJavaParser extends Parser {
 			setState(277);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 9007205697978368L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 9007205697978368L) != 0)) {
 				{
 				setState(276);
 				for_statement_expr();
@@ -1720,7 +1720,7 @@ public class MiniJavaParser extends Parser {
 			setState(296);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0)) {
 				{
 				setState(295);
 				expr();
@@ -1901,7 +1901,7 @@ public class MiniJavaParser extends Parser {
 			setState(318);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0)) {
 				{
 				setState(317);
 				argumentList();
@@ -2045,7 +2045,7 @@ public class MiniJavaParser extends Parser {
 			setState(333);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0)) {
 				{
 				setState(332);
 				argumentList();
@@ -2113,7 +2113,7 @@ public class MiniJavaParser extends Parser {
 			setState(342);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 17737362382307328L) != 0)) {
 				{
 				setState(341);
 				argumentList();
@@ -3133,7 +3133,7 @@ public class MiniJavaParser extends Parser {
 			{
 			setState(458);
 			_la = _input.LA(1);
-			if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 549755830240L) != 0) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 549755830240L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -3389,7 +3389,7 @@ public class MiniJavaParser extends Parser {
 			{
 			setState(468);
 			_la = _input.LA(1);
-			if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 1099544133632L) != 0) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1099544133632L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -3441,7 +3441,7 @@ public class MiniJavaParser extends Parser {
 			{
 			setState(470);
 			_la = _input.LA(1);
-			if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 9007199489622016L) != 0) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 9007199489622016L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
@@ -3497,7 +3497,7 @@ public class MiniJavaParser extends Parser {
 			{
 			setState(472);
 			_la = _input.LA(1);
-			if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 8725724278030336L) != 0) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 8725724278030336L) != 0)) ) {
 			_errHandler.recoverInline(this);
 			}
 			else {
