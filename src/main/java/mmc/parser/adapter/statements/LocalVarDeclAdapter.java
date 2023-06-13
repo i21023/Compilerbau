@@ -25,6 +25,7 @@ public class LocalVarDeclAdapter {
 
                 IExpression expression = null;
                 if (localVarDecl.ASSIGN() != null && localVarDecl.ASSIGN().size() > 0) {
+                    //ToDo: Parser: Schauen ob Reihenfolge in epxr-list bei fehlenden weniger Einträgen als Kommas trotzdem richtig initialisiert 
                     expression = ExpressionAdapter.adapt(localVarDecl.expr(i));
                 }
 
