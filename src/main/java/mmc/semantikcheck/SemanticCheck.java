@@ -502,7 +502,7 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
 
-        return new TypeCheckResult(valid, null);
+        return new TypeCheckResult(valid, newClass);
     }
 
     @Override

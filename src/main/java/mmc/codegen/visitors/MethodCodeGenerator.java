@@ -76,7 +76,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitCode();
         mainMethod.block.accept(this);
 
-        if (!(mainMethod.block.statements.get(mainMethod.block.statements.size() - 1) instanceof Return)) {
+        if (mainMethod.block.statements.size() == 0 || !(mainMethod.block.statements.get(mainMethod.block.statements.size() - 1) instanceof Return)) {
             new Return(BasicType.VOID, null).accept(this);
         }
         methodVisitor.visitMaxs(0, 0);
