@@ -140,8 +140,8 @@ public class SemanticCheck implements SemanticVisitor {
             }
         }else if(toCheck.expression != null && toCheck.type instanceof ReferenceType){
             var expressionResult = toCheck.expression.accept(this);
-            if(toCheck.type != expressionResult.getType()){
-                errors.add(new Exception("Field expected " + ((ReferenceType) toCheck.type).type + " but got " + expressionResult.getType()));
+            if(!Objects.equals(((ReferenceType) toCheck.type).type, ((ReferenceType) expressionResult.getType()).type)){
+                errors.add(new Exception("Field expected " + ((ReferenceType) toCheck.type).type + " but got " + ((ReferenceType) expressionResult.getType()).type));
                 valid = false;
             }
         }
