@@ -20,7 +20,7 @@ public class ForStatementAdapter {
         if (forStatement.for_init().for_statement_expr() != null) {
             if (forStatement.for_init().for_statement_expr().COMMA() != null
                     && forStatement.for_init().for_statement_expr().COMMA().size() > 0) {
-                for (int i = 0; i < forStatement.for_init().for_statement_expr().COMMA().size(); i++) {
+                for (int i = 0; i <= forStatement.for_init().for_statement_expr().COMMA().size(); i++) {
                     initStatements.add(StatementExprAdapter.adapt(forStatement.for_init().for_statement_expr().statement_expr(i)));
                 }
             } else {
@@ -39,7 +39,7 @@ public class ForStatementAdapter {
         if (forStatement.for_statement_expr() != null) {
             if (forStatement.for_statement_expr().COMMA() != null
                     && forStatement.for_statement_expr().COMMA().size() > 0) {
-                for (int i = 0; i < forStatement.for_statement_expr().COMMA().size(); i++) {
+                for (int i = 0; i <= forStatement.for_statement_expr().COMMA().size(); i++) {
                     updateStatements.add(StatementExprAdapter.adapt(forStatement.for_statement_expr().statement_expr(i)));
                 }
             } else {
