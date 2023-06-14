@@ -109,7 +109,7 @@ public class CheckType {
         throw new Exception("No declared Constructor with Arguments for this Type " + newDecl.getType());
     }
 
-    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass, boolean isStatic) {
+    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
         boolean failedBecauseNotVisible = false;
 
         if (type instanceof ReferenceType) {
@@ -152,7 +152,7 @@ public class CheckType {
                         } else {
                             canAccess = true;
                         }
-                        if (canAccess && method.getIsStatic() == isStatic) {
+                        if (canAccess) {
                             foundMethods.add(method);
                         }
                     }

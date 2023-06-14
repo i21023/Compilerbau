@@ -11,6 +11,7 @@ public class This implements IExpression {
     public Type type;
 
     public This() {
+
     }
 
     public This(Type pType) {
