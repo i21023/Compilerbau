@@ -357,7 +357,13 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(LocalVarDecl toCheck) {
         //int x;
         var valid = true;
-
+        //TODO: Bitte prüfen, ob es den Typ auf der linken Seite gibt, auch wenn man nur deklariert und
+        // nicht initialisiert, sonst kann man sowas schreiben, obwohl es den typen doodlesack leider nicht gibt
+        //
+        //public void foo(){
+        //		doodlesack i;
+        //		return;
+        //	}
         if (toCheck.expression != null) {
             var checkResult = toCheck.expression.accept(this);
             var resultType = toCheck.expression.getType();
