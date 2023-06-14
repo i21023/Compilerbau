@@ -380,7 +380,9 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         try {
-            CheckType.getClassInType(toCheck,programEnvironment); //schauen ob es den Typ überhaupt gibt
+            if(toCheck.type instanceof ReferenceType) {
+                CheckType.getClassInType(toCheck, programEnvironment); //schauen ob es den Typ überhaupt gibt
+            }
             currentScope.addLocalVar(toCheck);
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage() +  fileName));
