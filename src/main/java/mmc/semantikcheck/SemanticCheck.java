@@ -561,11 +561,11 @@ public class SemanticCheck implements SemanticVisitor {
                         new Exception("Trying to call a nonstatic method with a static reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
                 return new TypeCheckResult(false, null);
             }
-            else if(!(toCheck.methodOwnerPrefix instanceof This) && !isStatic && method.getIsStatic()){
+            /*else if(!(toCheck.methodOwnerPrefix instanceof This) && !isStatic && method.getIsStatic()){
                 errors.add(
                         new Exception("Trying to call a static method with a nonstatic reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
                 return new TypeCheckResult(false, null);
-            }
+            }*/
 
             toCheck.type = method.getType();
             toCheck.isStatic = method.getIsStatic();
@@ -721,11 +721,11 @@ public class SemanticCheck implements SemanticVisitor {
                         new Exception("Trying to make a static reference on the nonstatic field" + toCheck.name + " in class " + toCheck.expression.getType()));
                 return new TypeCheckResult(false, null);
             }
-            else if(!isStatic && nextInstVar.getIsStatic()){
+            /*else if(!isStatic && nextInstVar.getIsStatic()){
                 errors.add(
                         new Exception("Trying to make a nonstatic reference on the static field" + toCheck.name + " in class " + toCheck.expression.getType()));
                 return new TypeCheckResult(false, null);
-            }
+            }*/
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {
