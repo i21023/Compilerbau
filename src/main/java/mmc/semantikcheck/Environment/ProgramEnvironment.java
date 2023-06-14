@@ -49,6 +49,10 @@ public class ProgramEnvironment {
                 new ArrayList<>(),
                 new ArrayList<>());
 
+        ClassDecl StringClass = new ClassDecl("java/lang/String", new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>());
+
         Field out = new Field(AccessModifier.PUBLIC,true, new ReferenceType("java/io/PrintStream"),
                 "out");
         Field err = new Field(AccessModifier.PUBLIC, true , new ReferenceType("java/io/PrintStream"),
@@ -56,5 +60,6 @@ public class ProgramEnvironment {
         SystemClass.fields.add(out);
         SystemClass.fields.add(err);
         classes.put(SystemClass.name, new ClassEnvironment(SystemClass));
+        classes.put(StringClass.name, new ClassEnvironment(StringClass));
     }
 }

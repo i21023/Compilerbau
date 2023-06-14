@@ -9,6 +9,7 @@ import mmc.ast.expressions.JNull;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
+import mmc.ast.statements.LocalVarDecl;
 import mmc.semantikcheck.Environment.*;
 
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ public class CheckType {
                 return null;
             }
             if(field.getIsStatic() != isStatic){
-                if(isStatic){
+                if(isStatic || isStatic && SemanticCheck.methodIsStatic){
                     throw new Exception(
-                            "Cannot make a static reference to the non-static field" + objectClass.type);
+                            "Cannot make a static reference to the non-static field " + objectClass.type + "." + identifier);
                 }else{
                     throw new Exception(
                             "The static field " + identifier + " should be accessed in a static way" );
@@ -158,6 +159,17 @@ public class CheckType {
         } else {
             throw new Exception("Base Type " + type + " does not have Methods");
         }
+    }
+
+    public static ClassEnvironment getClassInType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
+        var objectClass = (ReferenceType) localVarDecl.type;
+        var declaredClassnames = ev.getClasses(); //Alle Klassen holen
+        var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
+        if(classContext == null){
+            throw new Exception(
+                    "Class: " + ((ReferenceType) localVarDecl.type).type + " not found in ");
+        }
+        return classContext;
     }
 
 }

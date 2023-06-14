@@ -27,7 +27,7 @@ public class SemanticCheck implements SemanticVisitor {
     public ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
     public ArrayList<String> getFields = new ArrayList<>();
 
-    private boolean isStatic;
+    public static boolean methodIsStatic;
 
 
     public static void main(String[] args) {
@@ -101,7 +101,6 @@ public class SemanticCheck implements SemanticVisitor {
         //Methoden überprüfen
         for (Method method : toCheck.methods) {
             //Für jede Methode durchgehen und schauen
-            //schauen ob isStatic
             valid = method.accept(this).isValid() && valid;
         }
 
@@ -139,7 +138,12 @@ public class SemanticCheck implements SemanticVisitor {
                 errors.add(new Exception("Field expected " + toCheck.type + " but got " + expressionResult.getType()));
                 valid = false;
             }
-
+        }else if(toCheck.expression != null && toCheck.type instanceof ReferenceType){
+            var expressionResult = toCheck.expression.accept(this);
+            if(toCheck.type != expressionResult.getType()){
+                errors.add(new Exception("Field expected " + ((ReferenceType) toCheck.type).type + " but got " + expressionResult.getType()));
+                valid = false;
+            }
         }
         valid = valid && typeExist;
         return new TypeCheckResult(valid, toCheck.getType());
@@ -172,6 +176,7 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(Method toCheck) {
         var valid = true;
+        methodIsStatic = toCheck.isStatic;
 
         for (Method method : this.getClass.methods) {
             //von der aktullen Klasse methoden durchgehen und schauen ob toCheck schon mal drin ist
@@ -231,7 +236,7 @@ public class SemanticCheck implements SemanticVisitor {
         //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
         if(toCheck.operator != Operator.ASSIGN){
             if(leftExpr.getType() != INT && rightExpr.getType() != INT){
-                errors.add(new Exception("Mismatch types in Assign-Statement: Both Types net to be Integer and not"
+                errors.add(new Exception("Mismatch types in Assign-Statement: Both Types need to be Integer and not"
                         + leftExpr.getType() + " and "
                         + rightExpr.getType()));
                 valid = false;
@@ -254,6 +259,7 @@ public class SemanticCheck implements SemanticVisitor {
         valid = valid && leftExpr.isValid() && rightExpr.isValid();
         currentNullType = null;
         return new TypeCheckResult(valid, null); //Hat keine Typ deswegen null zurück geben
+
     }
 
     @Override
@@ -357,11 +363,8 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(LocalVarDecl toCheck) {
         //int x;
         var valid = true;
-        //TODO: Bitte prüfen, ob es den Typ auf der linken Seite gibt, auch wenn man nur deklariert und
-        // nicht initialisiert, sonst kann man sowas schreiben, obwohl es den typen doodlesack leider nicht gibt
-        //
         //public void foo(){
-        //		doodlesack i;
+        //		doodlesack i; //Type Doodlesack, i name, expression null
         //		return;
         //	}
         if (toCheck.expression != null) {
@@ -377,6 +380,7 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         try {
+            CheckType.getClassInType(toCheck,programEnvironment); //schauen ob es den Typ überhaupt gibt
             currentScope.addLocalVar(toCheck);
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage() +  fileName));
@@ -502,6 +506,9 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
 
+        if(toCheck.type instanceof ReferenceType){
+            return new TypeCheckResult(valid, newClass);
+        }
         return new TypeCheckResult(valid, null);
     }
 
@@ -598,6 +605,10 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(This toCheck) { //nochmal schauen
+        if(methodIsStatic){
+            errors.add(new Exception("Cannot use this in a static context"));
+            return new TypeCheckResult(false, toCheck.getType());
+        }
         toCheck.setType(getClass.name);
         return new TypeCheckResult(true, toCheck.getType());
     }
@@ -656,7 +667,6 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(InstVar toCheck) {
         var valid = true;
 
-
         //Typ herausfinden
         var checkResult = toCheck.expression.accept(this);
         var type = checkResult.getType();
@@ -698,13 +708,15 @@ public class SemanticCheck implements SemanticVisitor {
         var valid = true;
 
         var lResult = toCheck.expression1.accept(this);
-        var oldNullType = currentNullType;
         currentNullType = toCheck.expression1.getType();
         var rResult = toCheck.expression2.accept(this);
-        currentNullType = oldNullType;
 
         Type lType = toCheck.expression1.getType();
         Type rType = toCheck.expression2.getType();
+
+        if (lType == null || rType == null) {
+            return new TypeCheckResult(false, null); //Hat keine Typ deswegen null zurück geben
+        }
 
         boolean isSame = lType.equals(rType);
         boolean lIsReference = lType instanceof ReferenceType;
