@@ -661,9 +661,14 @@ public class SemanticCheck implements SemanticVisitor {
         // Schauen ob sie in der Klasse deklariert ist, Feld bekommen welches aufgerufen wird
         try {
             var fieldVar = CheckType.getFieldInType(toCheck.name,
-                    new ReferenceType(getClass.name), programEnvironment, getClass, false);
+                    new ReferenceType(getClass.name), programEnvironment, getClass);
+
 
             if (fieldVar != null) {
+                if(!fieldVar.getIsStatic() && methodIsStatic){
+                    errors.add(new Exception("Cannot access nonstatic fieldvar " + toCheck.name + " in static Method"));
+                    return new TypeCheckResult(false, null);
+                }
                 toCheck.type = fieldVar.getType();
                 toCheck.isStatic = fieldVar.getIsStatic();
                 return new TypeCheckResult(true, fieldVar.getType());
@@ -701,7 +706,18 @@ public class SemanticCheck implements SemanticVisitor {
             if(toCheck.expression instanceof LocalOrFieldVar) {
                 isStatic = ((LocalOrFieldVar) toCheck.expression).isStatic;
             }
-            var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass, isStatic);
+            var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass);
+
+            if(isStatic && !nextInstVar.getIsStatic()){
+                errors.add(
+                        new Exception("Trying to make a static reference on the nonstatic field" + toCheck.name + " in class " + toCheck.expression.getType()));
+                return new TypeCheckResult(false, null);
+            }
+            else if(!isStatic && nextInstVar.getIsStatic()){
+                errors.add(
+                        new Exception("Trying to make a nonstatic reference on the static field" + toCheck.name + " in class " + toCheck.expression.getType()));
+                return new TypeCheckResult(false, null);
+            }
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {

@@ -62,8 +62,8 @@ public class Compiler implements ICompiler {
                 String finalOutDir = outDir;
                 code.forEach((x, y) -> {
                     try {
-                        FileOutputStream fos = new FileOutputStream(finalOutDir + File.separator + file.getName().replace(".java", ".class"));
-                        fos.write(code.get("Test"));
+                        FileOutputStream fos = new FileOutputStream(finalOutDir + File.separator + x + ".class");
+                        fos.write(y);
                         fos.close();
                     } catch (IOException e) {
                         throw new RuntimeException(e);

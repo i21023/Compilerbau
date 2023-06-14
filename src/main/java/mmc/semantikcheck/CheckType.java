@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class CheckType {
-    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, boolean isStatic) {
+/*    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, boolean isStatic) {
         if (type instanceof ReferenceType) { //Wenn mein Typ kein BasicType ist
             var objectClass = (ReferenceType) type;
             var declaredClassnames = context.getClasses(); //Alle Klassen holen
@@ -50,7 +50,35 @@ public class CheckType {
 
         }
 
+    }*/
+
+    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass) {
+        if (type instanceof ReferenceType) {
+            var objectClass = (ReferenceType) type;
+            var declaredClassnames = context.getClasses();
+            var classContext = declaredClassnames.get(objectClass.getType());
+            var field = classContext.getFields().get(identifier);
+            if (field == null) {
+                return null;
+            }
+
+            if (field.getAccessModifier() == AccessModifier.PRIVATE) {
+                if (objectClass.getType().equals(currentClass.name)) {
+                    return field;
+                } else {
+                    throw new Exception(
+                            "The Field " + objectClass.getType() + "." + identifier + " is not visible");
+                }
+            } else {
+                return field;
+            }
+        } else {
+            throw new Exception("Field " + identifier + " is missing in Type " + type);
+
+        }
+
     }
+
 
 
     public static ConstructorEnvironment getConstructor(New newDecl, ProgramEnvironment ev) {

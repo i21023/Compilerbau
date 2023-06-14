@@ -487,7 +487,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(InstVar instVar) {
+        boolean pushOnStackState = pushOnStack;
+        pushOnStack = true;
         instVar.expression.accept(this);
+        pushOnStack = pushOnStackState;
         String owner = ((ReferenceType) instVar.expression.getType()).type;
 
         if (!instVar.isStatic) {
@@ -614,9 +617,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     ReferenceType owner = (ReferenceType) leftExpr.expression.getType();
 
                     if (!leftExpr.isStatic) {
-                        leftExpr.expression.accept(this);
-
                         pushOnStack = true;
+                        leftExpr.expression.accept(this);
                         assign.rightExpr.accept(this);
                         pushOnStack = pushOnStackState;
 
@@ -867,8 +869,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
             methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
 
         } else {
-
+            boolean pushOnStackState = pushOnStack;
+            pushOnStack = true;
             ((InstVar) crement.expression).expression.accept(this);
+            pushOnStack = pushOnStackState;
+
             methodVisitor.visitInsn(Opcodes.DUP);
 
             methodVisitor.visitFieldInsn(Opcodes.GETFIELD, owner.type, instVar.name,
