@@ -26,7 +26,7 @@ public class CheckType {
                 return null;
             }
             if(field.getIsStatic() != isStatic){
-                if(isStatic || isStatic && SemanticCheck.methodIsStatic){
+                if(isStatic || SemanticCheck.methodIsStatic){
                     throw new Exception(
                             "Cannot make a static reference to the non-static field " + objectClass.type + "." + identifier);
                 }else{
