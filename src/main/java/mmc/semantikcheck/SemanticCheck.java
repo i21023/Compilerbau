@@ -27,6 +27,7 @@ public class SemanticCheck implements SemanticVisitor {
     public ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
     public ArrayList<String> getFields = new ArrayList<>();
 
+    private boolean blockEndReturn;
     public static boolean methodIsStatic;
 
 
@@ -208,7 +209,7 @@ public class SemanticCheck implements SemanticVisitor {
         if(resultType == null){
             resultType = VOID;
         }
-        if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
+        if (!resultType.equals(toCheck.getType()) || !blockEndReturn) { //Error wenn statement und Method nicht gleiche Typen haben
             errors.add(new Exception("Method-Declaration " + toCheck.name + " with type "
                     + toCheck.getType() + " has at least one Mismatching return Type"));
             valid = false;
@@ -348,10 +349,15 @@ public class SemanticCheck implements SemanticVisitor {
             toCheck.type = toCheck.expression.getType();
         }
         if (currentMethodReturnType != null && !currentMethodReturnType.equals(toCheck.getType())) {
-            //Wenn die aktuelle Methode einen Return Type hat aber nicht zu dem Return Typ passt exception
-            errors.add(
-                    new Exception("Return-Type mismatch:  cannot convert from " + returnExpression.getType()
-                            + " to " + currentMethodReturnType));
+            if(currentMethodReturnType instanceof ReferenceType){
+                new Exception("Return-Type mismatch:  cannot convert from " + returnExpression.getType()
+                        + " to " + ((ReferenceType)currentMethodReturnType).type);
+            }else {
+                //Wenn die aktuelle Methode einen Return Type hat aber nicht zu dem Return Typ passt exception
+                errors.add(
+                        new Exception("Return-Type mismatch:  cannot convert from " + returnExpression.getType()
+                                + " to " + currentMethodReturnType));
+            }
             valid = false;
             return new TypeCheckResult(valid, returnExpression.getType());
         }
@@ -373,8 +379,13 @@ public class SemanticCheck implements SemanticVisitor {
             valid = checkResult.isValid() && valid;
 
             if (!Objects.equals(resultType, toCheck.getType())) { //Expression muss zum LocalVar Typ passen
+                if (toCheck.type instanceof ReferenceType){
+                    errors.add(new Exception(
+                            "Type mismatch: cannot convert from " + resultType + " to " + ((ReferenceType)toCheck.getType()).type));
+            }else {
                 errors.add(new Exception(
                         "Type mismatch: cannot convert from " + resultType + " to " + toCheck.getType()));
+            }
                 valid = false;
             }
         }
@@ -413,7 +424,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         // else überprüfen
         if (toCheck.blockElse != null) { //Wenn es ein else block gibt dann..
-
+            blockEndReturn = true;
             var elseBlockResult = toCheck.blockElse.accept(this);
             valid = valid && elseBlockResult.isValid();
             var elseBlockType = elseBlockResult.getType();
@@ -452,8 +463,16 @@ public class SemanticCheck implements SemanticVisitor {
         currentScope.pushScope();
 
         for (var statement : toCheck.statements) { //jedes statement im Block durchgehen
-
-            TypeCheckResult checkResult = statement.accept(this);
+            boolean statementType = (statement instanceof If
+                    || statement instanceof While || statement instanceof For);
+            TypeCheckResult checkResult;
+            if(statementType){
+                checkResult = statement.accept(this);
+                blockEndReturn = false;
+            }else {
+                checkResult = statement.accept(this);
+                blockEndReturn = true;
+            }
             Type statementReturnType = checkResult.getType();
 
             if (statementReturnType != null) { //keine änderung des Block Return Typs
@@ -720,9 +739,9 @@ public class SemanticCheck implements SemanticVisitor {
             return new TypeCheckResult(false, null); //Hat keine Typ deswegen null zurück geben
         }
 
-        boolean isSame = lType.equals(rType);
+        boolean sameType = lType.equals(rType); //Haben gleichen Typ
         boolean lIsReference = lType instanceof ReferenceType;
-        boolean oneIsNull = lResult.getType() == null ^ rResult.getType() == null;
+        boolean oneIsNull = lResult.getType() == null ^ rResult.getType() == null; //XOR wenn einer davon null;
 
         var errorToThrow = new Exception(
                 "The Operator: " + toCheck.operator + " is undefined for the argument types: "
@@ -731,7 +750,7 @@ public class SemanticCheck implements SemanticVisitor {
         //Die Operatoren, welche wir unterstützen
         Operator operator = toCheck.operator;
 
-        boolean isCompareOperator = (toCheck.operator == Operator.EQUAL
+        boolean isCompareOperator = (operator == Operator.EQUAL
                 || operator == Operator.NOTEQUAL || operator == Operator.LESS
                 || operator == Operator.LESSEQUAL || operator == Operator.GREATER
                 || operator == Operator.GREATEREQUAL);
@@ -743,7 +762,7 @@ public class SemanticCheck implements SemanticVisitor {
 
 
         //Nur zwei gleiche Typen vergleichen
-        if (isSame && !lIsReference) { // Wenn 2 gleiche BaseTypes miteinander verglichen werden
+        if (sameType && !lIsReference) { // Wenn 2 gleiche BaseTypes miteinander verglichen werden
             var lBaseType = (BasicType) lType;
             switch (lBaseType) {
                 case BOOL -> {
@@ -775,7 +794,7 @@ public class SemanticCheck implements SemanticVisitor {
                     valid = false;
                 }
             }
-        } else if ((isSame || oneIsNull) && lIsReference) {// Wenn 2 Objekte miteinander verglichen werden
+        } else if ((sameType || oneIsNull) && lIsReference) {// String usw vergleichen
             if (operator == Operator.EQUAL || operator == Operator.NOTEQUAL) {
                 toCheck.type = BOOL;
             } else {
