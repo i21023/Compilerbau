@@ -509,7 +509,7 @@ public class SemanticCheck implements SemanticVisitor {
         if(toCheck.type instanceof ReferenceType){
             return new TypeCheckResult(valid, newClass);
         }
-        return new TypeCheckResult(valid, null);
+        return new TypeCheckResult(valid, newClass);
     }
 
     @Override
