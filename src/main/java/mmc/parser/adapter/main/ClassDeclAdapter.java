@@ -25,7 +25,7 @@ public class ClassDeclAdapter {
         classdeclContext.method_decl().forEach(
                 methodDecl -> methodDecls.add(MethodDeclAdapter.adapt(methodDecl)));
 
-        AccessModifier accessModifier = AccessModifier.PACKAGE_PRIVATE;
+        AccessModifier accessModifier = AccessModifier.DEFAULT;
 
         return new ClassDecl(classdeclContext.ID().getText(), fieldDecls, methodDecls, constructorDecls, accessModifier);
     }

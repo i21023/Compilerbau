@@ -19,7 +19,7 @@ public class MethodDeclAdapter {
             Block block = StatementBlockAdapter.adapt(methodDeclContext.main_method_decl().statement_block());
             return new MainMethod(block);
         } else {
-            AccessModifier accessModifier = AccessModifier.PUBLIC;
+            AccessModifier accessModifier = AccessModifier.DEFAULT;
             if (methodDeclContext.ACCES_MOD() != null) {
                 switch (methodDeclContext.ACCES_MOD().getText()) {
                     case "public":
@@ -32,7 +32,6 @@ public class MethodDeclAdapter {
                         accessModifier = AccessModifier.PROTECTED;
                         break;
                     default:
-                        accessModifier = AccessModifier.PUBLIC;
                         break;
                 }
             }

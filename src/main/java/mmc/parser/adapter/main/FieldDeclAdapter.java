@@ -15,7 +15,7 @@ public class FieldDeclAdapter {
 
     public static List<Field> adapt(MiniJavaParser.Field_declContext fieldDeclContext) {
 
-        AccessModifier accessModifier = AccessModifier.PRIVATE;
+        AccessModifier accessModifier = AccessModifier.DEFAULT;
         if (fieldDeclContext.ACCES_MOD() != null) {
             switch (fieldDeclContext.ACCES_MOD().getText()) {
                 case "public":
@@ -28,7 +28,6 @@ public class FieldDeclAdapter {
                     accessModifier = AccessModifier.PROTECTED;
                     break;
                 default:
-                    accessModifier = AccessModifier.PRIVATE;
                     break;
             }
         }
