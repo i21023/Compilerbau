@@ -28,6 +28,7 @@ public class SemanticCheck implements SemanticVisitor {
     public ArrayList<String> getFields = new ArrayList<>();
 
     private boolean blockEndReturn;
+    private boolean elseBlock = false;
     public static boolean methodIsStatic;
 
 
@@ -209,7 +210,7 @@ public class SemanticCheck implements SemanticVisitor {
         if(resultType == null){
             resultType = VOID;
         }
-        if (!resultType.equals(toCheck.getType()) || !blockEndReturn) { //Error wenn statement und Method nicht gleiche Typen haben
+        if (!resultType.equals(toCheck.getType()) || !blockEndReturn && !elseBlock) { //Error wenn statement und Method nicht gleiche Typen haben
             errors.add(new Exception("Method-Declaration " + toCheck.name + " with type "
                     + toCheck.getType() + " has at least one Mismatching return Type"));
             valid = false;
@@ -424,7 +425,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         // else überprüfen
         if (toCheck.blockElse != null) { //Wenn es ein else block gibt dann..
-            blockEndReturn = true;
+            elseBlock = true;
             var elseBlockResult = toCheck.blockElse.accept(this);
             valid = valid && elseBlockResult.isValid();
             var elseBlockType = elseBlockResult.getType();
