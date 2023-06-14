@@ -45,20 +45,32 @@ public class ProgramEnvironment {
 
 
     public void addStaticContext() {
-        ClassDecl SystemClass = new ClassDecl("java/lang/System", new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>());
-
-        ClassDecl StringClass = new ClassDecl("java/lang/String", new ArrayList<>(),
-                new ArrayList<>(),
-                new ArrayList<>());
 
         Field out = new Field(AccessModifier.PUBLIC,true, new ReferenceType("java/io/PrintStream"),
                 "out");
         Field err = new Field(AccessModifier.PUBLIC, true , new ReferenceType("java/io/PrintStream"),
                 "err");
+
+        var stringParams = new ArrayList<Parameter>();
+        stringParams.add(new Parameter(new ReferenceType("java/lang/String"), "s1"));
+
+        Method concatString = new Method(
+                new ReferenceType("java/lang/String"),"concat",stringParams,new Block(),AccessModifier.PUBLIC, false);
+
+        var stringMethods = new ArrayList<Method>();
+        stringMethods.add(concatString);
+
+        ClassDecl SystemClass = new ClassDecl("java/lang/System", new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>());
+
+        ClassDecl StringClass = new ClassDecl("java/lang/String", new ArrayList<>(),
+                stringMethods,
+                new ArrayList<>());
+
         SystemClass.fields.add(out);
         SystemClass.fields.add(err);
+
         classes.put(SystemClass.name, new ClassEnvironment(SystemClass));
         classes.put(StringClass.name, new ClassEnvironment(StringClass));
     }
