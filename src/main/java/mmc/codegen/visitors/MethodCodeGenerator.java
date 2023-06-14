@@ -516,7 +516,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         } else if (intExpr.value >= -32768 && intExpr.value <= 32767) {
             methodVisitor.visitIntInsn(Opcodes.SIPUSH, intExpr.value);
         } else {
-            methodVisitor.visitLdcInsn(Integer.valueOf(intExpr.value));
+            methodVisitor.visitLdcInsn(intExpr.value);
         }
     }
 
@@ -548,8 +548,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                         GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
 
             }
-
         }
+        //else it's a classname to access a static method or attribute:
+        //don't evaluate in this case
     }
 
     @Override
@@ -675,12 +676,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     public void visit(MethodCall methodCall) {
 
         boolean pushOnStackState = pushOnStack;
-
         pushOnStack = true;
-        methodCall.methodOwnerPrefix.accept(this);
+        if(!methodCall.isStatic) methodCall.methodOwnerPrefix.accept(this);
         methodCall.arguments.forEach(argument -> argument.accept(this));
         pushOnStack = pushOnStackState;
-
         String type = methodCall.methodOwnerPrefix.getType() instanceof ReferenceType ref ? ref.type : null;
 
         if (type == null)
@@ -691,9 +690,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         } else {
             methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, type, methodCall.name, GeneratorHelpFunctions.getDescriptor(methodCall.arguments.stream().map(IExpression::getType).collect(Collectors.toList()), methodCall.type), false);
         }
+
+
         if (!pushOnStack && methodCall.type != BasicType.VOID) {
             methodVisitor.visitInsn(Opcodes.POP);
         }
+
     }
 
     @Override
