@@ -94,7 +94,7 @@ public class SemanticCheck implements SemanticVisitor {
             var checkResult = field.accept(this);
             valid = valid && checkResult.isValid();
             if (valid) {
-                fieldNames.add(field.name); //Wenn feld valid in identifier speichern
+                fieldNames.add(field.name); //Wenn feld valid in identifier speichern TODO: Und wenn nicht? Wird kein Fehler ausgegeben sondern einfach ignoriert
             }
         }
 
@@ -133,7 +133,7 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         //Für Zuweisungen, schauen ob Zuweisung zum DatenTyp passt
-        if(toCheck.expression != null && toCheck.type instanceof BasicType){
+        if(toCheck.expression != null && toCheck.type instanceof BasicType){ //TODO: Bitte auch referenz Typen checken, z.B. darf bei Objekten nur new mit dem gleichen Typ wie auf der variablentyp stehen, bei Strings darf außerdem noch eine StringExpr stehen
             var expressionResult = toCheck.expression.accept(this);
             if(toCheck.type != expressionResult.getType()){
                 errors.add(new Exception("Field expected " + toCheck.type + " but got " + expressionResult.getType()));
