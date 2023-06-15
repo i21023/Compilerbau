@@ -558,6 +558,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitType(MiniJavaParser.TypeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#access_mod}.
+	 * @param ctx the parse tree
+	 */
+	void enterAccess_mod(MiniJavaParser.Access_modContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#access_mod}.
+	 * @param ctx the parse tree
+	 */
+	void exitAccess_mod(MiniJavaParser.Access_modContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#literal}.
 	 * @param ctx the parse tree
 	 */

@@ -41,8 +41,8 @@ public class MethodDeclAdapter {
             }
         } else {
             AccessModifier accessModifier = AccessModifier.DEFAULT;
-            if (methodDeclContext.ACCES_MOD() != null) {
-                switch (methodDeclContext.ACCES_MOD().getText()) {
+            if (methodDeclContext.access_mod() != null) {
+                switch (methodDeclContext.access_mod().getText()) {
                     case "public":
                         accessModifier = AccessModifier.PUBLIC;
                         break;

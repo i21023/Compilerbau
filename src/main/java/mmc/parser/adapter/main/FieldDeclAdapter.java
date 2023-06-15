@@ -16,8 +16,8 @@ public class FieldDeclAdapter {
     public static List<Field> adapt(MiniJavaParser.Field_declContext fieldDeclContext) {
 
         AccessModifier accessModifier = AccessModifier.DEFAULT;
-        if (fieldDeclContext.ACCES_MOD() != null) {
-            switch (fieldDeclContext.ACCES_MOD().getText()) {
+        if (fieldDeclContext.access_mod() != null) {
+            switch (fieldDeclContext.access_mod().getText()) {
                 case "public":
                     accessModifier = AccessModifier.PUBLIC;
                     break;
