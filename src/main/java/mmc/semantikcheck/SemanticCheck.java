@@ -31,8 +31,6 @@ public class SemanticCheck implements SemanticVisitor {
     private boolean elseBlock;
     public static boolean methodIsStatic;
 
-    public static String varName;
-
 
     public static void main(String[] args) {
 
@@ -243,13 +241,22 @@ public class SemanticCheck implements SemanticVisitor {
             String varName = ((LocalOrFieldVar) lExpr).name;
             var scope = currentScope.getLocalVar(varName);
             if(scope == null){
-                errors.add(new Exception("Local or Field Varaible " + varName + " doesn't exist"));
+                errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
                 valid = false;
             }else {
                 scope.isInitialized = true;
             }
+        }else if (lExpr instanceof LocalOrFieldVar && rExpr instanceof Binary){
+            String varName = ((LocalOrFieldVar) lExpr).name;
+            var scope = currentScope.getLocalVar(varName);
+            if(scope == null){
+                errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
+                valid = false;
+            }else if(scope.isInitialized == false){
+                errors.add(new Exception("Local or Field Variable " + varName + " may not have been initialized"));
+                valid = false;
+            }
         }
-
 
         //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
         if(toCheck.operator != Operator.ASSIGN){
@@ -643,6 +650,18 @@ public class SemanticCheck implements SemanticVisitor {
         boolean valid = true;
         toCheck.expression.accept(this);
         Type expressionType = toCheck.expression.getType();
+
+        if(toCheck.expression instanceof LocalOrFieldVar){
+            String varName = ((LocalOrFieldVar) toCheck.expression).name;
+            var scope = currentScope.getLocalVar(varName);
+            if(scope == null){
+                errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
+                valid = false;
+            }else if(scope.isInitialized == false){
+                errors.add(new Exception("Local or Field Variable " + varName + " may not have been initialized"));
+                valid = false;
+            }
+        }
 
         if (expressionType instanceof BasicType && (((BasicType) expressionType) == INT
                 || ((BasicType) expressionType) == CHAR)) {
