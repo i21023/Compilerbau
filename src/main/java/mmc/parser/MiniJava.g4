@@ -24,6 +24,7 @@ statement_block: local_var_decl SEMICOLON| statement;
 statement: block | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
 local_var_decl: type ID (ASSIGN expr)? (COMMA local_var_decl_concat)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 local_var_decl_concat: ID (ASSIGN expr)?;
+//ToDo: Parser: if, while, for Statements ohne Block mit Semikolon am Ende
 if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement; // example else { statement }
 while_statement: WHILE LEFT_BRACKET expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
