@@ -26,7 +26,6 @@ public class SemanticCheck implements SemanticVisitor {
     private ScopeEnvironment currentScope;
     public ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
     public ArrayList<String> getFields = new ArrayList<>();
-
     private boolean blockEndReturn;
     private boolean elseBlock = false;
     public static boolean methodIsStatic;
@@ -541,7 +540,41 @@ public class SemanticCheck implements SemanticVisitor {
         //arguments die parameter in dem methoden aufruf
         // int a = x.add(5,6);
 
+        if(toCheck.methodOwnerPrefix instanceof This){
+            try {
+                if (methodIsStatic){
+                    errors.add(new Exception("non-static method " + toCheck.name + " cannot be referenced from a static context"));
+                    return new TypeCheckResult(false, null);
+                }
+            }catch(Exception e){
+                errors.add(new Exception(e.getMessage()));
+                return new TypeCheckResult(false, null);
+            }
+        }
+
         var valid = true;
+        if(toCheck.methodOwnerPrefix == null){
+            try {
+                var method = CheckType.getMethodInType(toCheck, new ReferenceType(getClass.name), programEnvironment, getClass);
+
+                if(method.getIsStatic()){
+                    toCheck.methodOwnerPrefix = new Class(getClass.name, new ReferenceType(getClass.name));
+                }
+                else{
+                    if(!methodIsStatic){
+                        toCheck.methodOwnerPrefix = new This(new ReferenceType(getClass.name));
+                    }
+                    else{
+                        errors.add(new Exception("non-static method " + toCheck.name + " cannot be referenced from a static context"));
+                        return new TypeCheckResult(false, null);
+                    }
+                }
+
+            }catch(Exception e){
+                errors.add(new Exception(e.getMessage()));
+                return new TypeCheckResult(false, null);
+            }
+        }
 
         var receiver = toCheck.methodOwnerPrefix.accept(this);
 
@@ -550,6 +583,7 @@ public class SemanticCheck implements SemanticVisitor {
         for (var parameter : toCheck.arguments) {
             valid = valid && parameter.accept(this).isValid();
         }
+
         try {
             boolean isStatic = false;
             if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar) {
@@ -557,22 +591,15 @@ public class SemanticCheck implements SemanticVisitor {
             }
             var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
 
+            if(isStatic && methodIsStatic){
+                toCheck.methodOwnerPrefix = new Class(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name, new ReferenceType(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name));
+            }
+
             if(isStatic && !method.getIsStatic()){
                 errors.add(
                         new Exception("Trying to call a nonstatic method with a static reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
                 return new TypeCheckResult(false, null);
             }
-
-            if(toCheck.methodOwnerPrefix instanceof This && methodIsStatic && !method.getIsStatic()){
-                errors.add(
-                        new Exception("non-static method "+ toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType() + " cannot be referenced from a static context"));
-                return new TypeCheckResult(false, null);
-            }
-            /*else if(!(toCheck.methodOwnerPrefix instanceof This) && !isStatic && method.getIsStatic()){
-                errors.add(
-                        new Exception("Trying to call a static method with a nonstatic reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
-                return new TypeCheckResult(false, null);
-            }*/
 
             toCheck.type = method.getType();
             toCheck.isStatic = method.getIsStatic();
@@ -645,6 +672,10 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(This toCheck) { //nochmal schauen
+        if(methodIsStatic){
+            errors.add(new Exception("non-static variable this cannot be referenced from a static context"));
+            return new TypeCheckResult(false, null);
+        }
         toCheck.setType(getClass.name);
         return new TypeCheckResult(true, toCheck.getType());
     }
@@ -728,11 +759,7 @@ public class SemanticCheck implements SemanticVisitor {
                         new Exception("Trying to make a static reference on the nonstatic field" + toCheck.name + " in class " + toCheck.expression.getType()));
                 return new TypeCheckResult(false, null);
             }
-            /*else if(!isStatic && nextInstVar.getIsStatic()){
-                errors.add(
-                        new Exception("Trying to make a nonstatic reference on the static field" + toCheck.name + " in class " + toCheck.expression.getType()));
-                return new TypeCheckResult(false, null);
-            }*/
+
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {

@@ -15,7 +15,7 @@ public class MethodCallStatementAdapter {
 
     public static MethodCall adapt(MiniJavaParser.Method_call_statementContext methodCallStatement) {
 
-        IExpression methodOwnerPrefix = new This();
+        IExpression methodOwnerPrefix = null;
         if (methodCallStatement.method_owner_prefix() != null) { // explicit receiver
             if (methodCallStatement.method_owner_prefix().THIS() != null) {
                 methodOwnerPrefix = new This();
