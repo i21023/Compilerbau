@@ -341,6 +341,12 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitType(MiniJavaParser.TypeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#access_mod}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAccess_mod(MiniJavaParser.Access_modContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

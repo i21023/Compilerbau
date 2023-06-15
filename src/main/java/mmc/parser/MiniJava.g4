@@ -1,16 +1,16 @@
 grammar MiniJava;
 
 //Declarations
-program: ('package' ID ('.' ID )* SEMICOLON)? public_class_decl;
+program: (PACKAGE ID ('.' ID )* SEMICOLON)? public_class_decl;
 //Class
-public_class_decl: 'public' 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE class_decl* | class_decl+;
-class_decl: 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
+public_class_decl: PUBLIC CLASS ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE class_decl* | class_decl+;
+class_decl: CLASS ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
 ///Class objects
-const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET block;
-method_decl: main_method_decl | ACCES_MOD? STATIC? method_type ID LEFT_BRACKET parameter_list? RIGHT_BRACKET block;
-main_method_decl: 'public' STATIC VOID 'main' LEFT_BRACKET (string_args | parameter_list?)  RIGHT_BRACKET  block;
+const_decl: access_mod? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET block;
+method_decl: main_method_decl | access_mod? STATIC? method_type ID LEFT_BRACKET parameter_list? RIGHT_BRACKET block;
+main_method_decl: PUBLIC STATIC VOID MAIN LEFT_BRACKET (string_args | parameter_list?)  RIGHT_BRACKET  block;
 string_args: 'String' '[' ']'  'args';
-field_decl: ACCES_MOD? STATIC? type ID (ASSIGN expr)? (COMMA field_decl_concat)* SEMICOLON;
+field_decl: access_mod? STATIC? type ID (ASSIGN expr)? (COMMA field_decl_concat)* SEMICOLON;
 field_decl_concat: ID (ASSIGN expr)?;
 //example int a = 5, b = 6, c;
 
@@ -86,11 +86,17 @@ assign_op: '=' | '+=' | '-=' | '*=' | '/=' | '%=';
 type: 'int' | 'boolean' | 'char' | 'String' | ID ;
 
 //Declaration parameter
-ACCES_MOD: 'private' | 'public' | 'protected';
+access_mod: PRIVATE | PUBLIC | PROTECTED;
 STATIC: 'static';
 VOID: 'void';
 NEW: 'new';
 THIS: 'this';
+CLASS: 'class';
+PUBLIC: 'public';
+PRIVATE: 'private';
+PROTECTED: 'protected';
+PACKAGE: 'package';
+MAIN: 'main';
 
 //signs
 LEFT_BRACE: '{';

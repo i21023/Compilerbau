@@ -16,8 +16,8 @@ public class ConstDeclAdapter {
     public static Constructor adapt(MiniJavaParser.Const_declContext constuctorDeclContext) {
 
         AccessModifier accessModifier = AccessModifier.PUBLIC;
-        if (constuctorDeclContext.ACCES_MOD() != null) {
-            switch (constuctorDeclContext.ACCES_MOD().getText()) {
+        if (constuctorDeclContext.access_mod() != null) {
+            switch (constuctorDeclContext.access_mod().getText()) {
                 case "public":
                     accessModifier = AccessModifier.PUBLIC;
                     break;
