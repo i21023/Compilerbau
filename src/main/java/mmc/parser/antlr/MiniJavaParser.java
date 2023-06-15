@@ -2329,7 +2329,9 @@ public class MiniJavaParser extends Parser {
 	@SuppressWarnings("CheckReturnValue")
 	public static class New_statementContext extends ParserRuleContext {
 		public TerminalNode NEW() { return getToken(MiniJavaParser.NEW, 0); }
-		public TerminalNode ID() { return getToken(MiniJavaParser.ID, 0); }
+		public TypeContext type() {
+			return getRuleContext(TypeContext.class,0);
+		}
 		public TerminalNode LEFT_BRACKET() { return getToken(MiniJavaParser.LEFT_BRACKET, 0); }
 		public TerminalNode RIGHT_BRACKET() { return getToken(MiniJavaParser.RIGHT_BRACKET, 0); }
 		public ArgumentListContext argumentList() {
@@ -2364,7 +2366,7 @@ public class MiniJavaParser extends Parser {
 			setState(390);
 			match(NEW);
 			setState(391);
-			match(ID);
+			type();
 			setState(392);
 			match(LEFT_BRACKET);
 			setState(394);
@@ -4817,7 +4819,7 @@ public class MiniJavaParser extends Parser {
 		"\u0000\u0000\u0181\u0182\u0001\u0000\u0000\u0000\u0182\u0183\u0001\u0000"+
 		"\u0000\u0000\u0183\u0184\u0005)\u0000\u0000\u0184\u0185\u0005.\u0000\u0000"+
 		"\u01855\u0001\u0000\u0000\u0000\u0186\u0187\u0005\u001e\u0000\u0000\u0187"+
-		"\u0188\u0005:\u0000\u0000\u0188\u018a\u0005(\u0000\u0000\u0189\u018b\u0003"+
+		"\u0188\u0003l6\u0000\u0188\u018a\u0005(\u0000\u0000\u0189\u018b\u0003"+
 		"8\u001c\u0000\u018a\u0189\u0001\u0000\u0000\u0000\u018a\u018b\u0001\u0000"+
 		"\u0000\u0000\u018b\u018c\u0001\u0000\u0000\u0000\u018c\u018d\u0005)\u0000"+
 		"\u0000\u018d7\u0001\u0000\u0000\u0000\u018e\u0193\u0003@ \u0000\u018f"+

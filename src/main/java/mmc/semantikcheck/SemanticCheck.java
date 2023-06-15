@@ -785,6 +785,19 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(InstVar toCheck) {
         var valid = true;
 
+        //wenn weder Feld noch lokale Variable
+        if(toCheck.expression instanceof LocalOrFieldVar l){
+            if(currentScope.getLocalVar(l.name) == null && !getFields.contains(l.name)){ //If LocalOrFieldVar is no fieldvar and no localvar it could be a class name
+                if(programEnvironment.getClasses().get(l.name) != null){
+                    toCheck.expression = new Class(l.name, new ReferenceType(l.name)); //Replace LocalOrFieldVar with Class in AST
+                }
+                else{ // The provided identifier is none of the above: wrong input
+                    errors.add(new Exception("Cannot find Symbol " + toCheck.name));
+                    return new TypeCheckResult(false, null);
+                }
+            }
+        }
+
         //Typ herausfinden
         var checkResult = toCheck.expression.accept(this);
         var type = checkResult.getType();
@@ -797,7 +810,6 @@ public class SemanticCheck implements SemanticVisitor {
             boolean isStatic = false;
             if(toCheck.expression instanceof LocalOrFieldVar l) {
                 isStatic = ((LocalOrFieldVar) toCheck.expression).isStatic;
-                toCheck.expression = new Class(((ReferenceType) l.type).type, l.type);
             }
             var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass);
 
@@ -807,7 +819,6 @@ public class SemanticCheck implements SemanticVisitor {
                         new Exception("Trying to make a static reference on the nonstatic field" + toCheck.name + " in class " + toCheck.expression.getType()));
                 return new TypeCheckResult(false, null);
             }
-
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {
@@ -950,6 +961,10 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(Class toCheck) {
-        return new TypeCheckResult(true, toCheck.getType());
+        if(programEnvironment.getClasses().get(toCheck.type) != null){
+            return new TypeCheckResult(true, toCheck.getType());
+        }
+        errors.add(new Exception("There is no class with the name " + toCheck.name));
+        return new TypeCheckResult(false, null);
     }
 }

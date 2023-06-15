@@ -24,6 +24,7 @@ statement_block: local_var_decl SEMICOLON| statement;
 statement: block | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
 local_var_decl: type ID (ASSIGN expr)? (COMMA local_var_decl_concat)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 local_var_decl_concat: ID (ASSIGN expr)?;
+//ToDo: Parser: if, while, for Statements ohne Block mit Semikolon am Ende
 if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement; // example else { statement }
 while_statement: WHILE LEFT_BRACKET expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
@@ -38,7 +39,7 @@ method_call_statement: method_owner_prefix? method_chain* (ID LEFT_BRACKET argum
 //example a.hello().hello2(); methode1 ( expr , expr );
 method_owner_prefix: (THIS | inst_var | new_statement | ID) DOT;
 method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
-new_statement: NEW ID LEFT_BRACKET argumentList? RIGHT_BRACKET;
+new_statement: NEW type LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
 assign_statement: (inst_var | ID) assign_op expr; // example this.a = c + 3; x += 3;
 crement_statement: (pre_cre_op (ID | inst_var)) | ((ID | inst_var) suf_cre_op); //example a++; ++a

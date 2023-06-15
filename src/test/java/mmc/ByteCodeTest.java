@@ -21,6 +21,7 @@ import ressources.helpers.Classwriter;
 import ressources.helpers.Resources;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -691,6 +692,47 @@ public class ByteCodeTest {
                 new ArrayList<Constructor>());
 
         Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+    }
+
+    @Test
+    public void stringConcat(){
+
+        Method method1 = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
+
+                new LocalVarDecl("i", new ReferenceType("java/lang/String"), new MethodCall(new StringExpr("Hallo"), "concat", new ArrayList<>(Arrays.asList(new StringExpr("Hallo"))), new ReferenceType("java/lang/String"))),
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new LocalOrFieldVar("i", new ReferenceType("java/lang/String"), false))), BasicType.VOID, false)
+        ))));
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+    }
+
+    public void stringEqual(){
+        Method method1 = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
+
+                new LocalVarDecl("i", BasicType.BOOL, new Binary(Operator.EQUAL, new New("java/lang/String", new ArrayList<>(Arrays.asList(new StringExpr("Hallo")))), new StringExpr("Hallo"), BasicType.BOOL)),
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new LocalOrFieldVar("i", BasicType.BOOL, false))), BasicType.VOID, false)
+        ))));
+
+        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
     }
 }
 
