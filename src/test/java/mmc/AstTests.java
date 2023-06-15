@@ -344,7 +344,7 @@ public class AstTests {
     public void MethodCallTest() {
 
         Block Method1Body = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(1)), new Return(new LocalOrFieldVar("a"))));
-        Block Method2Body = new Block(Arrays.asList(new Return(new Binary(Operator.PLUS, new LocalOrFieldVar("b"), new MethodCall(new This(), "getA", new ArrayList<>())))));
+        Block Method2Body = new Block(Arrays.asList(new Return(new Binary(Operator.PLUS, new LocalOrFieldVar("b"), new MethodCall(null, "getA", new ArrayList<>())))));
 
         Method method1 = new Method(BasicType.INT, "getA", new ArrayList<Parameter>(), Method1Body, AccessModifier.PRIVATE, false);
         Method method2 = new Method(BasicType.INT, "addConstant", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "b"))), Method2Body, AccessModifier.PUBLIC, false);
@@ -373,7 +373,7 @@ public class AstTests {
                 new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))),
                         null,
                         new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
-                new Return(new MethodCall(new This(), "addRek", new ArrayList<IExpression>(Arrays.asList(
+                new Return(new MethodCall(null, "addRek", new ArrayList<IExpression>(Arrays.asList(
                         new Crement(BasicType.INT, new LocalOrFieldVar("a"), Operator.INCSUF),
                         new Crement(BasicType.INT, new LocalOrFieldVar("b"), Operator.DECSUF)))))));
 
@@ -399,8 +399,8 @@ public class AstTests {
     @DisplayName("BooleanOperator")
     public void BooleanOperatorTest() {
         ArrayList<Field> Fields = new ArrayList<Field>(Arrays.asList(
-                new Field(BasicType.BOOL, "bool1", AccessModifier.PRIVATE, new BoolExpr(true), false),
-                new Field(BasicType.BOOL, "bool2", AccessModifier.PRIVATE, new BoolExpr(false), false)));
+                new Field(BasicType.BOOL, "bool1", AccessModifier.DEFAULT, new BoolExpr(true), false),
+                new Field(BasicType.BOOL, "bool2", AccessModifier.DEFAULT, new BoolExpr(false), false)));
         Block Method1Body = new Block(Arrays.asList(
                 new If(
                         new Block(Arrays.asList(new Return(new BoolExpr(true)))), new Block(Arrays.asList(new Return(new BoolExpr(false)))),
@@ -488,7 +488,7 @@ public class AstTests {
     @DisplayName("FieldVarClassTest")
     public void FieldVarClassTest() {
 
-        ClassDecl classes = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "x", AccessModifier.PRIVATE, new IntExpr(5), false))), new ArrayList<Method>(), new ArrayList<Constructor>());
+        ClassDecl classes = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "x", AccessModifier.DEFAULT, new IntExpr(5), false))), new ArrayList<Method>(), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
         try {
@@ -511,13 +511,13 @@ public class AstTests {
         ArrayList<Parameter> params = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
         Method method1 = new Method(BasicType.INT, "add", params, new Block(Arrays.asList(
                 new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
-                new Return(new MethodCall(new This(), "add", new ArrayList<IExpression>(Arrays.asList(
+                new Return(new MethodCall(null, "add", new ArrayList<IExpression>(Arrays.asList(
                         new Binary(Operator.PLUS, new LocalOrFieldVar("a"), new IntExpr(1)), new Binary(Operator.MINUS, new LocalOrFieldVar("b"), new IntExpr(1)))))))), AccessModifier.PUBLIC, false);
         Method method2 = new Method(BasicType.INT, "mul", params, new Block(Arrays.asList(
                 new If(new Block(Arrays.asList(new Return(new IntExpr(0)))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
                 new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(1))),
-                new Return(new MethodCall(new This(), "add", new ArrayList<IExpression>(Arrays.asList(
-                        new LocalOrFieldVar("a"), new MethodCall(new This(), "mul", new ArrayList<IExpression>(Arrays.asList(
+                new Return(new MethodCall(null, "add", new ArrayList<IExpression>(Arrays.asList(
+                        new LocalOrFieldVar("a"), new MethodCall(null, "mul", new ArrayList<IExpression>(Arrays.asList(
                                 new LocalOrFieldVar("a"), new Binary(Operator.MINUS, new LocalOrFieldVar("b"), new IntExpr(1))
                         ))))))))), AccessModifier.PUBLIC, false);
 
