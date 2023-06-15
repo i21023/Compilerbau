@@ -5,7 +5,7 @@ import mmc.ast.statementexpression.IStatementExpression;
 import mmc.ast.statements.Block;
 import mmc.ast.statements.For;
 import mmc.ast.statements.IStatement;
-import mmc.parser.adapter.expressions.LogicalExprAdapter;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.adapter.statementexpressions.StatementExprAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
@@ -30,9 +30,9 @@ public class ForStatementAdapter {
             initStatements.addAll(LocalVarDeclAdapter.adapt(forStatement.for_init().local_var_decl()));
         }
 
-        IExpression logicalExpression = null;
-        if (forStatement.logical_expr() != null) {
-            logicalExpression = LogicalExprAdapter.adapt(forStatement.logical_expr());
+        IExpression expr = null;
+        if (forStatement.expr() != null) {
+            expr = ExpressionAdapter.adapt(forStatement.expr());
         }
 
         List<IStatementExpression> updateStatements = new ArrayList<>();
@@ -49,7 +49,7 @@ public class ForStatementAdapter {
 
         IStatement statement = StatementAdapter.adapt(forStatement.statement());
 
-        return new For(initStatements, logicalExpression, updateStatements, new Block(List.of(statement)));
+        return new For(initStatements, expr, updateStatements, new Block(List.of(statement)));
     }
 
 }

@@ -4,8 +4,8 @@ import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.ast.statements.IStatement;
 import mmc.ast.statements.LocalVarDecl;
-import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.adapter.TypeAdapter;
+import mmc.parser.adapter.expressions.ExpressionAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;
@@ -16,33 +16,32 @@ public class LocalVarDeclAdapter {
 
         Type type = TypeAdapter.adapt(localVarDecl.type());
 
-        if (localVarDecl.COMMA() != null && localVarDecl.COMMA().size() > 0) {
-            List<IStatement> localVarDecls = new ArrayList<>();
+        List<IStatement> localVarDecls = new ArrayList<>();
 
-            for (int i = 0; i <= localVarDecl.COMMA().size(); i++) {
+        String name = localVarDecl.ID().getText();
 
-                String name = localVarDecl.ID(i).getText();
+        IExpression expression = null;
+        if (localVarDecl.ASSIGN() != null) {
+            expression = ExpressionAdapter.adapt(localVarDecl.expr());
+        }
 
-                IExpression expression = null;
-                if (localVarDecl.ASSIGN() != null && localVarDecl.ASSIGN().size() > 0) {
-                    //ToDo: Parser: Schauen ob Reihenfolge in epxr-list bei fehlenden weniger Einträgen als Kommas trotzdem richtig initialisiert 
-                    expression = ExpressionAdapter.adapt(localVarDecl.expr(i));
+        localVarDecls.add(new LocalVarDecl(name, type, expression));
+
+        if (localVarDecl.local_var_decl_concat() != null && localVarDecl.local_var_decl_concat().size() > 0) {
+
+            for (int i = 0; i < localVarDecl.local_var_decl_concat().size(); i++) {
+
+                name = localVarDecl.local_var_decl_concat(i).ID().getText();
+
+                expression = null;
+                if (localVarDecl.local_var_decl_concat(i).ASSIGN() != null) {
+                    expression = ExpressionAdapter.adapt(localVarDecl.local_var_decl_concat(i).expr());
                 }
 
                 localVarDecls.add(new LocalVarDecl(name, type, expression));
-
             }
-            return localVarDecls;
-        } else {
-
-            String name = localVarDecl.ID(0).getText();
-
-            IExpression expression = null;
-            if (localVarDecl.ASSIGN() != null && localVarDecl.ASSIGN().size() > 0) {
-                expression = ExpressionAdapter.adapt(localVarDecl.expr(0));
-            }
-
-            return List.of(new LocalVarDecl(name, type, expression));
         }
+
+        return localVarDecls;
     }
 }

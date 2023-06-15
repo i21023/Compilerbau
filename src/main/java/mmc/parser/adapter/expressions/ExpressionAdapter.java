@@ -5,12 +5,9 @@ import mmc.parser.antlr.MiniJavaParser;
 
 public class ExpressionAdapter {
 
-    public static IExpression adapt(MiniJavaParser.ExprContext exprContext) {
+    public static IExpression adapt(MiniJavaParser.ExprContext expr) {
 
-        if (exprContext.basic_expr() != null) {
-            return BasicExprAdapter.adapt(exprContext.basic_expr());
-        } else {
-            return BinaryExprAdapter.adapt(exprContext.binary_expr());
-        }
+        return LogicalOrExprAdapter.adapt(expr.logical_or_expr());
+
     }
 }

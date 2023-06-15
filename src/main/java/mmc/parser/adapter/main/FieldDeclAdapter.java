@@ -39,31 +39,33 @@ public class FieldDeclAdapter {
 
         Type type = TypeAdapter.adapt(fieldDeclContext.type());
 
-        if (fieldDeclContext.COMMA() != null && fieldDeclContext.COMMA().size() > 0) {
-            List<Field> fieldDecls = new ArrayList<>();
-            for (int i = 0; i < fieldDeclContext.COMMA().size(); i++) {
+        List<Field> fieldDecls = new ArrayList<>();
 
-                String name = fieldDeclContext.ID(i).getText();
+        String name = fieldDeclContext.ID().getText();
 
-                IExpression expression = null;
-                if (fieldDeclContext.ASSIGN() != null && fieldDeclContext.ASSIGN().size() > 0) {
-                    expression = ExpressionAdapter.adapt(fieldDeclContext.expr(i));
+        IExpression expression = null;
+        if (fieldDeclContext.ASSIGN() != null) {
+            expression = ExpressionAdapter.adapt(fieldDeclContext.expr());
+        }
+
+        fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag));
+
+        if (fieldDeclContext.field_decl_concat() != null && fieldDeclContext.field_decl_concat().size() > 0) {
+
+            for (int i = 0; i < fieldDeclContext.field_decl_concat().size(); i++) {
+
+                name = fieldDeclContext.field_decl_concat(i).ID().getText();
+
+                expression = null;
+                if (fieldDeclContext.field_decl_concat(i).ASSIGN() != null) {
+                    expression = ExpressionAdapter.adapt(fieldDeclContext.field_decl_concat(i).expr());
                 }
 
                 fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag));
 
             }
-            return fieldDecls;
-        } else {
-
-            String name = fieldDeclContext.ID(0).getText();
-
-            IExpression expression = null;
-            if (fieldDeclContext.ASSIGN() != null && fieldDeclContext.ASSIGN().size() > 0) {
-                expression = ExpressionAdapter.adapt(fieldDeclContext.expr(0));
-            }
-
-            return List.of(new Field(type, name, accessModifier, expression, staticFlag));
         }
+
+        return fieldDecls;
     }
 }

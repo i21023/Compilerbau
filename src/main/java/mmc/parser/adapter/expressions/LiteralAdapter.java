@@ -11,8 +11,17 @@ import mmc.parser.antlr.MiniJavaParser;
 public class LiteralAdapter {
 
     public static IExpression adapt(MiniJavaParser.LiteralContext literal) {
-        if (literal.INT() != null) {
-            return new IntExpr(Integer.parseInt(literal.INT().getText()));
+        if (literal.int_() != null) {
+            if (literal.int_().add_sub_op() != null) {
+                if (literal.int_().add_sub_op().getText().equals("+")) {
+                    return new IntExpr(Integer.parseInt(literal.int_().INT().getText()));
+                } else {
+                    return new IntExpr(-Integer.parseInt(literal.int_().INT().getText()));
+                }
+            }
+            else {
+                return new IntExpr(Integer.parseInt(literal.int_().INT().getText()));
+            }
         } else if (literal.BOOLEAN() != null) {
             if (literal.BOOLEAN().getText().equals("true")) {
                 return new BoolExpr(true);

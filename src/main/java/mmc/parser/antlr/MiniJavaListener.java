@@ -1,4 +1,4 @@
-// Generated from D:/Daten/Coding/Java/Compilerbau/src/main/java/mmc/parser\MiniJava.g4 by ANTLR 4.12.0
+// Generated from java-escape by ANTLR 4.11.1
 package mmc.parser.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -78,6 +78,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitField_decl(MiniJavaParser.Field_declContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#field_decl_concat}.
+	 * @param ctx the parse tree
+	 */
+	void enterField_decl_concat(MiniJavaParser.Field_decl_concatContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#field_decl_concat}.
+	 * @param ctx the parse tree
+	 */
+	void exitField_decl_concat(MiniJavaParser.Field_decl_concatContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#parameter_list}.
 	 * @param ctx the parse tree
 	 */
@@ -127,6 +137,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLocal_var_decl(MiniJavaParser.Local_var_declContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#local_var_decl_concat}.
+	 * @param ctx the parse tree
+	 */
+	void enterLocal_var_decl_concat(MiniJavaParser.Local_var_decl_concatContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#local_var_decl_concat}.
+	 * @param ctx the parse tree
+	 */
+	void exitLocal_var_decl_concat(MiniJavaParser.Local_var_decl_concatContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#if_else_statement}.
 	 * @param ctx the parse tree
@@ -298,75 +318,165 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitExpr(MiniJavaParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#basic_expr}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#logical_or_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterBasic_expr(MiniJavaParser.Basic_exprContext ctx);
+	void enterLogical_or_expr(MiniJavaParser.Logical_or_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#basic_expr}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#logical_or_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitBasic_expr(MiniJavaParser.Basic_exprContext ctx);
+	void exitLogical_or_expr(MiniJavaParser.Logical_or_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#binary_expr}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#logical_and_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterBinary_expr(MiniJavaParser.Binary_exprContext ctx);
+	void enterLogical_and_expr(MiniJavaParser.Logical_and_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#binary_expr}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#logical_and_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitBinary_expr(MiniJavaParser.Binary_exprContext ctx);
+	void exitLogical_and_expr(MiniJavaParser.Logical_and_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#logical_expr}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#bitwise_or_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterLogical_expr(MiniJavaParser.Logical_exprContext ctx);
+	void enterBitwise_or_expr(MiniJavaParser.Bitwise_or_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#logical_expr}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#bitwise_or_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitLogical_expr(MiniJavaParser.Logical_exprContext ctx);
+	void exitBitwise_or_expr(MiniJavaParser.Bitwise_or_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#calculate_expr}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#bitwise_and_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterCalculate_expr(MiniJavaParser.Calculate_exprContext ctx);
+	void enterBitwise_and_expr(MiniJavaParser.Bitwise_and_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#calculate_expr}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#bitwise_and_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitCalculate_expr(MiniJavaParser.Calculate_exprContext ctx);
+	void exitBitwise_and_expr(MiniJavaParser.Bitwise_and_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#mul_div_expr}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#equality_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx);
+	void enterEquality_expr(MiniJavaParser.Equality_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#mul_div_expr}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#equality_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx);
+	void exitEquality_expr(MiniJavaParser.Equality_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#relational_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
+	void enterRelational_expr(MiniJavaParser.Relational_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#value_calculate_expr}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#relational_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx);
+	void exitRelational_expr(MiniJavaParser.Relational_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#logical_op}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#additive_expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterLogical_op(MiniJavaParser.Logical_opContext ctx);
+	void enterAdditive_expr(MiniJavaParser.Additive_exprContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#logical_op}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#additive_expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitLogical_op(MiniJavaParser.Logical_opContext ctx);
+	void exitAdditive_expr(MiniJavaParser.Additive_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#multiplicative_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiplicative_expr(MiniJavaParser.Multiplicative_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#multiplicative_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiplicative_expr(MiniJavaParser.Multiplicative_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#unary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnary_expr(MiniJavaParser.Unary_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#unary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnary_expr(MiniJavaParser.Unary_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#primary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrimary_expr(MiniJavaParser.Primary_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#primary_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrimary_expr(MiniJavaParser.Primary_exprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#logical_or_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogical_or_op(MiniJavaParser.Logical_or_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#logical_or_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogical_or_op(MiniJavaParser.Logical_or_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#logical_and_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogical_and_op(MiniJavaParser.Logical_and_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#logical_and_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogical_and_op(MiniJavaParser.Logical_and_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#bitwise_or_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterBitwise_or_op(MiniJavaParser.Bitwise_or_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#bitwise_or_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitBitwise_or_op(MiniJavaParser.Bitwise_or_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#bitwise_and_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterBitwise_and_op(MiniJavaParser.Bitwise_and_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#bitwise_and_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitBitwise_and_op(MiniJavaParser.Bitwise_and_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#equality_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterEquality_op(MiniJavaParser.Equality_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#equality_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitEquality_op(MiniJavaParser.Equality_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#relational_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterRelational_op(MiniJavaParser.Relational_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#relational_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitRelational_op(MiniJavaParser.Relational_opContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#add_sub_op}.
 	 * @param ctx the parse tree
@@ -437,4 +547,14 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(MiniJavaParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#int}.
+	 * @param ctx the parse tree
+	 */
+	void enterInt(MiniJavaParser.IntContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#int}.
+	 * @param ctx the parse tree
+	 */
+	void exitInt(MiniJavaParser.IntContext ctx);
 }

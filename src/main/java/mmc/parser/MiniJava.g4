@@ -3,13 +3,14 @@ grammar MiniJava;
 //Declarations
 program: ('package' ID ('.' ID )* SEMICOLON)? public_class_decl;
 //Class
-public_class_decl: 'public class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE class_decl* | class_decl+;
+public_class_decl: 'public' 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE class_decl* | class_decl+;
 class_decl: 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
 ///Class objects
 const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
 method_decl: main_method_decl | ACCES_MOD? STATIC? method_type ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
-main_method_decl: 'public ' 'static ' 'void ' 'main' '(' 'String' '[' ']'  'args'  ')'  statement_block;
-field_decl: ACCES_MOD? STATIC? type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)* SEMICOLON;
+main_method_decl: 'public' 'static' 'void' 'main' '(' 'String' '[' ']'  'args'  ')'  statement_block;
+field_decl: ACCES_MOD? STATIC? type ID (ASSIGN expr)? (COMMA field_decl_concat)* SEMICOLON;
+field_decl_concat: ID (ASSIGN expr)?;
 //example int a = 5, b = 6, c;
 
 //methode
@@ -19,7 +20,8 @@ method_type: VOID | type;
 //statements
 statement_block: LEFT_BRACE statement* RIGHT_BRACE; //Block
 statement: statement_block | local_var_decl SEMICOLON | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
-local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a = 3; a = b; a = a + b; a = ( a - b )
+local_var_decl: type ID (ASSIGN expr)? (COMMA local_var_decl_concat)*; // example a = 3; a = b; a = a + b; a = ( a - b )
+local_var_decl_concat: ID (ASSIGN expr)?;
 //ToDo: Parser: Keine Deklarationen bei If, For oder While ohne Block
 if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement; // example else { statement }
@@ -44,16 +46,15 @@ crement_statement: (pre_cre_op (ID | inst_var)) | ((ID | inst_var) suf_cre_op); 
 inst_var: ((THIS | new_statement) DOT ID) | (((THIS DOT) | (new_statement DOT))? (ID DOT)+ ID); // example this.a
 
 //expression
-//ToDo: Parser: ggf. Mehrdeutigkeit bei INT-Werten auflösen?
 expr: logical_or_expr;
-logical_or_expr: logical_and_expr (logical_or_op logical_and_expr)*;
-logical_and_expr: bitwise_or_expr (logical_and_op bitwise_or_expr)*;
-bitwise_or_expr: bitwise_and_expr (bitwise_or_op bitwise_and_expr)*;
-bitwise_and_expr: equality_expr (bitwise_and_op equality_expr)*;
-equality_expr: relational_expr (equality_op relational_expr)*;
-relational_expr: additive_expr (relational_op additive_expr)*;
-additive_expr: multiplicative_expr (add_sub_op multiplicative_expr)*;
-multiplicative_expr: unary_expr (mul_div_op unary_expr)*;
+logical_or_expr: logical_or_expr logical_or_op logical_and_expr | logical_and_expr;
+logical_and_expr: logical_and_expr logical_and_op bitwise_or_expr | bitwise_or_expr;
+bitwise_or_expr: bitwise_or_expr bitwise_or_op bitwise_and_expr | bitwise_and_expr;
+bitwise_and_expr: bitwise_and_expr bitwise_and_op equality_expr | equality_expr;
+equality_expr: equality_expr equality_op relational_expr | relational_expr;
+relational_expr: relational_expr relational_op additive_expr | additive_expr;
+additive_expr: additive_expr add_sub_op multiplicative_expr | multiplicative_expr;
+multiplicative_expr: multiplicative_expr mul_div_op unary_expr | unary_expr;
 unary_expr: crement_statement | primary_expr;
 primary_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr RIGHT_BRACKET | literal;
 //string_concat_expr: string_concat_expr '+' (ID | inst_var | string_concat_expr) | (ID | inst_var) '+' string_concat_expr  | (STRING|CHAR);

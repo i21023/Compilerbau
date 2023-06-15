@@ -1,4 +1,4 @@
-// Generated from D:/Daten/Coding/Java/Compilerbau/src/main/java/mmc/parser\MiniJava.g4 by ANTLR 4.12.0
+// Generated from java-escape by ANTLR 4.11.1
 package mmc.parser.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -101,6 +101,18 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterField_decl_concat(MiniJavaParser.Field_decl_concatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitField_decl_concat(MiniJavaParser.Field_decl_concatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterParameter_list(MiniJavaParser.Parameter_listContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -156,6 +168,18 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLocal_var_decl(MiniJavaParser.Local_var_declContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLocal_var_decl_concat(MiniJavaParser.Local_var_decl_concatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLocal_var_decl_concat(MiniJavaParser.Local_var_decl_concatContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -365,85 +389,193 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBasic_expr(MiniJavaParser.Basic_exprContext ctx) { }
+	@Override public void enterLogical_or_expr(MiniJavaParser.Logical_or_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBasic_expr(MiniJavaParser.Basic_exprContext ctx) { }
+	@Override public void exitLogical_or_expr(MiniJavaParser.Logical_or_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBinary_expr(MiniJavaParser.Binary_exprContext ctx) { }
+	@Override public void enterLogical_and_expr(MiniJavaParser.Logical_and_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBinary_expr(MiniJavaParser.Binary_exprContext ctx) { }
+	@Override public void exitLogical_and_expr(MiniJavaParser.Logical_and_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLogical_expr(MiniJavaParser.Logical_exprContext ctx) { }
+	@Override public void enterBitwise_or_expr(MiniJavaParser.Bitwise_or_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLogical_expr(MiniJavaParser.Logical_exprContext ctx) { }
+	@Override public void exitBitwise_or_expr(MiniJavaParser.Bitwise_or_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCalculate_expr(MiniJavaParser.Calculate_exprContext ctx) { }
+	@Override public void enterBitwise_and_expr(MiniJavaParser.Bitwise_and_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCalculate_expr(MiniJavaParser.Calculate_exprContext ctx) { }
+	@Override public void exitBitwise_and_expr(MiniJavaParser.Bitwise_and_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx) { }
+	@Override public void enterEquality_expr(MiniJavaParser.Equality_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMul_div_expr(MiniJavaParser.Mul_div_exprContext ctx) { }
+	@Override public void exitEquality_expr(MiniJavaParser.Equality_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx) { }
+	@Override public void enterRelational_expr(MiniJavaParser.Relational_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitValue_calculate_expr(MiniJavaParser.Value_calculate_exprContext ctx) { }
+	@Override public void exitRelational_expr(MiniJavaParser.Relational_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLogical_op(MiniJavaParser.Logical_opContext ctx) { }
+	@Override public void enterAdditive_expr(MiniJavaParser.Additive_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLogical_op(MiniJavaParser.Logical_opContext ctx) { }
+	@Override public void exitAdditive_expr(MiniJavaParser.Additive_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultiplicative_expr(MiniJavaParser.Multiplicative_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultiplicative_expr(MiniJavaParser.Multiplicative_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnary_expr(MiniJavaParser.Unary_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnary_expr(MiniJavaParser.Unary_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPrimary_expr(MiniJavaParser.Primary_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrimary_expr(MiniJavaParser.Primary_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLogical_or_op(MiniJavaParser.Logical_or_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLogical_or_op(MiniJavaParser.Logical_or_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLogical_and_op(MiniJavaParser.Logical_and_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLogical_and_op(MiniJavaParser.Logical_and_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBitwise_or_op(MiniJavaParser.Bitwise_or_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBitwise_or_op(MiniJavaParser.Bitwise_or_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBitwise_and_op(MiniJavaParser.Bitwise_and_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBitwise_and_op(MiniJavaParser.Bitwise_and_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEquality_op(MiniJavaParser.Equality_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEquality_op(MiniJavaParser.Equality_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRelational_op(MiniJavaParser.Relational_opContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRelational_op(MiniJavaParser.Relational_opContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -528,6 +660,18 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLiteral(MiniJavaParser.LiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterInt(MiniJavaParser.IntContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInt(MiniJavaParser.IntContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
