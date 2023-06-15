@@ -8,7 +8,7 @@ class_decl: 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGH
 ///Class objects
 const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
 method_decl: main_method_decl | ACCES_MOD? STATIC? method_type ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
-main_method_decl: 'public static void main(String[] args)' statement_block;
+main_method_decl: 'public ' 'static ' 'void ' 'main' '(' 'String' '[' ']'  'args'  ')'  statement_block;
 field_decl: ACCES_MOD? STATIC? type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)* SEMICOLON;
 //example int a = 5, b = 6, c;
 
@@ -21,10 +21,10 @@ statement_block: LEFT_BRACE statement* RIGHT_BRACE; //Block
 statement: statement_block | local_var_decl SEMICOLON | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
 local_var_decl: type ID (ASSIGN expr)? (COMMA ID (ASSIGN expr)?)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 //ToDo: Parser: Keine Deklarationen bei If, For oder While ohne Block
-if_else_statement: IF LEFT_BRACKET logical_expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
+if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement; // example else { statement }
-while_statement: WHILE LEFT_BRACKET logical_expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
-for_statement: FOR LEFT_BRACKET for_init? SEMICOLON logical_expr? SEMICOLON for_statement_expr? RIGHT_BRACKET statement;
+while_statement: WHILE LEFT_BRACKET expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
+for_statement: FOR LEFT_BRACKET for_init? SEMICOLON expr? SEMICOLON for_statement_expr? RIGHT_BRACKET statement;
 for_init: for_statement_expr | local_var_decl;
 for_statement_expr: statement_expr (COMMA statement_expr)*;
 return_statement: RETURN expr? SEMICOLON;
@@ -45,14 +45,17 @@ inst_var: ((THIS | new_statement) DOT ID) | (((THIS DOT) | (new_statement DOT))?
 
 //expression
 //ToDo: Parser: ggf. Mehrdeutigkeit bei INT-Werten auflösen?
-expr: basic_expr | binary_expr;
-basic_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr RIGHT_BRACKET | add_sub_op INT | literal;
-binary_expr: logical_expr | calculate_expr; //| string_concat_expr; //example a + b; 3 + 3 - a; "Countdown: " + a
-//ToDo: Parser: == etc. muss stärker binden als || etc.
-logical_expr: basic_expr logical_op expr;// (a +b ) == c; c == (a+b)
-calculate_expr: calculate_expr add_sub_op mul_div_expr | mul_div_expr;
-mul_div_expr: mul_div_expr mul_div_op value_calculate_expr | value_calculate_expr;
-value_calculate_expr: INT | ID | inst_var | method_call_statement | LEFT_BRACKET calculate_expr RIGHT_BRACKET | crement_statement;
+expr: logical_or_expr;
+logical_or_expr: logical_and_expr (logical_or_op logical_and_expr)*;
+logical_and_expr: bitwise_or_expr (logical_and_op bitwise_or_expr)*;
+bitwise_or_expr: bitwise_and_expr (bitwise_or_op bitwise_and_expr)*;
+bitwise_and_expr: equality_expr (bitwise_and_op equality_expr)*;
+equality_expr: relational_expr (equality_op relational_expr)*;
+relational_expr: additive_expr (relational_op additive_expr)*;
+additive_expr: multiplicative_expr (add_sub_op multiplicative_expr)*;
+multiplicative_expr: unary_expr (mul_div_op unary_expr)*;
+unary_expr: crement_statement | primary_expr;
+primary_expr: THIS | ID | inst_var | statement_expr | NOT expr | LEFT_BRACKET expr RIGHT_BRACKET | literal;
 //string_concat_expr: string_concat_expr '+' (ID | inst_var | string_concat_expr) | (ID | inst_var) '+' string_concat_expr  | (STRING|CHAR);
 // example  b =  a == 5 * 3 + 7 + 6 / 2;
 
@@ -65,7 +68,12 @@ hallo
 */
 
 // Operator
-logical_op: '|' | '&' | '||' | '&&' | '==' | '!=' | '<' | '>' | '<=' | '>=';
+logical_or_op: '||' ; // bindet schwächer als relational_op
+logical_and_op: '&&'; // bindet stärker als logical_or_op, aber schwächer als relational_op
+bitwise_or_op: '|' ; // bindet stärker als logical_and_op, aber schwächer als relational_op
+bitwise_and_op: '&'; // bindet stärker als bitwise_or_op, aber schwächer als relational_op
+equality_op: '==' | '!=';
+relational_op: '<' | '>' | '<=' | '>=';
 add_sub_op: '+' | '-';
 mul_div_op: '*' | '/';
 pre_cre_op: '++' | '--';
@@ -102,7 +110,8 @@ FOR: 'for';
 RETURN: 'return';
 
 // values
-literal: INT | BOOLEAN | CHAR | STRING | NULL;
+literal: int | BOOLEAN | CHAR | STRING | NULL;
+int: add_sub_op? INT;
 INT: [0-9]+;
 BOOLEAN: 'true' | 'false';
 CHAR: '\'' . '\''; //example 'a'
