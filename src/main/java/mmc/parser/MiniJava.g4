@@ -38,7 +38,7 @@ method_call_statement: method_owner_prefix? method_chain* (ID LEFT_BRACKET argum
 //example a.hello().hello2(); methode1 ( expr , expr );
 method_owner_prefix: (THIS | inst_var | new_statement | ID) DOT;
 method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
-new_statement: NEW ID LEFT_BRACKET argumentList? RIGHT_BRACKET;
+new_statement: NEW type LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
 assign_statement: (inst_var | ID) assign_op expr; // example this.a = c + 3; x += 3;
 crement_statement: (pre_cre_op (ID | inst_var)) | ((ID | inst_var) suf_cre_op); //example a++; ++a

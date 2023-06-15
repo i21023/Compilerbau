@@ -22,6 +22,6 @@ public class NewStatementAdapter {
             }
         }
 
-        return new New(newStatement.ID().getText(), arguments);
+        return new New(newStatement.type().getText(), arguments);
     }
 }
