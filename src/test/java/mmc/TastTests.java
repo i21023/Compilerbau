@@ -70,10 +70,10 @@ public class TastTests {
     @DisplayName("Class with FieldVars and Method")
     public void FieldVarClassMutableTest() {
 
-        Method method = new Method(AccessModifier.PUBLIC, BasicType.INT, "getY",
-                new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
-                Arrays.asList(new LocalVarDecl("y",
-                        BasicType.INT, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))));
+        Method method = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new LocalVarDecl("y",
+                                BasicType.INT, new IntExpr(30)), new Return(null, new LocalOrFieldVar("y"))))), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
@@ -81,10 +81,10 @@ public class TastTests {
 
         Program prog = new Program(Arrays.asList(classDecl));
 
-        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "getY",
-                new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
-                Arrays.asList(new LocalVarDecl("y",
-                        BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y", BasicType.INT)))), BasicType.INT));
+        Method method2 = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(),
+                new Block(new ArrayList<IStatement>(
+                        Arrays.asList(new LocalVarDecl("y",
+                                BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y", BasicType.INT)))), BasicType.INT), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl2 = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method2)),
@@ -230,10 +230,10 @@ public class TastTests {
     @DisplayName("ClassWithMultipleMethods")
     public void ClassWithMultipleMethods() {
         ArrayList<Method> methods = new ArrayList<Method>();
-        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
-        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))));
-        Method method3 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))));
-        Method method4 = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))));
+        Method method1 = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
+        Method method2 = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))), AccessModifier.PUBLIC, false);
+        Method method3 = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))), AccessModifier.PUBLIC, false);
+        Method method4 = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))), AccessModifier.PRIVATE, false);
         methods.add(method1);
         methods.add(method2);
         methods.add(method3);
@@ -252,10 +252,10 @@ public class TastTests {
             Program program = generateTypedast(prog);
 
             ArrayList<Method> methodsTast = new ArrayList<Method>();
-            Method method1Tast = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
-            Method method2Tast = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.INT, new IntExpr(1))), BasicType.INT));
-            Method method3Tast = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(true))), BasicType.BOOL));
-            Method method4Tast = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.CHAR, new CharExpr('c'))), BasicType.CHAR));
+            Method method1Tast = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
+            Method method2Tast = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.INT, new IntExpr(1))), BasicType.INT), AccessModifier.PUBLIC, false);
+            Method method3Tast = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(true))), BasicType.BOOL), AccessModifier.PUBLIC, false);
+            Method method4Tast = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.CHAR, new CharExpr('c'))), BasicType.CHAR), AccessModifier.PRIVATE, false);
             methodsTast.add(method1Tast);
             methodsTast.add(method2Tast);
             methodsTast.add(method3Tast);
