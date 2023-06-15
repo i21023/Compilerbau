@@ -61,7 +61,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitCode();
         method.block.accept(this);
 
-        if (!(method.block.statements.get(method.block.statements.size() - 1) instanceof Return)) {
+
+        if (method.type == BasicType.VOID && (method.block.statements.size() == 0 || !(method.block.statements.get(method.block.statements.size() - 1) instanceof Return))) {
             new Return(BasicType.VOID, null).accept(this);
         }
 
@@ -76,7 +77,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitCode();
         mainMethod.block.accept(this);
 
-        if (mainMethod.block.statements.size() == 0 || !(mainMethod.block.statements.get(mainMethod.block.statements.size() - 1) instanceof Return)) {
+        if (mainMethod.type == BasicType.VOID && (mainMethod.block.statements.size() == 0 || !(mainMethod.block.statements.get(mainMethod.block.statements.size() - 1) instanceof Return))) {
             new Return(BasicType.VOID, null).accept(this);
         }
         methodVisitor.visitMaxs(0, 0);

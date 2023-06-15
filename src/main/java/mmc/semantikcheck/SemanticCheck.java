@@ -562,6 +562,12 @@ public class SemanticCheck implements SemanticVisitor {
                         new Exception("Trying to call a nonstatic method with a static reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
                 return new TypeCheckResult(false, null);
             }
+
+            if(toCheck.methodOwnerPrefix instanceof This && methodIsStatic && !method.getIsStatic()){
+                errors.add(
+                        new Exception("non-static method "+ toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType() + " cannot be referenced from a static context"));
+                return new TypeCheckResult(false, null);
+            }
             /*else if(!(toCheck.methodOwnerPrefix instanceof This) && !isStatic && method.getIsStatic()){
                 errors.add(
                         new Exception("Trying to call a static method with a nonstatic reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
