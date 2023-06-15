@@ -47,6 +47,12 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMain_method_decl(MiniJavaParser.Main_method_declContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#string_args}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitString_args(MiniJavaParser.String_argsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#field_decl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -70,6 +76,12 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMethod_type(MiniJavaParser.Method_typeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlock(MiniJavaParser.BlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#statement_block}.
 	 * @param ctx the parse tree

@@ -6,9 +6,10 @@ program: ('package' ID ('.' ID )* SEMICOLON)? public_class_decl;
 public_class_decl: 'public' 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE class_decl* | class_decl+;
 class_decl: 'class' ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
 ///Class objects
-const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
-method_decl: main_method_decl | ACCES_MOD? STATIC? method_type ID LEFT_BRACKET parameter_list? RIGHT_BRACKET statement_block;
-main_method_decl: 'public' 'static' 'void' 'main' '(' 'String' '[' ']'  'args'  ')'  statement_block;
+const_decl: ACCES_MOD? ID LEFT_BRACKET parameter_list? RIGHT_BRACKET block;
+method_decl: main_method_decl | ACCES_MOD? STATIC? method_type ID LEFT_BRACKET parameter_list? RIGHT_BRACKET block;
+main_method_decl: 'public' STATIC VOID 'main' LEFT_BRACKET (string_args | parameter_list?)  RIGHT_BRACKET  block;
+string_args: 'String' '[' ']'  'args';
 field_decl: ACCES_MOD? STATIC? type ID (ASSIGN expr)? (COMMA field_decl_concat)* SEMICOLON;
 field_decl_concat: ID (ASSIGN expr)?;
 //example int a = 5, b = 6, c;
@@ -18,11 +19,11 @@ parameter_list: type ID (COMMA type ID)*;
 method_type: VOID | type;
 
 //statements
-statement_block: LEFT_BRACE statement* RIGHT_BRACE; //Block
-statement: statement_block | local_var_decl SEMICOLON | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
+block: LEFT_BRACE statement_block* RIGHT_BRACE; //Block
+statement_block: local_var_decl SEMICOLON| statement;
+statement: block | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
 local_var_decl: type ID (ASSIGN expr)? (COMMA local_var_decl_concat)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 local_var_decl_concat: ID (ASSIGN expr)?;
-//ToDo: Parser: Keine Deklarationen bei If, For oder While ohne Block
 if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
 else_statement: ELSE statement; // example else { statement }
 while_statement: WHILE LEFT_BRACKET expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
@@ -82,7 +83,7 @@ suf_cre_op: '++' | '--';
 assign_op: '=' | '+=' | '-=' | '*=' | '/=' | '%=';
 
 //Datatypes
-type: 'int' | 'boolean' | 'char' | ID ;
+type: 'int' | 'boolean' | 'char' | 'String' | ID ;
 
 //Declaration parameter
 ACCES_MOD: 'private' | 'public' | 'protected';

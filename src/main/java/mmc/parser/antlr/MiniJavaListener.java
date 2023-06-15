@@ -68,6 +68,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitMain_method_decl(MiniJavaParser.Main_method_declContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#string_args}.
+	 * @param ctx the parse tree
+	 */
+	void enterString_args(MiniJavaParser.String_argsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#string_args}.
+	 * @param ctx the parse tree
+	 */
+	void exitString_args(MiniJavaParser.String_argsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#field_decl}.
 	 * @param ctx the parse tree
 	 */
@@ -107,6 +117,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMethod_type(MiniJavaParser.Method_typeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(MiniJavaParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(MiniJavaParser.BlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#statement_block}.
 	 * @param ctx the parse tree

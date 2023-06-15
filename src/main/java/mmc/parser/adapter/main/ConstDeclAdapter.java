@@ -49,7 +49,7 @@ public class ConstDeclAdapter {
             }
         }
 
-        Block block = StatementBlockAdapter.adapt(constuctorDeclContext.statement_block());
+        Block block = StatementBlockAdapter.adapt(constuctorDeclContext.block());
 
         return new Constructor(block,parameterList, accessModifier);
     }

@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatementBlockAdapter {
-    public static Block adapt(MiniJavaParser.Statement_blockContext statementBlock) {
+    public static Block adapt(MiniJavaParser.BlockContext block) {
 
         List<IStatement> statementList = new ArrayList<>();
 
-        if (statementBlock.statement() != null) {
-            statementBlock.statement().forEach(statement -> {
+        if (block.statement_block() != null) {
+            block.statement_block().forEach(statement -> {
                 if (statement.local_var_decl() != null) {
-                    statementList.addAll(((Block) StatementAdapter.adapt(statement)).statements);
+                    statementList.addAll(LocalVarDeclAdapter.adapt(statement.local_var_decl()));
                 }
                 else {
-                    statementList.add(StatementAdapter.adapt(statement));
+                    statementList.add(StatementAdapter.adapt(statement.statement()));
                 }
             });
         }

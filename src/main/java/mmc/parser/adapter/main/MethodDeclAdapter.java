@@ -1,6 +1,7 @@
 package mmc.parser.adapter.main;
 
 import mmc.ast.AccessModifier;
+import mmc.ast.BasicType;
 import mmc.ast.Type;
 import mmc.ast.main.MainMethod;
 import mmc.ast.main.Method;
@@ -15,9 +16,29 @@ import java.util.List;
 
 public class MethodDeclAdapter {
     public static Method adapt(MiniJavaParser.Method_declContext methodDeclContext) {
-        if (methodDeclContext.main_method_decl() != null){
-            Block block = StatementBlockAdapter.adapt(methodDeclContext.main_method_decl().statement_block());
-            return new MainMethod(block);
+        if (methodDeclContext.main_method_decl() != null) {
+            Block block = StatementBlockAdapter.adapt(methodDeclContext.main_method_decl().block());
+            if (methodDeclContext.main_method_decl().string_args() != null) {
+                return new MainMethod(block);
+            } else {
+                List<Parameter> parameterList = new ArrayList<>();
+
+                if (methodDeclContext.parameter_list() != null) {
+                    if (methodDeclContext.parameter_list().COMMA() != null && methodDeclContext.parameter_list().COMMA().size() > 0) {
+                        for (int i = 0; i <= methodDeclContext.parameter_list().COMMA().size(); i++) {
+                            Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(i)),
+                                    methodDeclContext.parameter_list().ID(i).getText());
+                            parameterList.add(parameter);
+                        }
+                    } else {
+                        Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(0)),
+                                methodDeclContext.parameter_list().ID(0).getText());
+                        parameterList.add(parameter);
+                    }
+                }
+
+                return new Method(BasicType.VOID, "main", parameterList, block, AccessModifier.PUBLIC, true);
+            }
         } else {
             AccessModifier accessModifier = AccessModifier.DEFAULT;
             if (methodDeclContext.ACCES_MOD() != null) {
@@ -61,7 +82,7 @@ public class MethodDeclAdapter {
                 }
             }
 
-            Block block = StatementBlockAdapter.adapt(methodDeclContext.statement_block());
+            Block block = StatementBlockAdapter.adapt(methodDeclContext.block());
 
             return new Method(type, name, parameterList, block, accessModifier, staticFlag);
         }
