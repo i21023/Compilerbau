@@ -749,10 +749,12 @@ public class SemanticCheck implements SemanticVisitor {
         }
         try {
             boolean isStatic = false;
-            if(toCheck.expression instanceof LocalOrFieldVar) {
+            if(toCheck.expression instanceof LocalOrFieldVar l) {
                 isStatic = ((LocalOrFieldVar) toCheck.expression).isStatic;
+                toCheck.expression = new Class(((ReferenceType) l.type).type, l.type);
             }
             var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass);
+
 
             if(isStatic && !nextInstVar.getIsStatic()){
                 errors.add(
