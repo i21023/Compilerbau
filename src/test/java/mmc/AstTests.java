@@ -82,7 +82,7 @@ public class AstTests {
     @DisplayName("ClassWithMethodTest")
     public void ClassWithMethodTest() {
         ClassDecl classDecl = new ClassDecl("ClassMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
-                new Method(AccessModifier.PUBLIC, BasicType.VOID, "testMethod", new ArrayList<Parameter>(), new Block()
+                new Method(BasicType.VOID, "testMethod", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false
                 ))), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classDecl));
 
@@ -106,7 +106,7 @@ public class AstTests {
         ArrayList<Parameter> MethodParam = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b")));
         ClassDecl classDecl = new ClassDecl("ClassMethodParam", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
-                new Method(AccessModifier.PUBLIC, BasicType.VOID, "paramMethod", MethodParam, new Block()))), new ArrayList<Constructor>());
+                new Method(BasicType.VOID, "paramMethod", MethodParam, new Block(), AccessModifier.PUBLIC, false))), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classDecl));
 
         try {
@@ -158,7 +158,7 @@ public class AstTests {
         Block MethodBody = new Block(Arrays.asList(new If(new Block(Arrays.asList(new Return(new BoolExpr(true))))
                 , new Block(Arrays.asList(new Return(new BoolExpr(false))))
                 , new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
-        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "isEqual", MethodParam, MethodBody)));
+        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL, "isEqual", MethodParam, MethodBody, AccessModifier.PUBLIC, false)));
         ClassDecl classes = new ClassDecl("ClassIf", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -191,7 +191,7 @@ public class AstTests {
                         new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")), null),
                                 new Crement(BasicType.INT, new LocalOrFieldVar("b"), Operator.DECSUF)))),
                 new Return(new LocalOrFieldVar("c"))));
-        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "mult", MethodParam, MethodBody)));
+        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL, "mult", MethodParam, MethodBody, AccessModifier.PUBLIC, false)));
         ClassDecl classes = new ClassDecl("ClassWhile", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -214,9 +214,9 @@ public class AstTests {
     @DisplayName("Class with FieldVars and Method")
     public void FieldVarClassMutableTest() {
 
-        Method method = new Method(AccessModifier.PUBLIC, BasicType.VOID, "changeX", new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
+        Method method = new Method(BasicType.VOID, "changeX", new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
                 Arrays.asList(new Assign(new LocalOrFieldVar("x"),
-                        new IntExpr(30))))));
+                        new IntExpr(30))))), AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("FieldVarClassMutable", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
@@ -246,10 +246,10 @@ public class AstTests {
     @DisplayName("ClassWithMultipleMethodsTest")
     public void ClassWithMultipleMethods() {
         ArrayList<Method> methods = new ArrayList<Method>();
-        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block());
-        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))));
-        Method method3 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))));
-        Method method4 = new Method(AccessModifier.PRIVATE, BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))));
+        Method method1 = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
+        Method method2 = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))), AccessModifier.PUBLIC, false);
+        Method method3 = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))), AccessModifier.PUBLIC, false);
+        Method method4 = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))), AccessModifier.PRIVATE, false);
         methods.add(method1);
         methods.add(method2);
         methods.add(method3);
@@ -286,7 +286,7 @@ public class AstTests {
                                 new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")))))))));
         ArrayList<Parameter> Parameters = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
 
-        Method method = new Method(AccessModifier.PUBLIC, BasicType.VOID, "testFor", Parameters, MethodBody);
+        Method method = new Method(BasicType.VOID, "testFor", Parameters, MethodBody, AccessModifier.PUBLIC, false);
 
 
         ClassDecl classDecl = new ClassDecl("ClassFor", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
@@ -321,7 +321,7 @@ public class AstTests {
                 new If(new Block(Arrays.asList(new Return(new BoolExpr(true))))
                         , new Block(Arrays.asList(new Return(new BoolExpr(false))))
                         , new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
-        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(AccessModifier.PUBLIC, BasicType.BOOL, "isEqual", new ArrayList<Parameter>(), MethodBody)));
+        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL, "isEqual", new ArrayList<Parameter>(), MethodBody, AccessModifier.PUBLIC, false)));
         ClassDecl classes = new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -346,8 +346,8 @@ public class AstTests {
         Block Method1Body = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(1)), new Return(new LocalOrFieldVar("a"))));
         Block Method2Body = new Block(Arrays.asList(new Return(new Binary(Operator.PLUS, new LocalOrFieldVar("b"), new MethodCall(new This(), "getA", new ArrayList<>())))));
 
-        Method method1 = new Method(AccessModifier.PRIVATE, BasicType.INT, "getA", new ArrayList<Parameter>(), Method1Body);
-        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "addConstant", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "b"))), Method2Body);
+        Method method1 = new Method(BasicType.INT, "getA", new ArrayList<Parameter>(), Method1Body, AccessModifier.PRIVATE, false);
+        Method method2 = new Method(BasicType.INT, "addConstant", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "b"))), Method2Body, AccessModifier.PUBLIC, false);
         ClassDecl classes = new ClassDecl("MethodCall", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -377,7 +377,7 @@ public class AstTests {
                         new Crement(BasicType.INT, new LocalOrFieldVar("a"), Operator.INCSUF),
                         new Crement(BasicType.INT, new LocalOrFieldVar("b"), Operator.DECSUF)))))));
 
-        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.INT, "addRek", params, Method1Body);
+        Method method1 = new Method(BasicType.INT, "addRek", params, Method1Body, AccessModifier.PUBLIC, false);
         ClassDecl classes = new ClassDecl("Rekursion", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -412,8 +412,8 @@ public class AstTests {
                         new Binary(Operator.SINGLEOR, new LocalOrFieldVar("bool1"), new LocalOrFieldVar("bool2")))));
 
 
-        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "OpAnd", new ArrayList<Parameter>(), Method1Body);
-        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.BOOL, "OpOr", new ArrayList<Parameter>(), Method2Body);
+        Method method1 = new Method(BasicType.BOOL, "OpAnd", new ArrayList<Parameter>(), Method1Body, AccessModifier.PUBLIC, false);
+        Method method2 = new Method(BasicType.BOOL, "OpOr", new ArrayList<Parameter>(), Method2Body, AccessModifier.PUBLIC, false);
         ClassDecl classes = new ClassDecl("BooleanOperator", Fields, new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -439,8 +439,8 @@ public class AstTests {
         Block MethodBody = new Block(Arrays.asList(new Return(new Binary(Operator.PLUS, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
 
 
-        Method method = new Method(AccessModifier.PUBLIC, BasicType.INT, "add", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
-                new Parameter(BasicType.INT, "b"))), MethodBody);
+        Method method = new Method(BasicType.INT, "add", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
+                new Parameter(BasicType.INT, "b"))), MethodBody, AccessModifier.PUBLIC, false);
         ClassDecl classes = new ClassDecl("ReturnMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -466,7 +466,7 @@ public class AstTests {
         Block MethodBody = new Block(Arrays.asList(new LocalVarDecl("y", BasicType.INT, new IntExpr(30)), new Return(new LocalOrFieldVar("y"))));
 
 
-        Method method = new Method(AccessModifier.PUBLIC, BasicType.INT, "getY", new ArrayList<Parameter>(), MethodBody);
+        Method method = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(), MethodBody, AccessModifier.PUBLIC, false);
         ClassDecl classes = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -509,17 +509,17 @@ public class AstTests {
     @DisplayName("ArithmetikClassTest")
     public void ArithmetikClassTest() {
         ArrayList<Parameter> params = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
-        Method method1 = new Method(AccessModifier.PUBLIC, BasicType.INT, "add", params, new Block(Arrays.asList(
+        Method method1 = new Method(BasicType.INT, "add", params, new Block(Arrays.asList(
                 new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
                 new Return(new MethodCall(new This(), "add", new ArrayList<IExpression>(Arrays.asList(
-                        new Binary(Operator.PLUS, new LocalOrFieldVar("a"), new IntExpr(1)), new Binary(Operator.MINUS, new LocalOrFieldVar("b"), new IntExpr(1)))))))));
-        Method method2 = new Method(AccessModifier.PUBLIC, BasicType.INT, "mul", params, new Block(Arrays.asList(
+                        new Binary(Operator.PLUS, new LocalOrFieldVar("a"), new IntExpr(1)), new Binary(Operator.MINUS, new LocalOrFieldVar("b"), new IntExpr(1)))))))), AccessModifier.PUBLIC, false);
+        Method method2 = new Method(BasicType.INT, "mul", params, new Block(Arrays.asList(
                 new If(new Block(Arrays.asList(new Return(new IntExpr(0)))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0))),
                 new If(new Block(Arrays.asList(new Return(new LocalOrFieldVar("a")))), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(1))),
                 new Return(new MethodCall(new This(), "add", new ArrayList<IExpression>(Arrays.asList(
                         new LocalOrFieldVar("a"), new MethodCall(new This(), "mul", new ArrayList<IExpression>(Arrays.asList(
                                 new LocalOrFieldVar("a"), new Binary(Operator.MINUS, new LocalOrFieldVar("b"), new IntExpr(1))
-                        ))))))))));
+                        ))))))))), AccessModifier.PUBLIC, false);
 
         ClassDecl classes = new ClassDecl("ArithmetikClass", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
