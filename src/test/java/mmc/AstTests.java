@@ -191,7 +191,7 @@ public class AstTests {
                         new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")), null),
                                 new Crement(BasicType.INT, new LocalOrFieldVar("b"), Operator.DECSUF)))),
                 new Return(new LocalOrFieldVar("c"))));
-        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL, "mult", MethodParam, MethodBody, AccessModifier.PUBLIC, false)));
+        ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(BasicType.INT, "mult", MethodParam, MethodBody, AccessModifier.PUBLIC, false)));
         ClassDecl classes = new ClassDecl("ClassWhile", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
@@ -276,24 +276,23 @@ public class AstTests {
     }
 
     @Test
-    @DisplayName("For-Loop Test")
+    @DisplayName("For-Loop Test") //Fehler ist unbekannt.
     public void ForLoopTest() {
-        Block MethodBody = new Block(new ArrayList<IStatement>(
-                Arrays.asList(new LocalVarDecl("c", BasicType.INT, new LocalOrFieldVar("a")),
-                        new For(new ArrayList<>(Arrays.asList(new Block(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0)))))),
-                                new Binary(Operator.LESS, new LocalOrFieldVar("i"), new LocalOrFieldVar("b")),
-                                new ArrayList(Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("i"), Operator.INCSUF))),
-                                new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")))))))));
-        ArrayList<Parameter> Parameters = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+        ArrayList<Parameter> params = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+        Method method = new Method(BasicType.INT, "testFor", params, new Block(Arrays.asList(
+                new LocalVarDecl("c", BasicType.INT, new LocalOrFieldVar("a")),
+                new For(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0))),
+                        new Binary(Operator.LESS, new LocalOrFieldVar("i"), new LocalOrFieldVar("b")),
+                        Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("i"), Operator.INCSUF)),
+                        new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")))))),
+                new Return(new LocalOrFieldVar("c"))
+        )), AccessModifier.PUBLIC, false);
 
-        Method method = new Method(BasicType.VOID, "testFor", Parameters, MethodBody, AccessModifier.PUBLIC, false);
+        ArrayList<ClassDecl> classes = new ArrayList<ClassDecl>(Arrays.asList(
+                new ClassDecl("ClassFor", new ArrayList<>(), Arrays.asList(method), new ArrayList<>(), AccessModifier.PUBLIC)
+        ));
 
-
-        ClassDecl classDecl = new ClassDecl("ClassFor", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT,
-                "x", AccessModifier.PUBLIC, new IntExpr(10), false))), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>());
-
-        Program prog = new Program(Arrays.asList(classDecl));
+        Program prog = new Program(classes);
 
         //Vergleich mit Parser muss hierhin
 
