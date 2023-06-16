@@ -22,13 +22,13 @@ method_type: VOID | type;
 block: LEFT_BRACE statement_block* RIGHT_BRACE; //Block
 statement_block: local_var_decl SEMICOLON | statement | statement_block_inline;
 statement: block | if_else_statement | while_statement | for_statement | return_statement SEMICOLON | statement_expr SEMICOLON;
-statement_block_inline: statement_inline (SEMICOLON | statement);
+statement_block_inline: if_statement_inline (SEMICOLON | statement) else_statement? | statement_inline (SEMICOLON | statement);
 statement_inline: if_statement_inline | while_statement_inline | for_statement_inline;
 local_var_decl: type ID (ASSIGN expr)? (COMMA local_var_decl_concat)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 local_var_decl_concat: ID (ASSIGN expr)?;
 if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET block else_statement?; // example if ( expr ) { statement }
 if_statement_inline: IF LEFT_BRACKET expr RIGHT_BRACKET statement_inline?;
-else_statement: ELSE (statement_block_inline | block); // example else { statement }
+else_statement: ELSE (SEMICOLON | statement_block_inline | block | statement); // example else { statement }
 while_statement: WHILE LEFT_BRACKET expr RIGHT_BRACKET block; // example while ( expr ) { statement }
 while_statement_inline: WHILE LEFT_BRACKET expr RIGHT_BRACKET statement_inline?;
 for_statement: FOR LEFT_BRACKET for_init? SEMICOLON expr? SEMICOLON for_statement_expr? RIGHT_BRACKET block;
