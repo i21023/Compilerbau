@@ -8,9 +8,12 @@ public class ReturnStatementAdapter {
     public static Return adapt(MiniJavaParser.Return_statementContext returnStatement) {
 
         if (returnStatement.expr() != null) {
-            return new Return(ExpressionAdapter.adapt(returnStatement.expr()));
+            return new Return(ExpressionAdapter.adapt(returnStatement.expr()),
+                    returnStatement.getStart().getLine(),
+                    returnStatement.getStop().getLine());
         } else {
-            return new Return();
+            return new Return(returnStatement.getStart().getLine(),
+                    returnStatement.getStop().getLine());
         }
     }
 }

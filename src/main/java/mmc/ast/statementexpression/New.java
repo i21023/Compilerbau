@@ -7,14 +7,22 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-
 import java.util.List;
 
 public class New implements IStatementExpression {
     public List<IExpression> arguments;
     public Type type;
     public String name;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
+
+    public New(String pName, List<IExpression> pExpressions, int pStartLine, int pStopLine) {
+        arguments = pExpressions;
+        name = pName;
+        type = new ReferenceType(pName);
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public New(String pName, List<IExpression> pExpressions) {
         arguments = pExpressions;

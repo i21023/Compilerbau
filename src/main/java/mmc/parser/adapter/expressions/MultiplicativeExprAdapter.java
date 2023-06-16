@@ -12,7 +12,9 @@ public class MultiplicativeExprAdapter {
         if (multiplicativeExpr.multiplicative_expr() != null) {
             return new Binary(getOperator(multiplicativeExpr.mul_div_op().getText()),
                     MultiplicativeExprAdapter.adapt(multiplicativeExpr.multiplicative_expr()),
-                    UnaryExprAdapter.adapt(multiplicativeExpr.unary_expr()));
+                    UnaryExprAdapter.adapt(multiplicativeExpr.unary_expr()),
+                    multiplicativeExpr.getStart().getLine(),
+                    multiplicativeExpr.getStop().getLine());
         } else {
             return UnaryExprAdapter.adapt(multiplicativeExpr.unary_expr());
         }

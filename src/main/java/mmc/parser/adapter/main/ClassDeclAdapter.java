@@ -27,6 +27,7 @@ public class ClassDeclAdapter {
 
         AccessModifier accessModifier = AccessModifier.DEFAULT;
 
-        return new ClassDecl(classdeclContext.ID().getText(), fieldDecls, methodDecls, constructorDecls, accessModifier);
+        return new ClassDecl(classdeclContext.ID().getText(), fieldDecls, methodDecls, constructorDecls, accessModifier,
+                classdeclContext.getStart().getLine(), classdeclContext.getStop().getLine());
     }
 }

@@ -25,7 +25,9 @@ public class LocalVarDeclAdapter {
             expression = ExpressionAdapter.adapt(localVarDecl.expr());
         }
 
-        localVarDecls.add(new LocalVarDecl(name, type, expression));
+        localVarDecls.add(new LocalVarDecl(name, type, expression,
+                localVarDecl.getStart().getLine(),
+                localVarDecl.getStop().getLine()));
 
         if (localVarDecl.local_var_decl_concat() != null && localVarDecl.local_var_decl_concat().size() > 0) {
 
@@ -38,7 +40,9 @@ public class LocalVarDeclAdapter {
                     expression = ExpressionAdapter.adapt(localVarDecl.local_var_decl_concat(i).expr());
                 }
 
-                localVarDecls.add(new LocalVarDecl(name, type, expression));
+                localVarDecls.add(new LocalVarDecl(name, type, expression,
+                        localVarDecl.local_var_decl_concat(i).getStart().getLine(),
+                        localVarDecl.local_var_decl_concat(i).getStop().getLine()));
             }
         }
 

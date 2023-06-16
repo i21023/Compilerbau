@@ -2,16 +2,11 @@ package mmc.ast.main;
 
 import mmc.Visitable;
 import mmc.ast.AccessModifier;
-import mmc.ast.BasicType;
 import mmc.ast.Type;
 import mmc.ast.expressions.IExpression;
 import mmc.codegen.visitors.IClassCodeVisitor;
-import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
-import org.objectweb.asm.ClassWriter;
-
-import java.beans.Visibility;
 
 public class Field implements Visitable {
     public Type type;
@@ -19,7 +14,19 @@ public class Field implements Visitable {
     public AccessModifier accessModifier;
     public boolean isStatic;
     public IExpression expression;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
+
+    public Field(Type pType, String pName, AccessModifier pAccessModifier, IExpression pExpression, boolean pisStatic,
+                 int pStartLine, int pStopLine) {
+        type = pType;
+        name = pName;
+        accessModifier = pAccessModifier;
+        isStatic = pisStatic;
+        expression = pExpression;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public Field(Type pType, String pName, AccessModifier pAccessModifier, IExpression pExpression, boolean pisStatic) {
         type = pType;

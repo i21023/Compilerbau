@@ -25,7 +25,9 @@ public class IfStatementInlineAdapter {
 
         IStatement elseIStatement = null;
 
-        return new If(iStatement, elseIStatement, expr);
+        return new If(iStatement, elseIStatement, expr,
+                ifStatementInline.getStart().getLine(),
+                ifStatementInline.getStop().getLine());
     }
 
 }

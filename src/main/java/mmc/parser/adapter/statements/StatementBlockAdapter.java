@@ -26,6 +26,8 @@ public class StatementBlockAdapter {
             });
         }
 
-        return new Block(statementList);
+        return new Block(statementList,
+                block.getStart().getLine(),
+                block.getStop().getLine());
     }
 }

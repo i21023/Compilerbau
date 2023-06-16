@@ -12,7 +12,9 @@ public class AdditiveExprAdapter {
         if (additiveExpr.additive_expr() != null) {
             return new Binary(getOperator(additiveExpr.add_sub_op().getText()),
                     AdditiveExprAdapter.adapt(additiveExpr.additive_expr()),
-                    MultiplicativeExprAdapter.adapt(additiveExpr.multiplicative_expr()));
+                    MultiplicativeExprAdapter.adapt(additiveExpr.multiplicative_expr()),
+                    additiveExpr.getStart().getLine(),
+                    additiveExpr.getStop().getLine());
         } else {
             return MultiplicativeExprAdapter.adapt(additiveExpr.multiplicative_expr());
         }

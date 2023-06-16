@@ -22,6 +22,18 @@ public class Method implements Visitable {
     public boolean isStatic;
     public int startLine; public int stopLine;
 
+    public Method(Type pType, String pName, List<Parameter> pParameters, Block pBlock, AccessModifier pAccessModifier, boolean pIsStatic,
+                  int pStartLine, int pStopLine) {
+        type = pType;
+        name = pName;
+        parameters = pParameters;
+        block = pBlock;
+        accessModifier = pAccessModifier;
+        isStatic = pIsStatic;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
+
     public Method(Type pType, String pName, List<Parameter> pParameters, Block pBlock, AccessModifier pAccessModifier, boolean pIsStatic) {
         type = pType;
         name = pName;

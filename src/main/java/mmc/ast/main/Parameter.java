@@ -1,9 +1,7 @@
 package mmc.ast.main;
 
 import mmc.Visitable;
-import mmc.ast.BasicType;
 import mmc.ast.Type;
-import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
@@ -11,7 +9,15 @@ import mmc.semantikcheck.TypeCheckResult;
 public class Parameter implements Visitable {
     public Type type;
     public String name;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
+
+    public Parameter(Type pType, String pName, int pStartLine, int pStopLine) {
+        type = pType;
+        name = pName;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public Parameter(Type pType, String pName) {
         type = pType;

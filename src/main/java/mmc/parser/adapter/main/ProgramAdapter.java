@@ -23,6 +23,6 @@ public class ProgramAdapter {
                     classes.add(ClassDeclAdapter.adapt(classContext)));
         }
 
-        return new Program(classes);
+        return new Program(classes, programContext.getStart().getLine(), programContext.getStop().getLine());
     }
 }

@@ -19,7 +19,7 @@ public class MethodDeclAdapter {
         if (methodDeclContext.main_method_decl() != null) {
             Block block = StatementBlockAdapter.adapt(methodDeclContext.main_method_decl().block());
             if (methodDeclContext.main_method_decl().string_args() != null) {
-                return new MainMethod(block);
+                return new MainMethod(block, methodDeclContext.getStart().getLine(), methodDeclContext.getStop().getLine());
             } else {
                 List<Parameter> parameterList = new ArrayList<>();
 
@@ -27,17 +27,20 @@ public class MethodDeclAdapter {
                     if (methodDeclContext.parameter_list().COMMA() != null && methodDeclContext.parameter_list().COMMA().size() > 0) {
                         for (int i = 0; i <= methodDeclContext.parameter_list().COMMA().size(); i++) {
                             Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(i)),
-                                    methodDeclContext.parameter_list().ID(i).getText());
+                                    methodDeclContext.parameter_list().ID(i).getText(),
+                                    methodDeclContext.parameter_list().getStart().getLine(), methodDeclContext.parameter_list().getStop().getLine());
                             parameterList.add(parameter);
                         }
                     } else {
                         Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(0)),
-                                methodDeclContext.parameter_list().ID(0).getText());
+                                methodDeclContext.parameter_list().ID(0).getText(),
+                                methodDeclContext.parameter_list().getStart().getLine(), methodDeclContext.parameter_list().getStop().getLine());
                         parameterList.add(parameter);
                     }
                 }
 
-                return new Method(BasicType.VOID, "main", parameterList, block, AccessModifier.PUBLIC, true);
+                return new Method(BasicType.VOID, "main", parameterList, block, AccessModifier.PUBLIC, true,
+                        methodDeclContext.getStart().getLine(), methodDeclContext.getStop().getLine());
             }
         } else {
             AccessModifier accessModifier = AccessModifier.DEFAULT;
@@ -72,19 +75,22 @@ public class MethodDeclAdapter {
                 if (methodDeclContext.parameter_list().COMMA() != null && methodDeclContext.parameter_list().COMMA().size() > 0) {
                     for (int i = 0; i <= methodDeclContext.parameter_list().COMMA().size(); i++) {
                         Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(i)),
-                                methodDeclContext.parameter_list().ID(i).getText());
+                                methodDeclContext.parameter_list().ID(i).getText(),
+                                methodDeclContext.parameter_list().getStart().getLine(), methodDeclContext.parameter_list().getStop().getLine());
                         parameterList.add(parameter);
                     }
                 } else {
                     Parameter parameter = new Parameter(TypeAdapter.adapt(methodDeclContext.parameter_list().type(0)),
-                            methodDeclContext.parameter_list().ID(0).getText());
+                            methodDeclContext.parameter_list().ID(0).getText(),
+                            methodDeclContext.parameter_list().getStart().getLine(), methodDeclContext.parameter_list().getStop().getLine());
                     parameterList.add(parameter);
                 }
             }
 
             Block block = StatementBlockAdapter.adapt(methodDeclContext.block());
 
-            return new Method(type, name, parameterList, block, accessModifier, staticFlag);
+            return new Method(type, name, parameterList, block, accessModifier, staticFlag,
+                    methodDeclContext.getStart().getLine(), methodDeclContext.getStop().getLine());
         }
     }
 }

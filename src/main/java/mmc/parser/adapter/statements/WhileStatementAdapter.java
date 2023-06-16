@@ -14,7 +14,9 @@ public class WhileStatementAdapter {
 
         IStatement iStatement = StatementBlockAdapter.adapt(whileStatement.block());
 
-        return new While(expr, iStatement);
+        return new While(expr, iStatement,
+                whileStatement.getStart().getLine(),
+                whileStatement.getStop().getLine());
 
     }
 }

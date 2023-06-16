@@ -16,7 +16,9 @@ public class AssignStatementAdapter {
         if (assignStatement.inst_var() != null) {
             leftExpr = InstVarAdapter.adapt(assignStatement.inst_var());
         } else {
-            leftExpr = new LocalOrFieldVar(assignStatement.ID().getText());
+            leftExpr = new LocalOrFieldVar(assignStatement.ID().getText(),
+                    assignStatement.getStart().getLine(),
+                    assignStatement.getStop().getLine());
         }
 
         IExpression rightExpr = ExpressionAdapter.adapt(assignStatement.expr());
@@ -25,24 +27,36 @@ public class AssignStatementAdapter {
             case "=":
                 break;
             case "+=":
-                rightExpr = new Binary(Operator.PLUS, leftExpr, rightExpr);
+                rightExpr = new Binary(Operator.PLUS, leftExpr, rightExpr,
+                        assignStatement.getStart().getLine(),
+                        assignStatement.getStop().getLine());
                 break;
             case "-=":
-                rightExpr = new Binary(Operator.MINUS, leftExpr, rightExpr);
+                rightExpr = new Binary(Operator.MINUS, leftExpr, rightExpr,
+                        assignStatement.getStart().getLine(),
+                        assignStatement.getStop().getLine());
                 break;
             case "*=":
-                rightExpr = new Binary(Operator.MULT, leftExpr, rightExpr);
+                rightExpr = new Binary(Operator.MULT, leftExpr, rightExpr,
+                        assignStatement.getStart().getLine(),
+                        assignStatement.getStop().getLine());
                 break;
             case "/=":
-                rightExpr = new Binary(Operator.DIV, leftExpr, rightExpr);
+                rightExpr = new Binary(Operator.DIV, leftExpr, rightExpr,
+                        assignStatement.getStart().getLine(),
+                        assignStatement.getStop().getLine());
                 break;
             case "%=":
-                rightExpr = new Binary(Operator.MOD, leftExpr, rightExpr);
+                rightExpr = new Binary(Operator.MOD, leftExpr, rightExpr,
+                        assignStatement.getStart().getLine(),
+                        assignStatement.getStop().getLine());
                 break;
             default:
                 break;
         }
 
-        return new Assign(leftExpr, rightExpr);
+        return new Assign(leftExpr, rightExpr,
+                assignStatement.getStart().getLine(),
+                assignStatement.getStop().getLine());
     }
 }

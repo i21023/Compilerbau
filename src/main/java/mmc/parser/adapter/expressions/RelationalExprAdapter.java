@@ -12,7 +12,9 @@ public class RelationalExprAdapter {
         if (relationalExpr.relational_expr() != null) {
             return new Binary(getOperator(relationalExpr.relational_op().getText()),
                     RelationalExprAdapter.adapt(relationalExpr.relational_expr()),
-                    AdditiveExprAdapter.adapt(relationalExpr.additive_expr()));
+                    AdditiveExprAdapter.adapt(relationalExpr.additive_expr()),
+                    relationalExpr.getStart().getLine(),
+                    relationalExpr.getStop().getLine());
         } else {
             return AdditiveExprAdapter.adapt(relationalExpr.additive_expr());
         }

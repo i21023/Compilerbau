@@ -50,7 +50,9 @@ public class ForStatementAdapter {
 
         Block block = StatementBlockAdapter.adapt(forStatement.block());
 
-        return new For(initStatements, expr, updateStatements, block);
+        return new For(initStatements, expr, updateStatements, block,
+                forStatement.getStart().getLine(),
+                forStatement.getStop().getLine());
     }
 
 }

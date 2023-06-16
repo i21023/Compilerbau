@@ -11,7 +11,9 @@ public class BitwiseOrExprAdapter {
         if (bitwiseOrExpr.bitwise_or_expr() != null) {
             return new Binary(Operator.SINGLEOR,
                     BitwiseOrExprAdapter.adapt(bitwiseOrExpr.bitwise_or_expr()),
-                    BitwiseAndExprAdapter.adapt(bitwiseOrExpr.bitwise_and_expr()));
+                    BitwiseAndExprAdapter.adapt(bitwiseOrExpr.bitwise_and_expr()),
+                    bitwiseOrExpr.getStart().getLine(),
+                    bitwiseOrExpr.getStop().getLine());
         } else {
             return BitwiseAndExprAdapter.adapt(bitwiseOrExpr.bitwise_and_expr());
         }

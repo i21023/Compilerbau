@@ -12,7 +12,9 @@ public class BitwiseAndExprAdapter {
         if (bitwiseAndExpr.bitwise_and_expr() != null) {
             return new Binary(Operator.SINGLEAND,
                     BitwiseAndExprAdapter.adapt(bitwiseAndExpr.bitwise_and_expr()),
-                    EqualityExprAdapter.adapt(bitwiseAndExpr.equality_expr()));
+                    EqualityExprAdapter.adapt(bitwiseAndExpr.equality_expr()),
+                    bitwiseAndExpr.getStart().getLine(),
+                    bitwiseAndExpr.getStop().getLine());
         } else {
             return EqualityExprAdapter.adapt(bitwiseAndExpr.equality_expr());
         }

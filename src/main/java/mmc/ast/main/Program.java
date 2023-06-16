@@ -5,16 +5,20 @@ import mmc.codegen.visitors.IProgramCodeVisitor;
 import mmc.semantikcheck.Environment.ProgramEnvironment;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
-import org.objectweb.asm.ClassWriter;
 
-import java.beans.Visibility;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Program implements Visitable {
     public List<ClassDecl> classes;
     public ProgramEnvironment programEnvironment;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
+
+    public Program(List<ClassDecl> pClasses, int pStartLine, int pStopLine) {
+        classes = pClasses;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public Program(List<ClassDecl> pClasses) {
         classes = pClasses;
@@ -22,8 +26,8 @@ public class Program implements Visitable {
 
     @Override
     public boolean equals(Object o) {
-        if(this == o) return true;
-        if(o==null||getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Program program = (Program) o;
         return classes.equals(program.classes);
     }

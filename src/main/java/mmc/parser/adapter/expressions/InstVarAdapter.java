@@ -16,15 +16,16 @@ public class InstVarAdapter {
 
         IExpression previous = null;
         if (instVar.THIS() != null) {
-            previous = new This();
+            previous = new This(instVar.getStart().getLine(), instVar.getStop().getLine());
         } else if (instVar.new_statement() != null) {
             previous = NewStatementAdapter.adapt(instVar.new_statement());
         }
 
-        return generatePreviousInstVar(instVar.ID(), previous, 0); //Durchlaufen der IDs: Bei einer ID --> LocalFieldVar, sonst InstVar
+        return generatePreviousInstVar(instVar.ID(), previous, 0, instVar.getStart().getLine(), instVar.getStart().getLine()); //Durchlaufen der IDs: Bei einer ID --> LocalFieldVar, sonst InstVar
     }
 
-    private static IExpression generatePreviousInstVar(List<TerminalNode> ids, IExpression previous, int position) {
+    private static IExpression generatePreviousInstVar(List<TerminalNode> ids, IExpression previous, int position,
+                                                       int startLine, int endLine) {
         if (position >= ids.size()) {
             return previous;
         }
@@ -36,8 +37,10 @@ public class InstVarAdapter {
             id = "java/lang/String";
         }
 
-        IExpression currentExpression = (previous == null) ? new LocalOrFieldVar(id) : new InstVar(id, previous);
+        IExpression currentExpression = (previous == null) ?
+                new LocalOrFieldVar(id, startLine, endLine) :
+                new InstVar(id, previous, startLine, endLine);
 
-        return generatePreviousInstVar(ids, currentExpression, position + 1);
+        return generatePreviousInstVar(ids, currentExpression, position + 1, startLine, endLine);
     }
 }

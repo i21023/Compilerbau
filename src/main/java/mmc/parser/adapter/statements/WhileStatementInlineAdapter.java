@@ -19,7 +19,9 @@ public class WhileStatementInlineAdapter {
         if (iStatement == null && statement != null) {
             iStatement = StatementAdapter.adapt(statement);
         }
-        return new While(expr, iStatement);
+        return new While(expr, iStatement,
+                whileStatementInline.getStart().getLine(),
+                whileStatementInline.getStop().getLine());
 
     }
 

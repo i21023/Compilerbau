@@ -12,7 +12,9 @@ public class EqualityExprAdapter {
         if (equalityExpr.equality_expr() != null) {
             return new Binary(getOperator(equalityExpr.equality_op().getText()),
                     EqualityExprAdapter.adapt(equalityExpr.equality_expr()),
-                    RelationalExprAdapter.adapt(equalityExpr.relational_expr()));
+                    RelationalExprAdapter.adapt(equalityExpr.relational_expr()),
+                    equalityExpr.getStart().getLine(),
+                    equalityExpr.getStop().getLine());
         } else {
             return RelationalExprAdapter.adapt(equalityExpr.relational_expr());
         }

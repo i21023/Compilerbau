@@ -6,15 +6,21 @@ import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
 
-import javax.swing.plaf.nimbus.State;
-import java.beans.Expression;
-
 public class If implements IStatement {
     public IExpression expression;
     public IStatement blockIf;
     public IStatement blockElse;
     public Type type;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
+
+    public If(IStatement pIf, IStatement pElse, IExpression pExpression, int pStartLine, int pStopLine) {
+        blockIf = pIf;
+        blockElse = pElse;
+        expression = pExpression;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public If(IStatement pIf, IStatement pElse, IExpression pExpression) {
         blockIf = pIf;

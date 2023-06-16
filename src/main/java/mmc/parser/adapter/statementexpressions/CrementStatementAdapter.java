@@ -15,7 +15,9 @@ public class CrementStatementAdapter {
         if (crementStatement.inst_var() != null) {
             expression = InstVarAdapter.adapt(crementStatement.inst_var());
         } else {
-            expression = new LocalOrFieldVar(crementStatement.ID().getText());
+            expression = new LocalOrFieldVar(crementStatement.ID().getText(),
+                    crementStatement.getStart().getLine(),
+                    crementStatement.getStop().getLine());
         }
 
         Operator operator;
@@ -33,7 +35,9 @@ public class CrementStatementAdapter {
             }
         }
 
-        return new Crement(BasicType.INT, expression, operator);
+        return new Crement(BasicType.INT, expression, operator,
+                crementStatement.getStart().getLine(),
+                crementStatement.getStop().getLine());
 
     }
 

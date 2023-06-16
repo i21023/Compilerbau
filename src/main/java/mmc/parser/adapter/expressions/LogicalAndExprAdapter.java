@@ -12,7 +12,9 @@ public class LogicalAndExprAdapter {
         if (logicalAndExpr.logical_and_expr() != null) {
             return new Binary(Operator.AND,
                     LogicalAndExprAdapter.adapt(logicalAndExpr.logical_and_expr()),
-                    BitwiseOrExprAdapter.adapt(logicalAndExpr.bitwise_or_expr()));
+                    BitwiseOrExprAdapter.adapt(logicalAndExpr.bitwise_or_expr()),
+                    logicalAndExpr.getStart().getLine(),
+                    logicalAndExpr.getStop().getLine());
         } else {
             return BitwiseOrExprAdapter.adapt(logicalAndExpr.bitwise_or_expr());
         }

@@ -39,18 +39,24 @@ public class ConstDeclAdapter {
             if (constuctorDeclContext.parameter_list().COMMA() != null && constuctorDeclContext.parameter_list().COMMA().size() > 0) {
                 for (int i = 0; i < constuctorDeclContext.parameter_list().COMMA().size(); i++) {
                     Parameter parameter = new Parameter(TypeAdapter.adapt(constuctorDeclContext.parameter_list().type(i)),
-                            constuctorDeclContext.parameter_list().ID(i).getText());
+                            constuctorDeclContext.parameter_list().ID(i).getText(),
+                            constuctorDeclContext.parameter_list().type(i).getStart().getLine(),
+                            constuctorDeclContext.parameter_list().type(i).getStop().getLine());
                     parameterList.add(parameter);
                 }
             } else {
                 Parameter parameter = new Parameter(TypeAdapter.adapt(constuctorDeclContext.parameter_list().type(0)),
-                        constuctorDeclContext.parameter_list().ID(0).getText());
+                        constuctorDeclContext.parameter_list().ID(0).getText(),
+                        constuctorDeclContext.parameter_list().type(0).getStart().getLine(),
+                        constuctorDeclContext.parameter_list().type(0).getStop().getLine());
                 parameterList.add(parameter);
             }
         }
 
         Block block = StatementBlockAdapter.adapt(constuctorDeclContext.block());
 
-        return new Constructor(block,parameterList, accessModifier);
+        return new Constructor(block,parameterList, accessModifier,
+                constuctorDeclContext.getStart().getLine(),
+                constuctorDeclContext.getStop().getLine());
     }
 }

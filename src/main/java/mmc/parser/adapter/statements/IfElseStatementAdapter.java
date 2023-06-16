@@ -25,6 +25,8 @@ public class IfElseStatementAdapter {
             }
         }
 
-        return new If(iStatement, elseIStatement, expr);
+        return new If(iStatement, elseIStatement, expr,
+                ifElseStatement.getStart().getLine(),
+                ifElseStatement.getStop().getLine());
     }
 }

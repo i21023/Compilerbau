@@ -57,9 +57,13 @@ public class ForStatementInlineAdapter {
         }
 
         if (iStatement == null) {
-            return new For(initStatements, expr, updateStatements, new Block(new ArrayList<>()));
+            return new For(initStatements, expr, updateStatements, new Block(new ArrayList<>()),
+                    forStatementInline.getStart().getLine(),
+                    forStatementInline.getStop().getLine());
         } else {
-            return new For(initStatements, expr, updateStatements, new Block(List.of(iStatement)));
+            return new For(initStatements, expr, updateStatements, new Block(List.of(iStatement)),
+                    forStatementInline.getStart().getLine(),
+                    forStatementInline.getStop().getLine());
         }
     }
 }

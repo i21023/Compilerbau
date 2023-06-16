@@ -30,6 +30,6 @@ public class NewStatementAdapter {
             newType = "java/lang/String";
         }
 
-        return new New(newType, arguments);
+        return new New(newType, arguments, newStatement.getStart().getLine(), newStatement.getStop().getLine());
     }
 }

@@ -8,7 +8,6 @@ import mmc.ast.statements.Block;
 import mmc.codegen.visitors.IMethodCodeVisitor;
 import mmc.semantikcheck.SemanticVisitor;
 import mmc.semantikcheck.TypeCheckResult;
-import org.objectweb.asm.ClassWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,18 @@ public class Constructor implements Visitable {
     public Block statement;
     public Type type;
     public AccessModifier accessModifier;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
+
+    public Constructor(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier,
+                       int pStartLine, int pStopLine) {
+        statement = pStatement;
+        parameters = pParameters;
+        accessModifier = pAccessModifier;
+        type = BasicType.VOID;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public Constructor(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier) {
         statement = pStatement;

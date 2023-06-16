@@ -48,7 +48,8 @@ public class FieldDeclAdapter {
             expression = ExpressionAdapter.adapt(fieldDeclContext.expr());
         }
 
-        fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag));
+        fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag,
+                fieldDeclContext.getStart().getLine(),fieldDeclContext.getStop().getLine()));
 
         if (fieldDeclContext.field_decl_concat() != null && fieldDeclContext.field_decl_concat().size() > 0) {
 
@@ -61,7 +62,9 @@ public class FieldDeclAdapter {
                     expression = ExpressionAdapter.adapt(fieldDeclContext.field_decl_concat(i).expr());
                 }
 
-                fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag));
+                fieldDecls.add(new Field(type, name, accessModifier, expression, staticFlag,
+                        fieldDeclContext.getStart().getLine(),
+                        fieldDeclContext.getStop().getLine()));
 
             }
         }
