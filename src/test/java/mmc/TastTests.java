@@ -1,9 +1,6 @@
 package mmc;
 
-import mmc.ast.AccessModifier;
-import mmc.ast.BasicType;
-import mmc.ast.Operator;
-import mmc.ast.Type;
+import mmc.ast.*;
 import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.Assign;
@@ -253,10 +250,10 @@ public class TastTests {
         Method method2_2 = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.INT, new IntExpr(1))), BasicType.INT), AccessModifier.PUBLIC, false);
         Method method3_2 = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(true))), BasicType.BOOL), AccessModifier.PUBLIC, false);
         Method method4_2 = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(BasicType.CHAR, new CharExpr('c'))), BasicType.CHAR), AccessModifier.PRIVATE, false);
-        methods.add(method1_2);
-        methods.add(method2_2);
-        methods.add(method3_2);
-        methods.add(method4_2);
+        methods2.add(method1_2);
+        methods2.add(method2_2);
+        methods2.add(method3_2);
+        methods2.add(method4_2);
 
         ClassDecl classDecl2 = new ClassDecl("ClassWithMultipleMethods", new ArrayList<Field>(),
                 methods2, new ArrayList<Constructor>());
@@ -268,7 +265,7 @@ public class TastTests {
     }
 
     @Test
-    @DisplayName("For-Loop Test") //Todo: Weiter übersetzen zu Tast-Tests
+    @DisplayName("For-Loop Test")
     public void ForLoopTest() {
         ArrayList<Parameter> params = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
         Method method = new Method(BasicType.INT, "testFor", params, new Block(Arrays.asList(
@@ -286,20 +283,25 @@ public class TastTests {
 
         Program prog = new Program(classes);
 
-        //Vergleich mit Parser muss hierhin
+        Program genTast = generateTypedast(prog);
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassFor.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        ArrayList<Parameter> params2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+        Method method2 = new Method(BasicType.INT, "testFor", params2, new Block(Arrays.asList(
+                new LocalVarDecl("c", BasicType.INT, new LocalOrFieldVar("a", BasicType.INT)),
+                new For(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0))),
+                        new Binary(Operator.LESS, new LocalOrFieldVar("i", BasicType.INT), new LocalOrFieldVar("b", BasicType.INT), BasicType.BOOL),
+                        Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("i", BasicType.INT), Operator.INCSUF)),
+                        new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c", BasicType.INT), new Binary(Operator.PLUS, new LocalOrFieldVar("c", BasicType.INT), new LocalOrFieldVar("a", BasicType.INT), BasicType.INT), BasicType.INT)))),
+                new Return(BasicType.INT, new LocalOrFieldVar("c", BasicType.INT))
+        ), BasicType.INT), AccessModifier.PUBLIC, false);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        ArrayList<ClassDecl> classes2 = new ArrayList<ClassDecl>(Arrays.asList(
+                new ClassDecl("ClassFor", new ArrayList<>(), Arrays.asList(method2), new ArrayList<>(), AccessModifier.PUBLIC)
+        ));
 
+        Program tast = new Program(classes2);
 
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        assertEquals(tast, genTast);
 
     }
 
@@ -316,18 +318,19 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ClassIfLokalVar.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        Block MethodBody2 = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(3)),
+                new LocalVarDecl("b", BasicType.INT, new IntExpr(3)),
+                new If(new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(true))), BasicType.BOOL)
+                        , new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(false))), BasicType.BOOL)
+                        , new Binary(Operator.EQUAL, new LocalOrFieldVar("a", BasicType.INT), new LocalOrFieldVar("b", BasicType.INT), BasicType.BOOL), BasicType.BOOL)), BasicType.BOOL);
+        ArrayList<Method> methods2 = new ArrayList<Method>(Arrays.asList(new Method(BasicType.BOOL, "isEqual", new ArrayList<Parameter>(), MethodBody2, AccessModifier.PUBLIC, false)));
+        ClassDecl classes2 = new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), new ArrayList<Method>(methods2), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
+        assertEquals(tast, genTast);
 
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
     }
 
     @Test
@@ -342,18 +345,18 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("MethodCall", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/MethodCall.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        Block Method1Body2 = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(1)), new Return(BasicType.INT, new LocalOrFieldVar("a", BasicType.INT))), BasicType.INT);
+        Block Method2Body2 = new Block(Arrays.asList(new Return(BasicType.INT, new Binary(Operator.PLUS, new LocalOrFieldVar("b", BasicType.INT), new MethodCall(new This(new ReferenceType("MethodCall")), "getA", new ArrayList<>(), BasicType.INT), BasicType.INT))), BasicType.INT);
 
+        Method method12 = new Method(BasicType.INT, "getA", new ArrayList<Parameter>(), Method1Body2, AccessModifier.PRIVATE, false);
+        Method method22 = new Method(BasicType.INT, "addConstant", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "b"))), Method2Body2, AccessModifier.PUBLIC, false);
+        ClassDecl classes2 = new ClassDecl("MethodCall", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method12, method22)), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
+        assertEquals(tast, genTast);
 
-        }
     }
 
     @Test
@@ -372,18 +375,22 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("Rekursion", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/Rekursion.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        ArrayList<Parameter> params2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+        Block Method1Body2 = new Block(Arrays.asList(
+                new If(new Block(Arrays.asList(new Return(BasicType.INT, new LocalOrFieldVar("a", BasicType.INT))), BasicType.INT),
+                        null,
+                        new Binary(Operator.EQUAL, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(0), BasicType.BOOL), BasicType.INT),
+                new Return(BasicType.INT, new MethodCall(new This(new ReferenceType("Rekursion")), "addRek", new ArrayList<IExpression>(Arrays.asList(
+                        new Crement(BasicType.INT, new LocalOrFieldVar("a", BasicType.INT), Operator.INCSUF),
+                        new Crement(BasicType.INT, new LocalOrFieldVar("b", BasicType.INT), Operator.DECSUF))), BasicType.INT))), BasicType.INT);
 
+        Method method12 = new Method(BasicType.INT, "addRek", params2, Method1Body2, AccessModifier.PUBLIC, false);
+        ClassDecl classes2 = new ClassDecl("Rekursion", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method12)), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        assertEquals(tast, genTast);
     }
 
     @Test
@@ -408,92 +415,86 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("BooleanOperator", Fields, new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/BooleanOperator.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        ArrayList<Field> Fields2 = new ArrayList<Field>(Arrays.asList(
+                new Field(BasicType.BOOL, "bool1", AccessModifier.DEFAULT, new BoolExpr(true), false),
+                new Field(BasicType.BOOL, "bool2", AccessModifier.DEFAULT, new BoolExpr(false), false)));
+        Block Method1Body2 = new Block(Arrays.asList(
+                new If(
+                        new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(true))), BasicType.BOOL), new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(false))), BasicType.BOOL),
+                        new Binary(Operator.SINGLEAND, new LocalOrFieldVar("bool1", BasicType.BOOL), new LocalOrFieldVar("bool2", BasicType.BOOL), BasicType.BOOL), BasicType.BOOL)), BasicType.BOOL);
+
+        Block Method2Body2 = new Block(Arrays.asList(
+                new If(
+                        new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(true))), BasicType.BOOL), new Block(Arrays.asList(new Return(BasicType.BOOL, new BoolExpr(false))), BasicType.BOOL),
+                        new Binary(Operator.SINGLEOR, new LocalOrFieldVar("bool1", BasicType.BOOL), new LocalOrFieldVar("bool2", BasicType.BOOL), BasicType.BOOL), BasicType.BOOL)), BasicType.BOOL);
 
 
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
+        Method method12 = new Method(BasicType.BOOL, "OpAnd", new ArrayList<Parameter>(), Method1Body2, AccessModifier.PUBLIC, false);
+        Method method22 = new Method(BasicType.BOOL, "OpOr", new ArrayList<Parameter>(), Method2Body2, AccessModifier.PUBLIC, false);
+        ClassDecl classes2 = new ClassDecl("BooleanOperator", Fields2, new ArrayList<Method>(Arrays.asList(method12, method22)), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
-        }
+        assertEquals(tast, genTast);
     }
 
     @Test
     @DisplayName("ReturnMethodTest")
     public void ReturnMethodTest() {
-
-
         Block MethodBody = new Block(Arrays.asList(new Return(new Binary(Operator.PLUS, new LocalOrFieldVar("a"), new LocalOrFieldVar("b")))));
-
 
         Method method = new Method(BasicType.INT, "add", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b"))), MethodBody, AccessModifier.PUBLIC, false);
         ClassDecl classes = new ClassDecl("ReturnMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ReturnMethod.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        Block MethodBody2 = new Block(Arrays.asList(new Return(BasicType.INT, new Binary(Operator.PLUS, new LocalOrFieldVar("a", BasicType.INT), new LocalOrFieldVar("b", BasicType.INT), BasicType.INT))), BasicType.INT);
 
+        Method method2 = new Method(BasicType.INT, "add", new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
+                new Parameter(BasicType.INT, "b"))), MethodBody2, AccessModifier.PUBLIC, false);
+        ClassDecl classes2 = new ClassDecl("ReturnMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method2)), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        assertEquals(tast, genTast);
     }
 
     @Test
     @DisplayName("LocalVarGetTest")
     public void LocalVarGetTest() {
-
-
         Block MethodBody = new Block(Arrays.asList(new LocalVarDecl("y", BasicType.INT, new IntExpr(30)), new Return(new LocalOrFieldVar("y"))));
-
-
         Method method = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(), MethodBody, AccessModifier.PUBLIC, false);
         ClassDecl classes = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/LocalVarGet.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        Block MethodBody2 = new Block(Arrays.asList(new LocalVarDecl("y", BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y", BasicType.INT))), BasicType.INT);
+        Method method2 = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(), MethodBody2, AccessModifier.PUBLIC, false);
+        ClassDecl classes2 = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method2)), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
-
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        assertEquals(tast, genTast);
     }
 
     @Test
     @DisplayName("FieldVarClassTest")
     public void FieldVarClassTest() {
-
-        ClassDecl classes = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "x", AccessModifier.DEFAULT, new IntExpr(5), false))), new ArrayList<Method>(), new ArrayList<Constructor>());
+        ClassDecl classes = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(
+                new Field(BasicType.INT, "x", AccessModifier.DEFAULT, new IntExpr(5), false))),
+                new ArrayList<Method>(), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/FieldVarClass.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        ClassDecl classes2 = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(
+                new Field(BasicType.INT, "x", AccessModifier.DEFAULT, new IntExpr(5), false))),
+                new ArrayList<Method>(), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
-
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        assertEquals(tast, genTast);
     }
 
     @Test
@@ -515,18 +516,25 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("ArithmetikClass", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        try {
-            CharStream file = Resources.getFileInput("src/test/java/ressources/testcases/ArithmetikClass.java");
-            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+        Program genTast = generateTypedast(prog);
 
-            Program program = astGenerator.generateSyntaxTree(file);
+        ArrayList<Parameter> params2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
+        Method method12 = new Method(BasicType.INT, "add", params2, new Block(Arrays.asList(
+                new If(new Block(Arrays.asList(new Return(BasicType.INT, new LocalOrFieldVar("a", BasicType.INT))), BasicType.INT), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(0), BasicType.BOOL), BasicType.INT),
+                new Return(BasicType.INT, new MethodCall(new This(new ReferenceType("ArithmetikClass")), "add", new ArrayList<IExpression>(Arrays.asList(
+                        new Binary(Operator.PLUS, new LocalOrFieldVar("a", BasicType.INT), new IntExpr(1), BasicType.INT), new Binary(Operator.MINUS, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(1), BasicType.INT))), BasicType.INT))), BasicType.INT), AccessModifier.PUBLIC, false);
+        Method method22 = new Method(BasicType.INT, "mul", params2, new Block(Arrays.asList(
+                new If(new Block(Arrays.asList(new Return(BasicType.INT, new IntExpr(0))), BasicType.INT), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(0), BasicType.BOOL), BasicType.INT),
+                new If(new Block(Arrays.asList(new Return(BasicType.INT, new LocalOrFieldVar("a", BasicType.INT))), BasicType.INT), null, new Binary(Operator.EQUAL, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(1), BasicType.BOOL), BasicType.INT),
+                new Return(BasicType.INT, new MethodCall(new This(new ReferenceType("ArithmetikClass")), "add", new ArrayList<IExpression>(Arrays.asList(
+                        new LocalOrFieldVar("a", BasicType.INT), new MethodCall(new This(new ReferenceType("ArithmetikClass")), "mul", new ArrayList<IExpression>(Arrays.asList(
+                                new LocalOrFieldVar("a", BasicType.INT), new Binary(Operator.MINUS, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(1), BasicType.INT)
+                        )), BasicType.INT))), BasicType.INT))), BasicType.INT), AccessModifier.PUBLIC, false);
 
+        ClassDecl classes2 = new ClassDecl("ArithmetikClass", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method12, method22)), new ArrayList<Constructor>());
+        Program tast = new Program(Arrays.asList(classes2));
 
-            assertEquals(prog, program);
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }
+        assertEquals(tast, genTast);
     }
 
     //Tests mit Parser
