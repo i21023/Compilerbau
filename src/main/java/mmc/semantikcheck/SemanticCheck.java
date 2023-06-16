@@ -25,16 +25,28 @@ public class SemanticCheck implements SemanticVisitor {
     public Type currentMethodReturnType;
     private Type currentNullType;
     private ScopeEnvironment currentScope;
-    public ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
-    public ArrayList<String> getFields = new ArrayList<>();
-    private boolean blockEndReturn;
-    private boolean elseBlock;
+    public static ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
+    public static ArrayList<String> getFields = new ArrayList<>();
     public static boolean methodIsStatic;
 
 
     public static void main(String[] args) {
+        ArrayList<Method> methods = new ArrayList<Method>();
+        Method method1 = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
+        Method method2 = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))), AccessModifier.PUBLIC, false);
+        Method method3 = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))), AccessModifier.PUBLIC, false);
+        Method method4 = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))), AccessModifier.PRIVATE, false);
+        methods.add(method1);
+        methods.add(method2);
+        methods.add(method3);
+        methods.add(method4);
 
-
+        ClassDecl classDecl = new ClassDecl("ClassWithMultipleMethods", new ArrayList<Field>(),
+                methods, new ArrayList<Constructor>());
+        ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
+        classDecls.add(classDecl);
+        Program prog = new Program(classDecls);
+        generateTypedast(prog);
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
@@ -209,16 +221,13 @@ public class SemanticCheck implements SemanticVisitor {
             errors.add(new Exception("Method-Declaration " + toCheck.name + " with type "
                     + toCheck.getType() + " has at least one Mismatching return Type"));
             valid = false;
-            if(!blockEndReturn && !elseBlock || resultType != VOID){
-                errors.add(new Exception("Method-Declaration " + toCheck.name + " with type "
-                        + toCheck.getType() + " need after if, for, while a return"));
-            }
         }
         return new TypeCheckResult(valid, resultType);
     }
 
     @Override
     public TypeCheckResult typeCheck(Assign toCheck) { //int a = 5;
+
         boolean valid = true;
 
         var lExpr = toCheck.leftExpr;
@@ -234,30 +243,8 @@ public class SemanticCheck implements SemanticVisitor {
         currentNullType = leftExpr.getType();
         var rightExpr = rExpr.accept(this);
 
-        boolean baseType = (rExpr instanceof IntExpr || rExpr instanceof StringExpr
-                || rExpr instanceof BoolExpr || rExpr instanceof CharExpr );
 
-        if(lExpr instanceof LocalOrFieldVar && baseType){
-            String varName = ((LocalOrFieldVar) lExpr).name;
-            var scope = currentScope.getLocalVar(varName);
-            if(scope == null){
-                errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
-                valid = false;
-            }else {
-                scope.isInitialized = true;
-            }
-        }else if (lExpr instanceof LocalOrFieldVar && rExpr instanceof Binary){
-            String varName = ((LocalOrFieldVar) lExpr).name;
-            var scope = currentScope.getLocalVar(varName);
-            if(scope == null){
-                errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
-                valid = false;
-            }else if(scope.isInitialized == false){
-                errors.add(new Exception("Local or Field Variable " + varName + " may not have been initialized"));
-                valid = false;
-            }
-        }
-
+        valid = CheckType.isInitalised(currentScope,rExpr,lExpr);
         //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
         if(toCheck.operator != Operator.ASSIGN){
             if(leftExpr.getType() != INT && rightExpr.getType() != INT){
@@ -406,6 +393,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         if (toCheck.expression != null) {
             isInitialized = true;
+
             var checkResult = toCheck.expression.accept(this);
             var resultType = toCheck.expression.getType();
             valid = checkResult.isValid() && valid;
@@ -448,7 +436,7 @@ public class SemanticCheck implements SemanticVisitor {
         // Condition überprüfen
         var expressionResult = toCheck.expression.accept(this);
         valid = valid && expressionResult.isValid();
-        boolean isBool = Objects.equals(BasicType.BOOL,toCheck.expression.getType());
+        boolean isBool = (Objects.equals(BasicType.BOOL,toCheck.expression.getType()) || expressionResult.getType() instanceof ReferenceType);
         if (!isBool) {
             errors.add(
                     new Exception(
@@ -458,7 +446,6 @@ public class SemanticCheck implements SemanticVisitor {
 
         // else überprüfen
         if (toCheck.blockElse != null) { //Wenn es ein else block gibt dann..
-            elseBlock = true;
             var elseBlockResult = toCheck.blockElse.accept(this);
             valid = valid && elseBlockResult.isValid();
             var elseBlockType = elseBlockResult.getType();
@@ -497,16 +484,8 @@ public class SemanticCheck implements SemanticVisitor {
         currentScope.pushScope();
 
         for (var statement : toCheck.statements) { //jedes statement im Block durchgehen
-            boolean statementType = (statement instanceof If
-                    || statement instanceof While || statement instanceof For);
             TypeCheckResult checkResult;
-            if(statementType){
-                checkResult = statement.accept(this);
-                blockEndReturn = false;
-            }else {
-                checkResult = statement.accept(this);
-                blockEndReturn = true;
-            }
+            checkResult = statement.accept(this);
             Type statementReturnType = checkResult.getType();
 
             if (statementReturnType != null) { //keine änderung des Block Return Typs
@@ -660,7 +639,6 @@ public class SemanticCheck implements SemanticVisitor {
                 errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
                 valid = false;
             }else if(scope.isInitialized == false){
-                errors.add(new Exception("Local or Field Variable " + varName + " may not have been initialized"));
                 valid = false;
             }
         }
@@ -748,6 +726,11 @@ public class SemanticCheck implements SemanticVisitor {
         var localVar = currentScope.getLocalVar(toCheck.name);
 
         if (localVar != null) {
+            if(!localVar.isInitialized){
+                errors.add(new Exception("The local variable "+ toCheck.name + " may not have been initialized"));
+                toCheck.type = localVar.type;
+                return new TypeCheckResult(false, localVar.type);
+            }
             toCheck.type = localVar.type;
             return new TypeCheckResult(true, localVar.type);
         }

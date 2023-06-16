@@ -4,8 +4,7 @@ import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
 import mmc.ast.ReferenceType;
 import mmc.ast.Type;
-import mmc.ast.expressions.IExpression;
-import mmc.ast.expressions.JNull;
+import mmc.ast.expressions.*;
 import mmc.ast.main.*;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
@@ -191,12 +190,47 @@ public class CheckType {
     public static ClassEnvironment getClassInType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
         var objectClass = (ReferenceType) localVarDecl.type;
         var declaredClassnames = ev.getClasses(); //Alle Klassen holen
+
         var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
         if(classContext == null){
             throw new Exception(
                     "Class: " + ((ReferenceType) localVarDecl.type).type + " not found in ");
         }
         return classContext;
+    }
+
+    public static boolean isInitalised(ScopeEnvironment currentScope, IExpression rExpr,IExpression lExpr ){
+        boolean valid = true;
+
+        boolean baseType = (rExpr instanceof IntExpr || rExpr instanceof StringExpr
+                || rExpr instanceof BoolExpr || rExpr instanceof CharExpr );
+
+        if(lExpr instanceof LocalOrFieldVar && baseType) {
+            String varName = ((LocalOrFieldVar) lExpr).name;
+            if (!SemanticCheck.getFields.contains(varName)) {
+                var scope = currentScope.getLocalVar(varName);
+                if (scope == null) {
+                    SemanticCheck.errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
+                    valid = false;
+                } else {
+                    scope.isInitialized = true;
+                }
+            }
+
+        }else if (lExpr instanceof LocalOrFieldVar && rExpr instanceof Binary){
+            String varName = ((LocalOrFieldVar) lExpr).name;
+            if (!SemanticCheck.getFields.contains(varName)) {
+                var scope = currentScope.getLocalVar(varName);
+                if (scope == null && !SemanticCheck.getFields.contains(varName)) {
+                    SemanticCheck.errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
+                    valid = false;
+                } else if (scope.isInitialized == false) {
+                    valid = false;
+                }
+            }
+        }
+        //Feld schauen ob dieses initialisiert wurde
+        return valid;
     }
 
 }
