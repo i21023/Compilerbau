@@ -198,15 +198,15 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitIf_else_statement(MiniJavaParser.If_else_statementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MiniJavaParser#if_else_statement_inline}.
+	 * Enter a parse tree produced by {@link MiniJavaParser#if_statement_inline}.
 	 * @param ctx the parse tree
 	 */
-	void enterIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx);
+	void enterIf_statement_inline(MiniJavaParser.If_statement_inlineContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MiniJavaParser#if_else_statement_inline}.
+	 * Exit a parse tree produced by {@link MiniJavaParser#if_statement_inline}.
 	 * @param ctx the parse tree
 	 */
-	void exitIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx);
+	void exitIf_statement_inline(MiniJavaParser.If_statement_inlineContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#else_statement}.
 	 * @param ctx the parse tree

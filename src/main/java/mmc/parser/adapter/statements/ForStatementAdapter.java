@@ -17,17 +17,19 @@ public class ForStatementAdapter {
     public static For adapt(MiniJavaParser.For_statementContext forStatement) {
 
         List<IStatement> initStatements = new ArrayList<>();
-        if (forStatement.for_init().for_statement_expr() != null) {
-            if (forStatement.for_init().for_statement_expr().COMMA() != null
-                    && forStatement.for_init().for_statement_expr().COMMA().size() > 0) {
-                for (int i = 0; i <= forStatement.for_init().for_statement_expr().COMMA().size(); i++) {
-                    initStatements.add(StatementExprAdapter.adapt(forStatement.for_init().for_statement_expr().statement_expr(i)));
+        if (forStatement.for_init() != null) {
+            if (forStatement.for_init().for_statement_expr() != null) {
+                if (forStatement.for_init().for_statement_expr().COMMA() != null
+                        && forStatement.for_init().for_statement_expr().COMMA().size() > 0) {
+                    for (int i = 0; i <= forStatement.for_init().for_statement_expr().COMMA().size(); i++) {
+                        initStatements.add(StatementExprAdapter.adapt(forStatement.for_init().for_statement_expr().statement_expr(i)));
+                    }
+                } else {
+                    initStatements.add(StatementExprAdapter.adapt(forStatement.for_init().for_statement_expr().statement_expr(0)));
                 }
-            } else {
-                initStatements.add(StatementExprAdapter.adapt(forStatement.for_init().for_statement_expr().statement_expr(0)));
+            } else if (forStatement.for_init().local_var_decl() != null) {
+                initStatements.addAll(LocalVarDeclAdapter.adapt(forStatement.for_init().local_var_decl()));
             }
-        } else if (forStatement.for_init().local_var_decl() != null) {
-            initStatements.addAll(LocalVarDeclAdapter.adapt(forStatement.for_init().local_var_decl()));
         }
 
         IExpression expr = null;
@@ -47,9 +49,9 @@ public class ForStatementAdapter {
             }
         }
 
-        IStatement statement = StatementAdapter.adapt(forStatement.statement());
+        Block block = StatementBlockAdapter.adapt(forStatement.block());
 
-        return new For(initStatements, expr, updateStatements, new Block(List.of(statement)));
+        return new For(initStatements, expr, updateStatements, block);
     }
 
 }

@@ -245,13 +245,13 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx) { }
+	@Override public void enterIf_statement_inline(MiniJavaParser.If_statement_inlineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx) { }
+	@Override public void exitIf_statement_inline(MiniJavaParser.If_statement_inlineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

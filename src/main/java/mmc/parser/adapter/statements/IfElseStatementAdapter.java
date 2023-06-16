@@ -12,11 +12,15 @@ public class IfElseStatementAdapter {
 
         IExpression expr = ExpressionAdapter.adapt(ifElseStatement.expr());
 
-        IStatement iStatement = StatementAdapter.adapt(ifElseStatement.statement());
+        IStatement iStatement = StatementBlockAdapter.adapt(ifElseStatement.block());
 
         IStatement elseIStatement = null;
         if (ifElseStatement.else_statement() != null) {
-            elseIStatement = StatementAdapter.adapt(ifElseStatement.else_statement().statement());
+            if (ifElseStatement.else_statement().statement_block_inline() != null) {
+                elseIStatement = StatementBlockInlineAdapter.adapt(ifElseStatement.else_statement().statement_block_inline());
+            } else {
+                elseIStatement = StatementBlockAdapter.adapt(ifElseStatement.else_statement().block());
+            }
         }
 
         return new If(iStatement, elseIStatement, expr);

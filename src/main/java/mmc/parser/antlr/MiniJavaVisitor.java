@@ -125,11 +125,11 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf_else_statement(MiniJavaParser.If_else_statementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniJavaParser#if_else_statement_inline}.
+	 * Visit a parse tree produced by {@link MiniJavaParser#if_statement_inline}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx);
+	T visitIf_statement_inline(MiniJavaParser.If_statement_inlineContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#else_statement}.
 	 * @param ctx the parse tree

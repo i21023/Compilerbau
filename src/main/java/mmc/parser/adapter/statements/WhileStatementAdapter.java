@@ -12,7 +12,7 @@ public class WhileStatementAdapter {
 
         IExpression expr = ExpressionAdapter.adapt(whileStatement.expr());
 
-        IStatement iStatement = StatementAdapter.adapt(whileStatement.statement());
+        IStatement iStatement = StatementBlockAdapter.adapt(whileStatement.block());
 
         return new While(expr, iStatement);
 
