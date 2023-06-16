@@ -22,7 +22,7 @@ method_type: VOID | type;
 block: LEFT_BRACE statement_block* RIGHT_BRACE; //Block
 statement_block: local_var_decl SEMICOLON | statement | statement_block_inline;
 statement: block | if_else_statement | while_statement | for_statement | return_statement SEMICOLON | statement_expr SEMICOLON;
-statement_block_inline: statement_inline+ (SEMICOLON | statement);
+statement_block_inline: statement_inline (SEMICOLON | statement);
 statement_inline: if_else_statement_inline | while_statement_inline | for_statement_inline;
 local_var_decl: type ID (ASSIGN expr)? (COMMA local_var_decl_concat)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 local_var_decl_concat: ID (ASSIGN expr)?;
