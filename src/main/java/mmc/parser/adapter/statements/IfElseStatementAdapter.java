@@ -18,8 +18,10 @@ public class IfElseStatementAdapter {
         if (ifElseStatement.else_statement() != null) {
             if (ifElseStatement.else_statement().statement_block_inline() != null) {
                 elseIStatement = StatementBlockInlineAdapter.adapt(ifElseStatement.else_statement().statement_block_inline());
-            } else {
+            } else if (ifElseStatement.else_statement().block() != null) {
                 elseIStatement = StatementBlockAdapter.adapt(ifElseStatement.else_statement().block());
+            } else if (ifElseStatement.else_statement().statement() != null) {
+                elseIStatement = StatementAdapter.adapt(ifElseStatement.else_statement().statement());
             }
         }
 
