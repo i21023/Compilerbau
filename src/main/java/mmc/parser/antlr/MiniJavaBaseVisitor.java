@@ -151,7 +151,7 @@ public class MiniJavaBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIf_statement_inline(MiniJavaParser.If_statement_inlineContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
