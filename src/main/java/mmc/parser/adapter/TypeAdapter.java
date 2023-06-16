@@ -16,7 +16,9 @@ public class TypeAdapter {
             case "char":
                 return BasicType.CHAR;
             case "String":
-                return new ReferenceType("String");
+                return new ReferenceType("java/lang/String");
+            case "System":
+                return new ReferenceType("java/lang/System");
             default:
                 return new ReferenceType(typeContext.ID().getText());
         }
