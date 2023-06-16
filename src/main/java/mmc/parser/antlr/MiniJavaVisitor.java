@@ -95,6 +95,18 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(MiniJavaParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#statement_block_inline}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement_block_inline(MiniJavaParser.Statement_block_inlineContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#statement_inline}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStatement_inline(MiniJavaParser.Statement_inlineContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#local_var_decl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -113,6 +125,12 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf_else_statement(MiniJavaParser.If_else_statementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#if_else_statement_inline}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#else_statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -125,11 +143,23 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhile_statement(MiniJavaParser.While_statementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#while_statement_inline}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_statement_inline(MiniJavaParser.While_statement_inlineContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#for_statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitFor_statement(MiniJavaParser.For_statementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#for_statement_inline}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_statement_inline(MiniJavaParser.For_statement_inlineContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#for_init}.
 	 * @param ctx the parse tree

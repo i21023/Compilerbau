@@ -20,18 +20,22 @@ method_type: VOID | type;
 
 //statements
 block: LEFT_BRACE statement_block* RIGHT_BRACE; //Block
-statement_block: local_var_decl SEMICOLON| statement;
-statement: block | if_else_statement | while_statement | for_statement | return_statement | statement_expr SEMICOLON;
+statement_block: local_var_decl SEMICOLON | statement | statement_block_inline;
+statement: block | if_else_statement | while_statement | for_statement | return_statement SEMICOLON | statement_expr SEMICOLON;
+statement_block_inline: statement_inline (SEMICOLON | statement);
+statement_inline: if_statement_inline | while_statement_inline | for_statement_inline;
 local_var_decl: type ID (ASSIGN expr)? (COMMA local_var_decl_concat)*; // example a = 3; a = b; a = a + b; a = ( a - b )
 local_var_decl_concat: ID (ASSIGN expr)?;
-//ToDo: Parser: if, while, for Statements ohne Block mit Semikolon am Ende
-if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET statement else_statement?; // example if ( expr ) { statement }
-else_statement: ELSE statement; // example else { statement }
+if_else_statement: IF LEFT_BRACKET expr RIGHT_BRACKET block else_statement?; // example if ( expr ) { statement }
+if_statement_inline: IF LEFT_BRACKET expr RIGHT_BRACKET statement_inline?;
+else_statement: ELSE (statement_block_inline | block); // example else { statement }
 while_statement: WHILE LEFT_BRACKET expr RIGHT_BRACKET statement; // example while ( expr ) { statement }
-for_statement: FOR LEFT_BRACKET for_init? SEMICOLON expr? SEMICOLON for_statement_expr? RIGHT_BRACKET statement;
+while_statement_inline: WHILE LEFT_BRACKET expr RIGHT_BRACKET statement_inline?;
+for_statement: FOR LEFT_BRACKET for_init? SEMICOLON expr? SEMICOLON for_statement_expr? RIGHT_BRACKET block;
+for_statement_inline: FOR LEFT_BRACKET for_init? SEMICOLON expr? SEMICOLON for_statement_expr? RIGHT_BRACKET statement_inline?;
 for_init: for_statement_expr | local_var_decl;
 for_statement_expr: statement_expr (COMMA statement_expr)*;
-return_statement: RETURN expr? SEMICOLON;
+return_statement: RETURN expr?;
 
 ///Statement expression
 statement_expr: method_call_statement| new_statement  | assign_statement | crement_statement ; // example MyClass obj = new MyClass(42);

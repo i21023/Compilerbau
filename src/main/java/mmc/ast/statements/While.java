@@ -16,6 +16,12 @@ public class While implements IStatement {
         statement = pStatement;
     }
 
+    public While(IExpression pExpression, IStatement pStatement, Type pType) {
+        expression = pExpression;
+        statement = pStatement;
+        type = pType;
+    }
+
     public Type getType() {
         return type;
     }

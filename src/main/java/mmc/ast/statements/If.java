@@ -21,6 +21,13 @@ public class If implements IStatement {
         expression = pExpression;
     }
 
+    public If(IStatement pIf, IStatement pElse, IExpression pExpression, Type pType) {
+        blockIf = pIf;
+        blockElse = pElse;
+        expression = pExpression;
+        type = pType;
+    }
+
     public Type getType() {
         return type;
     }

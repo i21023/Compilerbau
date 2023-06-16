@@ -41,6 +41,7 @@ public class MethodCall implements IStatementExpression {
     @Override
     public boolean equals(Object o) {
         boolean typeIsEqual = false;
+        boolean methodOwnerPrefixIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MethodCall methodCall = (MethodCall) o;
@@ -49,7 +50,12 @@ public class MethodCall implements IStatementExpression {
         } else if (type.equals(methodCall.type)) {
             typeIsEqual = true;
         }
-        return methodOwnerPrefix.equals(methodCall.methodOwnerPrefix) && name.equals(methodCall.name)
+        if (methodOwnerPrefix == null && methodCall.methodOwnerPrefix == null) {
+            methodOwnerPrefixIsEqual = true;
+        } else if (methodOwnerPrefix.equals(methodCall.methodOwnerPrefix)) {
+            methodOwnerPrefixIsEqual = true;
+        }
+        return methodOwnerPrefixIsEqual && name.equals(methodCall.name)
                 && arguments.equals(methodCall.arguments) && typeIsEqual && isStatic == methodCall.isStatic;
     }
 
