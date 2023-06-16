@@ -9,8 +9,13 @@ import mmc.semantikcheck.TypeCheckResult;
 public class This implements IExpression {
 
     public Type type;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
 
+    public This(int pStartLine, int pStopLine) {
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
     public This() {
 
     }

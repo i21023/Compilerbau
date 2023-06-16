@@ -10,8 +10,15 @@ public class StringExpr implements IExpression {
 
     public String value;
     private Type type;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
 
+    public StringExpr(String pString, int pStartLine, int pStopLine) {
+        value = pString;
+        type = new ReferenceType("java/lang/String");
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
     public StringExpr(String pString) {
         value = pString;
         type = new ReferenceType("java/lang/String");

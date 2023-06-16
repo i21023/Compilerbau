@@ -11,11 +11,18 @@ public class InstVar implements IExpression {
     public IExpression expression;
     public Type type;
     public boolean isStatic; //TODO: @Emma bitte im Semantikcheck setzen :)
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
 
     public InstVar(String pName, IExpression pExpression) {
         name = pName;
         expression = pExpression;
+    }
+    public InstVar(String pName, IExpression pExpression, int pStartLine, int pStopLine) {
+        name = pName;
+        expression = pExpression;
+        startLine = pStartLine;
+        stopLine = pStopLine;
     }
 
     public InstVar(String pName, IExpression pExpression, Type pType, boolean pIsStatic) {

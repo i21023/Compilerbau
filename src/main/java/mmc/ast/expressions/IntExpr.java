@@ -9,7 +9,15 @@ import mmc.semantikcheck.TypeCheckResult;
 public class IntExpr implements IExpression {
     public int value;
     public Type type;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
+
+    public IntExpr(int pValue, int pStartLine, int pStopLine) {
+        value = pValue;
+        type = BasicType.INT;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public IntExpr(int pValue) {
         value = pValue;

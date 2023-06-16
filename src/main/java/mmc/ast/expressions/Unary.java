@@ -10,8 +10,15 @@ public class Unary implements IExpression {
     public Operator operator;
     public IExpression expression;
     public Type type;
-    public int startLine; public int stopLine;
+    public int startLine;
+    public int stopLine;
 
+    public Unary(Operator pOperator, IExpression pExpression, int pStartLine, int pStopLine) {
+        operator = pOperator;
+        expression = pExpression;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
     public Unary(Operator pOperator, IExpression pExpression) {
         operator = pOperator;
         expression = pExpression;
