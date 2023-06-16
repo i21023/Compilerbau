@@ -148,6 +148,26 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitStatement(MiniJavaParser.StatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#statement_block_inline}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement_block_inline(MiniJavaParser.Statement_block_inlineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#statement_block_inline}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement_block_inline(MiniJavaParser.Statement_block_inlineContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void enterStatement_inline(MiniJavaParser.Statement_inlineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void exitStatement_inline(MiniJavaParser.Statement_inlineContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#local_var_decl}.
 	 * @param ctx the parse tree
 	 */
@@ -178,6 +198,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitIf_else_statement(MiniJavaParser.If_else_statementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#if_else_statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#if_else_statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_else_statement_inline(MiniJavaParser.If_else_statement_inlineContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#else_statement}.
 	 * @param ctx the parse tree
 	 */
@@ -198,6 +228,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitWhile_statement(MiniJavaParser.While_statementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#while_statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_statement_inline(MiniJavaParser.While_statement_inlineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#while_statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_statement_inline(MiniJavaParser.While_statement_inlineContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#for_statement}.
 	 * @param ctx the parse tree
 	 */
@@ -207,6 +247,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFor_statement(MiniJavaParser.For_statementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#for_statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_statement_inline(MiniJavaParser.For_statement_inlineContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#for_statement_inline}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_statement_inline(MiniJavaParser.For_statement_inlineContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#for_init}.
 	 * @param ctx the parse tree
