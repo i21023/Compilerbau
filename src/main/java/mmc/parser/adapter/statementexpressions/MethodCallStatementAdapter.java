@@ -67,7 +67,7 @@ public class MethodCallStatementAdapter {
         List<IExpression> arguments = new ArrayList<>();
         if (argumentList != null) {
             if (argumentList.COMMA().size() > 0) {
-                for (int i = 0; i < argumentList.COMMA().size(); i++) {
+                for (int i = 0; i <= argumentList.COMMA().size(); i++) {
                     arguments.add(ExpressionAdapter.adapt(argumentList.expr(i)));
                 }
             } else {
