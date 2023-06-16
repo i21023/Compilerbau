@@ -112,11 +112,10 @@ public class CheckType {
     public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
         boolean failedBecauseNotVisible = false;
 
-        if (type instanceof ReferenceType) {
+        if (type instanceof ReferenceType referenceType) {
 
-            var renferenceType = (ReferenceType) type; //Sicherheit nochmal Casten
             var declaredClassnames = ev.getClasses(); //ProgramEnvironment Classes holen
-            var classContext = declaredClassnames.get(renferenceType.type); //Hashmap den typ heraus filtern
+            var classContext = declaredClassnames.get(referenceType.type); //Hashmap den typ heraus filtern
             if (classContext == null) { //Wenn Typ nicht enthalten
                 throw new Exception("No declared Class " + toCheck.name + " with Arguments: "
                         + toCheck.type + " in Type " + type);
@@ -145,7 +144,7 @@ public class CheckType {
                         var accessModifier = method.getAccessModifier();
                         boolean canAccess;
                         if (accessModifier == AccessModifier.PRIVATE) {
-                            canAccess = renferenceType.type.equals(currentClass.name); //Gleiche bezeichnung suchen
+                            canAccess = referenceType.type.equals(currentClass.name); //Gleiche bezeichnung suchen
                             if (!canAccess) {
                                 failedBecauseNotVisible = true;
                             }
@@ -162,7 +161,7 @@ public class CheckType {
                 if (failedBecauseNotVisible) {
 
                     throw new Exception(
-                            "The Method " + renferenceType.type + "." + toCheck.name
+                            "The Method " + referenceType.type + "." + toCheck.name
                                     + toCheck.type + " is not visible");
 
                 } else {

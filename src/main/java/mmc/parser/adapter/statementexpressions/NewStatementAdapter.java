@@ -22,6 +22,14 @@ public class NewStatementAdapter {
             }
         }
 
-        return new New(newStatement.type().getText(), arguments);
+        String newType = newStatement.type().getText();
+
+        if (newType.equals("System")) {
+            newType = "java/lang/System";
+        } else if (newType.equals("String")) {
+            newType = "java/lang/String";
+        }
+
+        return new New(newType, arguments);
     }
 }

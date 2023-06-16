@@ -2,10 +2,11 @@ package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.expressions.IExpression;
 import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.ast.expressions.StringExpr;
 import mmc.ast.expressions.This;
 import mmc.ast.statementexpression.MethodCall;
-import mmc.parser.adapter.expressions.InstVarAdapter;
 import mmc.parser.adapter.expressions.ExpressionAdapter;
+import mmc.parser.adapter.expressions.InstVarAdapter;
 import mmc.parser.antlr.MiniJavaParser;
 
 import java.util.ArrayList;
@@ -23,8 +24,16 @@ public class MethodCallStatementAdapter {
                 methodOwnerPrefix = InstVarAdapter.adapt(methodCallStatement.method_owner_prefix().inst_var());
             } else if (methodCallStatement.method_owner_prefix().new_statement() != null) {
                 methodOwnerPrefix = NewStatementAdapter.adapt(methodCallStatement.method_owner_prefix().new_statement());
+            } else if (methodCallStatement.method_owner_prefix().STRING() != null) {
+                methodOwnerPrefix = new StringExpr(methodCallStatement.method_owner_prefix().STRING().getText());
             } else {
-                methodOwnerPrefix = new LocalOrFieldVar(methodCallStatement.method_owner_prefix().ID().getText());
+                String id = methodCallStatement.method_owner_prefix().ID().getText();
+                if (id.equals("System")) {
+                    id = "java/lang/System";
+                } else if (id.equals("String")) {
+                    id = "java/lang/String";
+                }
+                methodOwnerPrefix = new LocalOrFieldVar(id);
             }
         }
 
@@ -58,7 +67,7 @@ public class MethodCallStatementAdapter {
         List<IExpression> arguments = new ArrayList<>();
         if (argumentList != null) {
             if (argumentList.COMMA().size() > 0) {
-                for (int i = 0; i < argumentList.COMMA().size(); i++) {
+                for (int i = 0; i <= argumentList.COMMA().size(); i++) {
                     arguments.add(ExpressionAdapter.adapt(argumentList.expr(i)));
                 }
             } else {
