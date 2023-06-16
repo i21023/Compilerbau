@@ -11,7 +11,9 @@ import mmc.semantikcheck.Exception;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class ProgramEnvironment {
     private HashMap<String, ClassEnvironment> classes;
@@ -58,9 +60,29 @@ public class ProgramEnvironment {
         Method concatString = new Method(
                 new ReferenceType("java/lang/String"),"concat",stringParams,new Block(),AccessModifier.PUBLIC, false);
 
+        Method charAt = new Method(
+                BasicType.CHAR,"charAt",new ArrayList<>(List.of(new Parameter(BasicType.INT, "s1"))),new Block(),AccessModifier.PUBLIC, false);
+
+        Method length = new Method(
+                BasicType.INT,"length", new ArrayList<>(),new Block(),AccessModifier.PUBLIC, false);
+
+        Method isEmpty = new Method(
+                BasicType.BOOL,"isEmpty", new ArrayList<>(),new Block(),AccessModifier.PUBLIC, false);
+
+        Method indexOfChar = new Method(
+                BasicType.INT,"indexOf", new ArrayList<>(List.of(new Parameter(BasicType.CHAR, "s1"))),new Block(),AccessModifier.PUBLIC, false);
+
+        Method indexOfString = new Method(
+                BasicType.INT,"indexOf", new ArrayList<>(List.of(new Parameter(new ReferenceType("java/lang/String"), "s1"))),new Block(),AccessModifier.PUBLIC, false);
+
 
         var stringMethods = new ArrayList<Method>();
         stringMethods.add(concatString);
+        stringMethods.add(charAt);
+        stringMethods.add(length);
+        stringMethods.add(isEmpty);
+        stringMethods.add(indexOfChar);
+        stringMethods.add(indexOfString);
 
         /* MethodCall ( InstVar ("out", Class("java/lang/System", new ReferenceType("java/lang/System"), true) "println)
         * new MethodCall(new InstVar("out"), new LocalOrFieldVar("System"), "println")*/
@@ -73,10 +95,29 @@ public class ProgramEnvironment {
                 stringMethods,
                 new ArrayList<>());
 
-        Method printlnString = new Method(BasicType.VOID,"println",stringParams,new Block(),AccessModifier.PUBLIC,true);
+        //println
+        Method printlnString = new Method(BasicType.VOID,"println",stringParams,new Block(),AccessModifier.PUBLIC,false);
+        Method printlnInt = new Method(BasicType.VOID,"println",new ArrayList<>(List.of(new Parameter(BasicType.INT, "s1"))),new Block(),AccessModifier.PUBLIC,false);
+        Method printlnChar = new Method(BasicType.VOID,"println",new ArrayList<>(List.of(new Parameter(BasicType.CHAR, "s1"))),new Block(),AccessModifier.PUBLIC,false);
+        Method printlnBool = new Method(BasicType.VOID,"println",new ArrayList<>(List.of(new Parameter(BasicType.BOOL, "s1"))),new Block(),AccessModifier.PUBLIC,false);
+
+        //print
+        Method printString = new Method(BasicType.VOID,"print",stringParams,new Block(),AccessModifier.PUBLIC,false);
+        Method printInt = new Method(BasicType.VOID,"print",new ArrayList<>(List.of(new Parameter(BasicType.INT, "s1"))),new Block(),AccessModifier.PUBLIC,false);
+        Method printChar = new Method(BasicType.VOID,"print",new ArrayList<>(List.of(new Parameter(BasicType.CHAR, "s1"))),new Block(),AccessModifier.PUBLIC,false);
+        Method printBool = new Method(BasicType.VOID,"print",new ArrayList<>(List.of(new Parameter(BasicType.BOOL, "s1"))),new Block(),AccessModifier.PUBLIC,false);
+
 
         var printlnMethods = new ArrayList<Method>();
         printlnMethods.add(printlnString);
+        printlnMethods.add(printlnInt);
+        printlnMethods.add(printlnChar);
+        printlnMethods.add(printlnBool);
+
+        printlnMethods.add(printString);
+        printlnMethods.add(printInt);
+        printlnMethods.add(printChar);
+        printlnMethods.add(printBool);
 
         ClassDecl PrintStreamClass = new ClassDecl("java/io/PrintStream",new ArrayList<>(),printlnMethods,new ArrayList<>(),AccessModifier.PUBLIC);
 

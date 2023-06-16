@@ -13,6 +13,9 @@ public class ReferenceType implements Type {
 
     @Override
     public boolean equals(Object o) {
+        if(!(o instanceof ReferenceType)){
+            return false;
+        }
         boolean typeIsEqual = false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) ;

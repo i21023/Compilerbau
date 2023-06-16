@@ -1,0 +1,54 @@
+public class MyClass {
+  //Test
+  public static int myField = 10;
+
+  public static void main(String[] args) {
+    int a = 5, b = 10, c = 6;
+
+    a = new Test().i++;
+
+    if (b > 10) {
+      System.out.println("b is ".concat("greater than 10"));
+    } else {
+      System.out.println("b is ".concat("less than or equal to 10"));
+    }
+
+    int k = 3;
+    if(k > 10 & (k = 5) == 3){}
+    System.out.println(k);
+
+    k = 3;
+    if(k > 10 && (k = 5) == 3){}
+    System.out.println(k);
+
+    while (a > 0) {
+      System.out.print("Countdown: ");
+      System.out.println(a--);
+    }
+
+    String foo = "Hallo Welt";
+
+    for (int i = 0; i < foo.length(); i++) {
+      System.out.println(foo.charAt(i));
+    }
+
+    int result = calculateSum(3, 4);
+    System.out.print("Result: ");
+    System.out.println(result);
+
+    MyClass obj = new MyClass();
+    obj.printHello();
+  }
+
+  private static int calculateSum(int x, int y) {
+    return x + y;
+  }
+
+  private void printHello() {
+    System.out.println("Hello, world!");
+  }
+}
+
+class Test{
+    int i = 5;
+}

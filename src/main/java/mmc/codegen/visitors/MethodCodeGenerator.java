@@ -572,7 +572,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                 if (assign.leftExpr instanceof LocalOrFieldVar leftExpr) {
                     //LocalVar
                     if (localVars.contains(leftExpr.name)) {
+                        pushOnStack = true;
                         assign.rightExpr.accept(this);
+                        pushOnStack = pushOnStackState;
 
                         if (pushOnStack) { //when used as expression
                             methodVisitor.visitInsn(Opcodes.DUP);

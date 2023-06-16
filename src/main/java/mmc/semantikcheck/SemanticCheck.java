@@ -946,7 +946,7 @@ public class SemanticCheck implements SemanticVisitor {
 
     @Override
     public TypeCheckResult typeCheck(Class toCheck) {
-        if(programEnvironment.getClasses().get(toCheck.type) != null){
+        if(programEnvironment.getClasses().get(toCheck.name) != null){
             return new TypeCheckResult(true, toCheck.getType());
         }
         errors.add(new Exception("There is no class with the name " + toCheck.name));
