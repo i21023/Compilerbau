@@ -38,10 +38,10 @@ for_statement_expr: statement_expr (COMMA statement_expr)*;
 return_statement: RETURN expr?;
 
 ///Statement expression
-statement_expr: method_call_statement| new_statement  | assign_statement | crement_statement ; // example MyClass obj = new MyClass(42);
+statement_expr: method_call_statement| new_statement | assign_statement | crement_statement ; // example MyClass obj = new MyClass(42);
 method_call_statement: method_owner_prefix? method_chain* (ID LEFT_BRACKET argumentList? RIGHT_BRACKET);
 //example a.hello().hello2(); methode1 ( expr , expr );
-method_owner_prefix: (THIS | inst_var | new_statement | ID) DOT;
+method_owner_prefix: (THIS | inst_var | new_statement | ID | STRING) DOT;
 method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
 new_statement: NEW type LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
@@ -128,7 +128,7 @@ int: add_sub_op? INT;
 INT: [0-9]+;
 BOOLEAN: 'true' | 'false';
 CHAR: '\'' . '\''; //example 'a'
-STRING: '"' ~[\r\n]* '"' ;
+STRING: '"' (~['"\r\n])* '"';
 NULL: 'null';
 
 //Identifier

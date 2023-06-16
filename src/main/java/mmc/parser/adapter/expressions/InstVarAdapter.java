@@ -30,6 +30,12 @@ public class InstVarAdapter {
         }
 
         String id = ids.get(position).getText();
+        if (previous == null && id.equals("System")) {
+            id = "java/lang/System";
+        } else if (previous == null && id.equals("String")) {
+            id = "java/lang/String";
+        }
+
         IExpression currentExpression = (previous == null) ? new LocalOrFieldVar(id) : new InstVar(id, previous);
 
         return generatePreviousInstVar(ids, currentExpression, position + 1);
