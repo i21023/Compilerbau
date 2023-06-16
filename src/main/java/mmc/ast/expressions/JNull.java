@@ -7,6 +7,7 @@ import mmc.semantikcheck.TypeCheckResult;
 
 public class JNull implements IExpression {
     public Type type;
+    public int startLine; public int stopLine;
 
     public JNull() {
     }

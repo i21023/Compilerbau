@@ -9,6 +9,7 @@ public class LocalOrFieldVar implements IExpression {
     public String name;
     public Type type;
     public boolean isStatic; //TODO: @Emma bitte im Semantikcheck setzen :)
+    public int startLine; public int stopLine;
 
     public LocalOrFieldVar(String pName) {
         name = pName;

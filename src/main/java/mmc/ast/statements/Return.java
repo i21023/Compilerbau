@@ -9,6 +9,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class Return implements IStatement {
     public IExpression expression;
     public Type type;
+    public int startLine; public int stopLine;
 
     public Return(Type pType, IExpression pExpression) {
         expression = pExpression;

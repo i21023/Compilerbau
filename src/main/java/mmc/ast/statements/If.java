@@ -14,6 +14,7 @@ public class If implements IStatement {
     public IStatement blockIf;
     public IStatement blockElse;
     public Type type;
+    public int startLine; public int stopLine;
 
     public If(IStatement pIf, IStatement pElse, IExpression pExpression) {
         blockIf = pIf;

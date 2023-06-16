@@ -14,6 +14,7 @@ public class Assign implements IStatementExpression {
     public IExpression rightExpr;
     public Operator operator;
     public Type type;
+    public int startLine; public int stopLine;
 
     public Assign(IExpression pLeftExpr, IExpression pRightExpr, Type pType) {
         leftExpr = pLeftExpr;

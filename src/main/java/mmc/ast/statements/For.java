@@ -17,6 +17,7 @@ public class For implements IStatement {
     public List<IStatementExpression> updateStatements;
     public Block statementBlock;
     public Type type;
+    public int startLine; public int stopLine;
 
     public For(List<IStatement> initExpr, IExpression logicalCondition, List<IStatementExpression> updateExpr, Block statementBlock) {
         this.initStatements = initExpr;

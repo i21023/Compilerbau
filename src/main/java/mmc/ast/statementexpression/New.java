@@ -14,6 +14,7 @@ public class New implements IStatementExpression {
     public List<IExpression> arguments;
     public Type type;
     public String name;
+    public int startLine; public int stopLine;
 
     public New(String pName, List<IExpression> pExpressions) {
         arguments = pExpressions;

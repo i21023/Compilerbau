@@ -11,6 +11,7 @@ import java.util.List;
 public class Block implements IStatement {
     public List<IStatement> statements;
     public Type type;
+    public int startLine; public int stopLine;
 
     public Block(List<IStatement> statements) {
         this.statements = statements;

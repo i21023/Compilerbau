@@ -2,6 +2,14 @@ package mmc.ast;
 
 public class ReferenceType implements Type {
     public String type;
+    public int startLine;
+    public int stopLine;
+
+    public ReferenceType(String pType, int pStartLine, int pStopLine) {
+        type = pType;
+        startLine = pStartLine;
+        stopLine = pStopLine;
+    }
 
     public ReferenceType(String pType) {
         type = pType;
@@ -13,7 +21,7 @@ public class ReferenceType implements Type {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof ReferenceType)){
+        if (!(o instanceof ReferenceType)) {
             return false;
         }
         boolean typeIsEqual = false;

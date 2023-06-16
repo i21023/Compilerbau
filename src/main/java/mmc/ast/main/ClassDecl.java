@@ -14,6 +14,7 @@ public class ClassDecl implements Visitable {
     public List<Method> methods;
     public List<Constructor> constructors;
     public AccessModifier accessModifier;
+    public int startLine; public int stopLine;
 
     public ClassDecl(String pName, List<Field> pFiedls, List<Method> pMethods, List<Constructor> pConstructors, AccessModifier pAccessModifier) {
         name = pName;

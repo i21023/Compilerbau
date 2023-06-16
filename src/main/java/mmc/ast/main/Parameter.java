@@ -11,6 +11,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class Parameter implements Visitable {
     public Type type;
     public String name;
+    public int startLine; public int stopLine;
 
     public Parameter(Type pType, String pName) {
         type = pType;

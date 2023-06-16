@@ -11,6 +11,7 @@ public class Binary implements IExpression {
     public IExpression expression1;
     public Type type;
     public IExpression expression2;
+    public int startLine; public int stopLine;
 
     public Binary(Operator pOperator, IExpression pExpression1, IExpression pExpression2) {
         operator = pOperator;

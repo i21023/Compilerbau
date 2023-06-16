@@ -9,6 +9,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class CharExpr implements IExpression {
     public char value;
     public Type type;
+    public int startLine; public int stopLine;
 
     public CharExpr(char pValue) {
         value = pValue;

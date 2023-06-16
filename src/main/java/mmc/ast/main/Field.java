@@ -19,6 +19,7 @@ public class Field implements Visitable {
     public AccessModifier accessModifier;
     public boolean isStatic;
     public IExpression expression;
+    public int startLine; public int stopLine;
 
     public Field(Type pType, String pName, AccessModifier pAccessModifier, IExpression pExpression, boolean pisStatic) {
         type = pType;

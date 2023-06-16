@@ -10,6 +10,7 @@ public class While implements IStatement {
     public IExpression expression;
     public IStatement statement;
     public Type type;
+    public int startLine; public int stopLine;
 
     public While(IExpression pExpression, IStatement pStatement) {
         expression = pExpression;

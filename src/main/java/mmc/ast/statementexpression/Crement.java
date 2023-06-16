@@ -12,6 +12,7 @@ public class Crement implements IStatementExpression {
     public IExpression expression;
     public Operator operator;
     public Type type;
+    public int startLine; public int stopLine;
 
     public Crement(Type pType, IExpression pExpression, Operator pOperator) {
         expression = pExpression;

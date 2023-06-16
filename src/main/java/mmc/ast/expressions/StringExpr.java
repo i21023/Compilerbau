@@ -10,6 +10,7 @@ public class StringExpr implements IExpression {
 
     public String value;
     private Type type;
+    public int startLine; public int stopLine;
 
     public StringExpr(String pString) {
         value = pString;

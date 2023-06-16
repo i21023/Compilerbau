@@ -20,6 +20,7 @@ public class Method implements Visitable {
     public AccessModifier accessModifier;
     public Block block;
     public boolean isStatic;
+    public int startLine; public int stopLine;
 
     public Method(Type pType, String pName, List<Parameter> pParameters, Block pBlock, AccessModifier pAccessModifier, boolean pIsStatic) {
         type = pType;

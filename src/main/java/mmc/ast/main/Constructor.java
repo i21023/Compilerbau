@@ -18,6 +18,7 @@ public class Constructor implements Visitable {
     public Block statement;
     public Type type;
     public AccessModifier accessModifier;
+    public int startLine; public int stopLine;
 
     public Constructor(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier) {
         statement = pStatement;

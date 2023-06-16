@@ -14,6 +14,7 @@ import java.util.List;
 public class Program implements Visitable {
     public List<ClassDecl> classes;
     public ProgramEnvironment programEnvironment;
+    public int startLine; public int stopLine;
 
     public Program(List<ClassDecl> pClasses) {
         classes = pClasses;

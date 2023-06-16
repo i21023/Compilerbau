@@ -9,6 +9,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class BoolExpr implements IExpression {
     public boolean value;
     public Type type;
+    public int startLine; public int stopLine;
 
     public BoolExpr(boolean pValue) {
         type = BasicType.BOOL;
