@@ -540,6 +540,12 @@ public class SemanticCheck implements SemanticVisitor {
         //arguments die parameter in dem methoden aufruf
         // int a = x.add(5,6);
 
+        var valid = true;
+
+        for (var parameter : toCheck.arguments) {
+            valid = parameter.accept(this).isValid();
+        }
+
         if(toCheck.methodOwnerPrefix instanceof This){
             try {
                 if (methodIsStatic){
@@ -552,7 +558,7 @@ public class SemanticCheck implements SemanticVisitor {
             }
         }
 
-        var valid = true;
+
         if(toCheck.methodOwnerPrefix == null){
             try {
                 var method = CheckType.getMethodInType(toCheck, new ReferenceType(getClass.name), programEnvironment, getClass);
@@ -579,10 +585,6 @@ public class SemanticCheck implements SemanticVisitor {
         var receiver = toCheck.methodOwnerPrefix.accept(this);
 
         valid = valid && receiver.isValid();
-
-        for (var parameter : toCheck.arguments) {
-            valid = valid && parameter.accept(this).isValid();
-        }
 
         try {
             boolean isStatic = false;
