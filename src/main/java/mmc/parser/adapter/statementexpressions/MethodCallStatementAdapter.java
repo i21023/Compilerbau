@@ -25,7 +25,8 @@ public class MethodCallStatementAdapter {
             } else if (methodCallStatement.method_owner_prefix().new_statement() != null) {
                 methodOwnerPrefix = NewStatementAdapter.adapt(methodCallStatement.method_owner_prefix().new_statement());
             } else if (methodCallStatement.method_owner_prefix().STRING() != null) {
-                methodOwnerPrefix = new StringExpr(methodCallStatement.method_owner_prefix().STRING().getText());
+                methodOwnerPrefix = new StringExpr(methodCallStatement.method_owner_prefix().STRING().getText().substring(1,
+                        methodCallStatement.method_owner_prefix().STRING().getText().length() - 1));
             } else {
                 String id = methodCallStatement.method_owner_prefix().ID().getText();
                 if (id.equals("System")) {
