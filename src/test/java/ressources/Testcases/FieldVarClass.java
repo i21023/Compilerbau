@@ -1,5 +1,5 @@
 package ressources.Testcases;
 
 public class FieldVarClass {
-    int x = 5;
+    public int x = 5;
 }
