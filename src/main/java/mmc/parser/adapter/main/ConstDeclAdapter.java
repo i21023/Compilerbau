@@ -37,7 +37,7 @@ public class ConstDeclAdapter {
 
         if (constuctorDeclContext.parameter_list() != null) {
             if (constuctorDeclContext.parameter_list().COMMA() != null && constuctorDeclContext.parameter_list().COMMA().size() > 0) {
-                for (int i = 0; i < constuctorDeclContext.parameter_list().COMMA().size(); i++) {
+                for (int i = 0; i <= constuctorDeclContext.parameter_list().COMMA().size(); i++) {
                     Parameter parameter = new Parameter(TypeAdapter.adapt(constuctorDeclContext.parameter_list().type(i)),
                             constuctorDeclContext.parameter_list().ID(i).getText(),
                             constuctorDeclContext.parameter_list().type(i).getStart().getLine(),

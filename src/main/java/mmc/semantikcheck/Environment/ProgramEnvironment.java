@@ -37,7 +37,7 @@ public class ProgramEnvironment {
     public ClassEnvironment getClass(LocalOrFieldVar localFieldVar){ //Für static InstVar
         var classes = getClasses().get(localFieldVar.name);
         if(classes == null){
-            throw new Exception("");
+            throw new Exception("Error in line " + localFieldVar.startLine + ": the variable " + localFieldVar.name + " is not defined");
         }
         return classes;
     }

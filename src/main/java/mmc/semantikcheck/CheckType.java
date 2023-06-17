@@ -51,7 +51,7 @@ public class CheckType {
 
     }*/
 
-    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass) {
+    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, int line) {
         if (type instanceof ReferenceType) {
             var objectClass = (ReferenceType) type;
             var declaredClassnames = context.getClasses();
@@ -66,13 +66,13 @@ public class CheckType {
                     return field;
                 } else {
                     throw new Exception(
-                            "The Field " + objectClass.getType() + "." + identifier + " is not visible");
+                            "Error in line " + line + ": the field " + objectClass.getType() + "." + identifier + " is not visible");
                 }
             } else {
                 return field;
             }
         } else {
-            throw new Exception("Field " + identifier + " is missing in Type " + type);
+            throw new Exception("Error in line " + line + ": the field " + identifier + " is missing in class " + type);
 
         }
 
@@ -105,7 +105,7 @@ public class CheckType {
                 }
             }
         }
-        throw new Exception("No declared Constructor with Arguments for this Type " + newDecl.getType());
+        throw new Exception("Error in line " + newDecl.startLine + ": no declared constructor " + generateConstructorCallString(newDecl) + " in class " + newDecl.getType());
     }
 
     public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
@@ -156,18 +156,11 @@ public class CheckType {
                 }
             }
             if (foundMethods.size() == 0) {
-                if (failedBecauseNotVisible) {
+                if (failedBecauseNotVisible)
+                    throw new Exception("Error in line " + toCheck.startLine + ": method " + generateMethodCallString(toCheck) + " in class " + type + " is not visible");
+                else
+                    throw new Exception("Error in line " + toCheck.startLine + ": no declared method " + generateMethodCallString(toCheck) + " in class " + type);
 
-                    throw new Exception(
-                            "The Method " + referenceType.type + "." + toCheck.name
-                                    + toCheck.type + " is not visible");
-
-                } else {
-
-                    throw new Exception(
-                            "No declared Method " + toCheck.name + " with Arguments: "
-                                    + toCheck.type + " in Type " + type);
-                }
             } else if (foundMethods.size() == 1) {
                 for (int i = 0; i < foundMethods.get(0).getParameterTypes().size(); i++) {
                     var parameterType = foundMethods.get(0).getParameterTypes().get(i);
@@ -178,11 +171,11 @@ public class CheckType {
                 }
                 return foundMethods.get(0);
             } else {
-                throw new Exception("Cannot resolve Method-Call with Arguments: " + toCheck.type
-                        + " in Type " + type + ". Multiple Methods found: \n" + foundMethods);
+                throw new Exception("Error in line " + toCheck.startLine + ": cannot resolve method call " + generateMethodCallString(toCheck)
+                        + " in class " + type + ". multiple methods found.");
             }
         } else {
-            throw new Exception("Base Type " + type + " does not have Methods");
+            throw new Exception("Error in line " + toCheck.startLine +  ": base type " + type + " does not have methods");
         }
     }
 
@@ -193,7 +186,7 @@ public class CheckType {
         var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
         if(classContext == null){
             throw new Exception(
-                    "Class: " + ((ReferenceType) localVarDecl.type).type + " not found in ");
+                    "Error in line " + localVarDecl.startLine + ": class " + localVarDecl.getType() + " not found");
         }
         return classContext;
     }
@@ -204,26 +197,26 @@ public class CheckType {
         boolean baseType = (rExpr instanceof IntExpr || rExpr instanceof StringExpr
                 || rExpr instanceof BoolExpr || rExpr instanceof CharExpr );
 
-        if(lExpr instanceof LocalOrFieldVar && baseType) {
+        if(lExpr instanceof LocalOrFieldVar l && baseType) {
             String varName = ((LocalOrFieldVar) lExpr).name;
             if (!SemanticCheck.getFields.contains(varName)) {
                 var scope = currentScope.getLocalVar(varName);
                 if (scope == null) {
-                    SemanticCheck.errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
+                    SemanticCheck.errors.add(new Exception("Error in line " + l.startLine + ": variable " + varName + " doesn't exist"));
                     valid = false;
                 } else {
                     scope.isInitialized = true;
                 }
             }
 
-        }else if (lExpr instanceof LocalOrFieldVar && rExpr instanceof Binary){
+        }else if (lExpr instanceof LocalOrFieldVar l && rExpr instanceof Binary){
             String varName = ((LocalOrFieldVar) lExpr).name;
             if (!SemanticCheck.getFields.contains(varName)) {
                 var scope = currentScope.getLocalVar(varName);
                 if (scope == null && !SemanticCheck.getFields.contains(varName)) {
-                    SemanticCheck.errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
+                    SemanticCheck.errors.add(new Exception("Error in line " + l.startLine + ": variable " + varName + " doesn't exist"));
                     valid = false;
-                } else if (scope.isInitialized == false) {
+                } else if (!scope.isInitialized) {
                     valid = false;
                 }
             }
@@ -235,14 +228,28 @@ public class CheckType {
 
     private static String generateMethodCallString(MethodCall methodcall){
         StringBuilder s = new StringBuilder();
-        s.append(methodcall.type);
-        s.append(" ");
         s.append(methodcall.name);
         s.append("(");
         for(int i = 0; i < methodcall.arguments.size(); i++){
 
             s.append(methodcall.arguments.get(i).getType().toString());
-            if(i > methodcall.arguments.size() - 1){
+            if(i < methodcall.arguments.size() - 1){
+                s.append(",");
+            }
+
+        }
+        s.append(")");
+        return s.toString();
+    }
+
+    private static String generateConstructorCallString(New constructor){
+        StringBuilder s = new StringBuilder();
+        s.append(constructor.name);
+        s.append("(");
+        for(int i = 0; i < constructor.arguments.size(); i++){
+
+            s.append(constructor.arguments.get(i).getType().toString());
+            if(i < constructor.arguments.size() - 1){
                 s.append(",");
             }
 

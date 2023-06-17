@@ -28,6 +28,7 @@ public class SemanticCheck implements SemanticVisitor {
     public static ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
     public static ArrayList<String> getFields = new ArrayList<>();
     public static boolean methodIsStatic;
+    private boolean assign = false;
 
 
     public static void main(String[] args) {
@@ -232,7 +233,9 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }*/
 
+        assign = true;
         var leftExpr = lExpr.accept(this);
+        assign = false;
         currentNullType = leftExpr.getType();
         var rightExpr = rExpr.accept(this);
 
@@ -359,6 +362,9 @@ public class SemanticCheck implements SemanticVisitor {
             toCheck.type = BasicType.VOID;
         } else { //return x;
             returnExpression = toCheck.expression.accept(this); //von Expression der Type
+            if(!returnExpression.isValid()){
+                return new TypeCheckResult(false, null);
+            }
             toCheck.type = toCheck.expression.getType();
         }
         if (currentMethodReturnType != null && !currentMethodReturnType.equals(toCheck.getType())) {
@@ -421,7 +427,7 @@ public class SemanticCheck implements SemanticVisitor {
             }
             currentScope.addLocalVar(toCheck, isInitialized);
         } catch (java.lang.Exception e) {
-            errors.add(new Exception(e.getMessage() +  fileName));
+            errors.add(new Exception(e.getMessage()));
             valid = false;
         }
         return new TypeCheckResult(valid, null);
@@ -607,8 +613,8 @@ public class SemanticCheck implements SemanticVisitor {
 
         try {
             boolean isStatic = false;
-            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar) {
-                isStatic = ((LocalOrFieldVar) toCheck.methodOwnerPrefix).isStatic;
+            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar l) {
+                isStatic = l.isStatic;
             }
             var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
 
@@ -730,11 +736,11 @@ public class SemanticCheck implements SemanticVisitor {
 
         if (localVar != null) {
             //TODO: nochmals überarbeiten, triggert auch wenn die variable geschrieben wird
-            /*if(!localVar.isInitialized){
+            if(!localVar.isInitialized && !assign){
                 errors.add(new Exception("Error in line " + toCheck.startLine + ": local variable "+ toCheck.name + " might not have been initialized"));
                 toCheck.type = localVar.type;
                 return new TypeCheckResult(false, localVar.type);
-            }*/
+            }
             toCheck.type = localVar.type;
             return new TypeCheckResult(true, localVar.type);
         }
@@ -742,7 +748,7 @@ public class SemanticCheck implements SemanticVisitor {
         // Schauen ob sie in der Klasse deklariert ist, Feld bekommen welches aufgerufen wird
         try {
             var fieldVar = CheckType.getFieldInType(toCheck.name,
-                    new ReferenceType(getClass.name), programEnvironment, getClass);
+                    new ReferenceType(getClass.name), programEnvironment, getClass, toCheck.startLine);
 
 
             if (fieldVar != null) {
@@ -796,7 +802,7 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
         try {
-            var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass);
+            var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass, toCheck.startLine);
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {
