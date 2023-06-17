@@ -259,7 +259,6 @@ class MainTest {
         }
     }
 
-    //toDo: auf reflection übersetzen
     @Test
     @DisplayName("Empty Class")
     public void EmptyClassTest() throws IOException {
