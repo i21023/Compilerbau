@@ -440,19 +440,24 @@ public class SemanticCheck implements SemanticVisitor {
         // Condition überprüfen
         var expressionResult = toCheck.expression.accept(this);
 
-        if(!expressionResult.isValid()) return new TypeCheckResult(false, null);
 
-        valid = valid && expressionResult.isValid();
-        boolean isBool = (Objects.equals(BasicType.BOOL,toCheck.expression.getType()) || expressionResult.getType() instanceof ReferenceType);
-        if (!isBool) {
-            errors.add(
-                    new Exception(
-                            "If Condition expected " + BasicType.BOOL + " but got " + expressionResult.getType()));
+        if(expressionResult.isValid()){
+            valid = valid && expressionResult.isValid();
+            boolean isBool = (Objects.equals(BasicType.BOOL,toCheck.expression.getType()) || expressionResult.getType() instanceof ReferenceType);
+            if (!isBool) {
+                errors.add(
+                                new Exception("Error in line " + toCheck.startLine +
+                                        ": incompatible types: " + expressionResult.getType() + " cannot be converted to " + BOOL));
+                valid = false;
+            }
+        }
+        else{
             valid = false;
         }
 
         //if Block überprüfen
         var ifResult = toCheck.blockIf.accept(this);
+
         var ifBlockType = ifResult.getType();
         valid = valid && ifResult.isValid();
 
@@ -471,7 +476,7 @@ public class SemanticCheck implements SemanticVisitor {
                 //Falls else keinen return Typ nehmen wir den Typ von if
                 toCheck.type = ifResult.getType();
 
-            } else if (ifBlockType != null && elseBlockType != null) {
+            } else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
                 // Typen müssen übereinstimmen
                 if (!Objects.equals(elseBlockType, ifBlockType)) {
                     errors.add(new Exception(
