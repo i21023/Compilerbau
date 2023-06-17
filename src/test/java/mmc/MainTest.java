@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import ressources.Testcases.FieldVarClassMutable;
 import ressources.helpers.Classwriter;
+import ressources.helpers.ReflectionHelper;
 import ressources.helpers.Resources;
 
 import java.io.File;
@@ -131,6 +132,7 @@ class MainTest {
 
         try {
 
+
             /*ressources.compiles.FieldVarClassMutable test = new ressources.compiles.FieldVarClassMutable();*/
 
             String resourcesPath = "src/main/resources_tests/";
@@ -184,24 +186,12 @@ class MainTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(tast);
 
-        Classwriter.WriteClassFile("MethodCall", "src/main/resources_tests/", code);
-
         try {
-
-            /*ressources.compiles.FieldVarClassMutable test = new ressources.compiles.FieldVarClassMutable();*/
-
-            String resourcesPath = "src/main/resources_tests/";
-
-            // Name der Klasse, die instanziiert werden soll
+//Mit Hilfe des ReflectionHelpers wird der ByteCode ohne vorheriges wegschreiben geladen In Zukunft nur noch über den ReflectionHelper
             String className = "MethodCall";
-
-            // URLClassLoader erstellen und das Verzeichnis zum Klassenpfad hinzufügen
-            URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(resourcesPath).toURI().toURL()});
-
-            // Klasse laden
-            java.lang.Class<?> loadedClass = classLoader.loadClass(className);
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
             java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
-
             // Instanz der Klasse erstellen
             Object instance = constructor.newInstance();
 
@@ -235,23 +225,18 @@ class MainTest {
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
-            Classwriter.WriteClassFile("MyClass", "src/main/resources_tests/", code);
-            Classwriter.WriteClassFile("Test", "src/main/resources_tests/", code);
-
             try {
 
-                /*ressources.compiles.FieldVarClassMutable test = new ressources.compiles.FieldVarClassMutable();*/
 
-                String resourcesPath = "src/main/resources_tests/";
-
-                // Name der Klasse, die instanziiert werden soll
+                // Name der Klasse, die instanziert werden soll
                 String className = "MyClass";
 
-                // URLClassLoader erstellen und das Verzeichnis zum Klassenpfad hinzufügen
-                URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{new File(resourcesPath).toURI().toURL()});
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
 
                 // Klasse laden
-                java.lang.Class<?> loadedClass = classLoader.loadClass(className);
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+                java.lang.Class<?> test = classLoader.defineClass("Test", code.get("Test"));
+
                 java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
 
                 // Instanz der Klasse erstellen
@@ -262,7 +247,6 @@ class MainTest {
                 java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
                 main.invoke(null, (Object) args);
 
-
             } catch (Exception e) {
                 if (e instanceof InvocationTargetException) {
                     Throwable cause = ((InvocationTargetException) e).getTargetException();
@@ -271,14 +255,8 @@ class MainTest {
                     e.printStackTrace();
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
-
         }
-
-
     }
-
-
 }
