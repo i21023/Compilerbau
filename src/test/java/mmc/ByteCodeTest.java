@@ -13,7 +13,7 @@ import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 import mmc.codegen.visitors.ProgramCodeGenerator;
-import mmc.semantikcheck.SemanticCheck;
+
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,13 +21,11 @@ import ressources.helpers.Classwriter;
 import ressources.helpers.Resources;
 
 import java.io.IOException;
-import java.sql.Array;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
-import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
 public class ByteCodeTest {
 
@@ -47,7 +45,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(testTast);
 
-        Classwriter.WriteClassFile("EmptyClass", "C:/Users/Micha/Documents/GitHub/Tests", code);
+        Classwriter.WriteClassFile("EmptyClass", "src/main/ressources_tests", code);
 
     }
 
@@ -84,7 +82,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("ContructorWithParam", "C:/Users/Micha/Documents/GitHub/Tests", code);
+        Classwriter.WriteClassFile("ContructorWithParam", "src/main/ressources_tests", code);
 
 
         //(Block pStatement, List<Parameter> pParameters, AccessModifier pAccessModifier, Block pBlock)
@@ -106,7 +104,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("FieldVarClass", "C:/Users/Micha/Documents/GitHub/Tests", code);
+        Classwriter.WriteClassFile("FieldVarClass", "src/main/ressources_tests", code);
 
     }
 
@@ -129,9 +127,14 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("FieldVarClassMutable", "C:/Users/Micha/Documents/GitHub/Tests", code);
+        Classwriter.WriteClassFile("FieldVarClassMutable", "src/main/ressources_tests", code);
+
+        System.out.println("Test-Reihenfolge");
+        //Ab hier Testen durch laden des Kompilates
+        // Pfad zu .class-Verzeichnis
 
     }
+
 
     @Test
     @DisplayName("Class with FieldVars and Method")
@@ -150,7 +153,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "/Users/julian/IdeaProjects/Compilerbau/Compilerbau/src/test/java/mmc", code);
+        Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);
     }
 
 
@@ -175,7 +178,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
+        Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);
     }
 
 
@@ -198,7 +201,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
+        Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);
     }
 
     @Test
@@ -218,7 +221,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
+        Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);
     }
 
     @Test
@@ -243,7 +246,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
+        Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);
     }
 
     @Test
@@ -262,7 +265,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "C:/Users/Julian/Desktop/test", code);
+        Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);
     }
 
     @Test
@@ -612,7 +615,7 @@ public class ByteCodeTest {
     }
 
 
-    public void staticFib(){
+    public void staticFib() {
 
         /*public class Test{
 
@@ -660,7 +663,7 @@ public class ByteCodeTest {
         Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
     }
 
-    public void callStaticMethodFromOtherClass(){
+    public void callStaticMethodFromOtherClass() {
         //Klasse Bar gegeben:
         /* class Bar{
 
@@ -695,7 +698,7 @@ public class ByteCodeTest {
     }
 
     @Test
-    public void stringConcat(){
+    public void stringConcat() {
 
         Method method1 = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
 
@@ -715,7 +718,7 @@ public class ByteCodeTest {
         Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
     }
 
-    public void stringEqual(){
+    public void stringEqual() {
         Method method1 = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
 
                 new LocalVarDecl("i", BasicType.BOOL, new Binary(Operator.EQUAL, new New("java/lang/String", new ArrayList<>(Arrays.asList(new StringExpr("Hallo")))), new StringExpr("Hallo"), BasicType.BOOL)),
