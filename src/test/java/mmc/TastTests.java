@@ -594,6 +594,7 @@ public class TastTests {
             Program tast = generateTypedast(prog);
             assertEquals(prog, tast);
         } catch (Exception e) {
+            e.printStackTrace();
             HasFailed = true;
         }
         assertEquals(true, HasFailed);
@@ -615,6 +616,7 @@ public class TastTests {
         try {
             Program tast = generateTypedast(prog);
         } catch (Exception e) {
+            e.printStackTrace();
             HasFailed = true;
         }
         assertEquals(true, HasFailed);
