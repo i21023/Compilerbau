@@ -36,5 +36,10 @@ public class ReferenceType implements Type {
 
         return typeIsEqual;
     }
+
+    @Override
+    public String toString(){
+        return type;
+    }
 }
 

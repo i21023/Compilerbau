@@ -124,8 +124,7 @@ public class CheckType {
             var foundMethods = new ArrayList<MethodEnvironment>();
             var methods = classContext.getMethods().get(toCheck.name);
             if (methods == null) {
-                throw new Exception("No declared Method " + toCheck.name + " with Arguments: "
-                        + toCheck.type + " in Type " + type);
+                throw new Exception("Error in line " + toCheck.startLine + ": no declared method " + generateMethodCallString(toCheck) + " in class " + type);
             }
             for (var method : methods) { //Für jede Methode Parameter checken Polymorphy
                 if (method.getParameterTypes().size() == toCheck.arguments.size()) { //Schauen ob beim Methode Call alle Parameter mitgegeben wurden
@@ -233,4 +232,22 @@ public class CheckType {
         return valid;
     }
 
+
+    private static String generateMethodCallString(MethodCall methodcall){
+        StringBuilder s = new StringBuilder();
+        s.append(methodcall.type);
+        s.append(" ");
+        s.append(methodcall.name);
+        s.append("(");
+        for(int i = 0; i < methodcall.arguments.size(); i++){
+
+            s.append(methodcall.arguments.get(i).getType().toString());
+            if(i > methodcall.arguments.size() - 1){
+                s.append(",");
+            }
+
+        }
+        s.append(")");
+        return s.toString();
+    }
 }
