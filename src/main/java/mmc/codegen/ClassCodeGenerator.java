@@ -1,4 +1,4 @@
-package mmc.codegen.visitors;
+package mmc.codegen;
 
 import mmc.ast.*;
 import mmc.ast.expressions.LocalOrFieldVar;
@@ -6,7 +6,7 @@ import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Constructor;
 import mmc.ast.main.Field;
 import mmc.ast.statementexpression.Assign;
-import mmc.ast.statements.Block;
+import mmc.codegen.visitors.IClassCodeVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Opcodes;
@@ -14,7 +14,7 @@ import org.objectweb.asm.Opcodes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ClassCodeGenerator implements IClassCodeVisitor{
+public class ClassCodeGenerator implements IClassCodeVisitor {
     private final ClassWriter classWriter;
 
     private Map<String, Type> fieldVars;

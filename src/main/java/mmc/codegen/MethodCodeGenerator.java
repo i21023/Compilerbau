@@ -1,4 +1,4 @@
-package mmc.codegen.visitors;
+package mmc.codegen;
 
 import mmc.ast.BasicType;
 import mmc.ast.Operator;
@@ -12,6 +12,8 @@ import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
+import mmc.codegen.GeneratorHelpFunctions;
+import mmc.codegen.visitors.IMethodCodeVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -29,8 +31,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     private String currentClassName;
     private Map<String, Type> fieldVars;
     private Stack<String> localVars;
-    private boolean isStaticMethod;
-
     private boolean pushOnStack = false;
 
 
@@ -43,8 +43,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(Method method) {
-
-        isStaticMethod = method.isStatic;
 
         if (!method.isStatic) {
             localVars.push("this");
@@ -489,7 +487,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     @Override
     public void visit(InstVar instVar) {
         boolean pushOnStackState = pushOnStack;
-        pushOnStack = true;
+        if(instVar.isStatic) pushOnStack = false;
+        else pushOnStack = true;
         instVar.expression.accept(this);
         pushOnStack = pushOnStackState;
         String owner = ((ReferenceType) instVar.expression.getType()).type;
@@ -681,8 +680,11 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     public void visit(MethodCall methodCall) {
 
         boolean pushOnStackState = pushOnStack;
-        pushOnStack = true;
-        if(!methodCall.isStatic) methodCall.methodOwnerPrefix.accept(this);
+
+        if(methodCall.isStatic) pushOnStack = false;
+        else pushOnStack = true;
+
+        methodCall.methodOwnerPrefix.accept(this);
         methodCall.arguments.forEach(argument -> argument.accept(this));
         pushOnStack = pushOnStackState;
         String type = methodCall.methodOwnerPrefix.getType() instanceof ReferenceType ref ? ref.type : null;

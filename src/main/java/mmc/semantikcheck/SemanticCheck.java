@@ -211,11 +211,11 @@ public class SemanticCheck implements SemanticVisitor {
         if(resultType == null){
             resultType = VOID;
         }
-/*        if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
+        if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
             errors.add(new Exception("Method-Declaration " + toCheck.name + " with type "
                     + toCheck.getType() + " has at least one Mismatching return Type"));
             valid = false;
-        }*/
+        }
         return new TypeCheckResult(valid, resultType);
     }
 

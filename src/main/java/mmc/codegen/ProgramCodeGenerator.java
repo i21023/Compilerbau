@@ -1,14 +1,14 @@
-package mmc.codegen.visitors;
+package mmc.codegen;
 
-import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Program;
+import mmc.codegen.ClassCodeGenerator;
+import mmc.codegen.visitors.IProgramCodeVisitor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProgramCodeGenerator implements IProgramCodeVisitor{
+public class ProgramCodeGenerator implements IProgramCodeVisitor {
 
     private final HashMap<String, byte[]> classes;
 

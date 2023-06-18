@@ -1,4 +1,4 @@
-package mmc.codegen.visitors;
+package mmc.codegen;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;

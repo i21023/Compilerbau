@@ -11,14 +11,13 @@ import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statements.*;
-import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.codegen.ProgramCodeGenerator;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import ressources.Testcases.FieldVarClassMutable;
 import ressources.helpers.Classwriter;
 import ressources.helpers.ReflectionHelper;
 import ressources.helpers.Resources;

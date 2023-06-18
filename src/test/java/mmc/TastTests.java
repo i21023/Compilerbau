@@ -7,20 +7,16 @@ import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statements.*;
-import mmc.codegen.visitors.ProgramCodeGenerator;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ressources.helpers.Classwriter;
 import ressources.helpers.Resources;
 
-import java.beans.Statement;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 

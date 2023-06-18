@@ -12,7 +12,7 @@ import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
-import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.codegen.ProgramCodeGenerator;
 
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class ByteCodeTest {
@@ -736,6 +737,69 @@ public class ByteCodeTest {
 
         Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
 
+    }
+
+    public void staticInstVarCallOnReference(){
+        Method MainMethod = new MainMethod(new Block(new ArrayList<>(Arrays.asList(new MethodCall(new Class("Main", new ReferenceType("Main")), "foo", new ArrayList<>(), BasicType.VOID, true)))));
+
+        Method foo = new Method(BasicType.VOID, "foo", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new MethodCall(new InstVar("a",
+                                        new MethodCall(new Class("Test", new ReferenceType("Test")), "getInstance", new ArrayList<>(), new ReferenceType("Test"), true), new ReferenceType("java/lang/String"), true)
+                                        , "charAt", new ArrayList<>(List.of(new IntExpr(0))), BasicType.CHAR, false)
+                        )), BasicType.VOID, false)))), AccessModifier.PUBLIC, true);
+
+        ClassDecl main = new ClassDecl("Main", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(foo, MainMethod)),
+                new ArrayList<Constructor>());
+
+        Method getInstance = new Method(new ReferenceType("Test"), "getInstance", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+                new Return(new ReferenceType("Test"), new New("Test", new ArrayList<>())
+                )))), AccessModifier.DEFAULT, true);
+
+        ClassDecl test = new ClassDecl("Test", new ArrayList<Field>(
+                Arrays.asList(new Field(new ReferenceType("java/lang/String"), "a", AccessModifier.DEFAULT, new StringExpr("MMC"), true))
+        ), new ArrayList<Method>(Arrays.asList(getInstance)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(main, test)));
+    }
+
+    public void staticMethodCallOnReference(){
+        Method MainMethod = new MainMethod(new Block(new ArrayList<>(Arrays.asList(new MethodCall(new Class("Main", new ReferenceType("Main")), "foo", new ArrayList<>(), BasicType.VOID, true)))));
+
+        Method foo = new Method(BasicType.VOID, "foo", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+                new MethodCall(
+                        new InstVar("out",
+                                new Class("java/lang/System",
+                                        new ReferenceType("java/lang/System")),
+                                new ReferenceType("java/io/PrintStream"), true), "println",
+                        new ArrayList<>(Arrays.asList(
+                                new MethodCall(
+                                        new MethodCall(new Class("Test", new ReferenceType("Test")), "getInstance", new ArrayList<>(), new ReferenceType("Test"), true), "test", new ArrayList<>(), BasicType.INT, true)
+                        )), BasicType.VOID, false)))), AccessModifier.PUBLIC, true);
+
+        ClassDecl main = new ClassDecl("Main", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(foo, MainMethod)),
+                new ArrayList<Constructor>());
+
+        Method getInstance = new Method(new ReferenceType("Test"), "getInstance", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+                new Return(new ReferenceType("Test"), new New("Test", new ArrayList<>())
+                )))), AccessModifier.DEFAULT, true);
+
+        Method testmethod = new Method(BasicType.INT, "test", new ArrayList<>(), new Block(new ArrayList<>(Arrays.asList(
+                new Return(BasicType.INT, new InstVar("b", new Class("Test", new ReferenceType("Test")), BasicType.INT, true))
+        ))), AccessModifier.DEFAULT, true);
+
+        ClassDecl test = new ClassDecl("Test", new ArrayList<Field>(
+                Arrays.asList(new Field(BasicType.INT, "b", AccessModifier.DEFAULT, null, true))
+        ), new ArrayList<Method>(Arrays.asList(getInstance, testmethod)),
+                new ArrayList<Constructor>());
+
+        Program program = new Program(new ArrayList<>(Arrays.asList(main, test)));
     }
 }
 
