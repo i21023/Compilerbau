@@ -245,6 +245,7 @@ class MainTest {
                 java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
                 main.invoke(null, (Object) args);
 
+
             } catch (Exception e) {
                 if (e instanceof InvocationTargetException) {
                     Throwable cause = ((InvocationTargetException) e).getTargetException();
