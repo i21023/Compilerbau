@@ -1,7 +1,8 @@
 package mmc;
 
 import mmc.ast.main.Program;
-import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.codegen.ProgramCodeGenerator;
+
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
