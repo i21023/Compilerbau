@@ -13,7 +13,8 @@ import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
-import mmc.codegen.visitors.ProgramCodeGenerator;
+import mmc.codegen.ProgramCodeGenerator;
+import mmc.codegen.visitors.IProgramCodeVisitor;;
 import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStreams;
 
@@ -56,7 +57,7 @@ public class Compiler implements ICompiler {
                 SemanticCheck tAst = new SemanticCheck();
                 Program tAstProgram = tAst.generateTypedast(program);
 
-                ProgramCodeGenerator programVisitor = new ProgramCodeGenerator();
+                IProgramCodeVisitor programVisitor = new ProgramCodeGenerator();
                 HashMap<String, byte[]> code = programVisitor.getBytecode(tAstProgram);
 
                 String finalOutDir = outDir;
