@@ -8,6 +8,7 @@ import mmc.ast.expressions.Class;
 import mmc.ast.main.*;
 import mmc.ast.statements.Block;
 import mmc.semantikcheck.Exception;
+import mmc.semantikcheck.SemanticCheck;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -26,6 +27,11 @@ public class ProgramEnvironment {
         addStaticContext();
 
         program.classes.forEach(clazz -> {
+
+            if (classes.containsKey(clazz.name)) {
+                SemanticCheck.errors.add(new Exception("Error: Duplicate classes found: " + clazz.name));
+            }
+
             ClassEnvironment cc = new ClassEnvironment(clazz);
             classes.put(clazz.name, cc);
             if (cc.hasMain) {

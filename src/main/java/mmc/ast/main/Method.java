@@ -74,8 +74,7 @@ public class Method implements Visitable {
 
     public boolean isSameDeclaration(Method methodDecl) {
 
-        if (!this.name.equals(methodDecl.name) || !this.getType().equals(methodDecl.getType())
-                || this.parameters.size() != methodDecl.parameters.size()) {
+        if (!this.name.equals(methodDecl.name) || this.parameters.size() != methodDecl.parameters.size()) {
             return false;
         }
 

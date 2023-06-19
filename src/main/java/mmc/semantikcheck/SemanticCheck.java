@@ -32,15 +32,6 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
-        ArrayList<Method> methods = new ArrayList<Method>();
-        Method method1 = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
-        Method method2 = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))), AccessModifier.PUBLIC, false);
-        Method method3 = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))), AccessModifier.PUBLIC, false);
-        Method method4 = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))), AccessModifier.PRIVATE, false);
-        methods.add(method1);
-        methods.add(method2);
-        methods.add(method3);
-        methods.add(method4);
 
     }
 
@@ -63,6 +54,10 @@ public class SemanticCheck implements SemanticVisitor {
         boolean valid = true;
         programEnvironment = new ProgramEnvironment(toCheck);
         toCheck.programEnvironment = programEnvironment; //für programm speicherung
+
+        if(!errors.isEmpty()){
+            return new TypeCheckResult(false, null);
+        }
 
         currentScope = new ScopeEnvironment();
 
