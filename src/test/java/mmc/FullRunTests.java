@@ -55,7 +55,7 @@ public class FullRunTests {
                 java.lang.reflect.Method minus = instance.getClass().getMethod("minus", int.class, int.class);
                 java.lang.reflect.Method mul = instance.getClass().getMethod("mul", int.class, int.class);
                 java.lang.reflect.Method div = instance.getClass().getMethod("div", int.class, int.class);
-                //java.lang.reflect.Method mod = instance.getClass().getMethod("mod", int.class,int.class);
+                java.lang.reflect.Method mod = instance.getClass().getMethod("mod", int.class, int.class);
                 java.lang.reflect.Method incpre = instance.getClass().getMethod("incpre", int.class);
                 java.lang.reflect.Method incsuf = instance.getClass().getMethod("incsuf", int.class);
                 java.lang.reflect.Method decpre = instance.getClass().getMethod("decpre", int.class);
@@ -81,7 +81,7 @@ public class FullRunTests {
                 assertEquals(-3, minus.invoke(instance, 2, 5));
                 assertEquals(10, mul.invoke(instance, 2, 5));
                 assertEquals(0, div.invoke(instance, 2, 5));
-                //assertEquals(0,mod.invoke(instance,2));
+                assertEquals(0, mod.invoke(instance, 4, 2));
                 assertEquals(3, incpre.invoke(instance, 2));
                 assertEquals(3, incsuf.invoke(instance, 2));
                 assertEquals(1, decpre.invoke(instance, 2));

@@ -1,0 +1,13 @@
+public class PrivateCall{
+private int x = 42;
+}
+
+class Caller{
+PrivateCall pc = new PrivateCall();
+
+
+public int getX()
+{
+    return pc.x;
+}
+}

@@ -1,0 +1,5 @@
+public class WrongWhileReturnType{
+public char method(char v){
+while(v) return v;
+}
+}

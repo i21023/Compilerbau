@@ -3,7 +3,7 @@ package ressources.Testcases.failTest;
 public class AssignFail {
     public int foo() {
         int x = 1;
-        //x= true;
+        x = true;
         return x;
     }
 }

@@ -1,0 +1,13 @@
+public class WrongIfTypes{
+
+public int equal(int a, char b){
+if(a==b){
+return b;
+}
+}
+public boolean equal(String a, boolean b){
+if(a!=b){
+return b;
+}
+}
+}

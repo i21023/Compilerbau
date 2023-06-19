@@ -1,0 +1,4 @@
+public class SameVarID{
+int x = 2;
+char x = 'c';
+}

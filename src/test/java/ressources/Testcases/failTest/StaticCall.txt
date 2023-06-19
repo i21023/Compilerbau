@@ -1,0 +1,10 @@
+public class StaticCall{
+private int x =5;
+}
+
+class test{
+StaticCall i = new StaticCall();
+public int getX(){
+return i.x;
+}
+}

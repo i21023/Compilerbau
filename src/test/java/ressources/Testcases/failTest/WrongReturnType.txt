@@ -1,8 +1,7 @@
 package ressources.Testcases.failTest;
 
 public class WrongReturnType {
-    public int foo(int a)
-    {
-        return 0;
+    public boolean foo(int a) {
+        return a;
     }
 }

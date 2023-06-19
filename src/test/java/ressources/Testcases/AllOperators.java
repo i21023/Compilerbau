@@ -52,6 +52,10 @@ public class AllOperators {
         return a / b;
     }
 
+    public int mod(int a, int b) {
+        return a % b;
+    }
+
     public int incpre(int a) {
         return ++a;
     }

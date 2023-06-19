@@ -1,0 +1,8 @@
+public class SameMethodIdentifier{
+public int add(){
+return 2+3;
+}
+public int add(){
+return 4+7;
+}
+}
