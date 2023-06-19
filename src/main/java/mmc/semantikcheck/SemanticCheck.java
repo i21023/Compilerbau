@@ -613,7 +613,7 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(Crement toCheck) { //Erweitern
         boolean valid = true;
-        toCheck.expression.accept(this);
+        var typeCheckResult = toCheck.expression.accept(this);
         Type expressionType = toCheck.expression.getType();
 
         if(toCheck.expression instanceof LocalOrFieldVar){
@@ -635,6 +635,8 @@ public class SemanticCheck implements SemanticVisitor {
             errors.add(new Exception("The Operator: " + toCheck.operator
                     + " is not defined for the argument type: " + toCheck.expression.getType()));
         }
+
+        valid = valid && typeCheckResult.isValid();
         return new TypeCheckResult(valid, null);
     }
 
