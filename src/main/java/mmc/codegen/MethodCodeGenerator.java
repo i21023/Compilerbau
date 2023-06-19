@@ -84,6 +84,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(Constructor constructor) {
+
+        localVars.push("this");
+
         List<Type> parameterTypes = constructor.parameters.stream().map(parameter -> parameter.type).collect(Collectors.toList());
 
         methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(constructor.accessModifier, false),
@@ -262,8 +265,10 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
             case NOT -> {
                 Label evaluateTrue = new Label();
                 Label end = new Label();
-
+                boolean pushOnStackState = pushOnStack;
+                pushOnStack = true;
                 unary.expression.accept(this);
+                pushOnStack = pushOnStackState;
                 methodVisitor.visitJumpInsn(Opcodes.IFEQ, evaluateTrue);
 
                 methodVisitor.visitInsn(Opcodes.ICONST_0);
@@ -279,9 +284,14 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(Binary binary) {
+
+        boolean pushOnStackState = pushOnStack;
         if (binary.operator != Operator.AND && binary.operator != Operator.OR) {
+
+            pushOnStack = true;
             binary.expression1.accept(this);
             binary.expression2.accept(this);
+            pushOnStack = pushOnStackState;
 
             switch (binary.operator) {
                 case PLUS -> {
@@ -426,10 +436,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     Label andFalse = new Label();
                     Label end = new Label();
 
+                    pushOnStack = true;
                     binary.expression1.accept(this);
                     methodVisitor.visitJumpInsn(Opcodes.IFEQ, andFalse);
 
                     binary.expression2.accept(this);
+                    pushOnStack = pushOnStackState;
                     methodVisitor.visitJumpInsn(Opcodes.IFEQ, andFalse);
                     methodVisitor.visitInsn(Opcodes.ICONST_1);
                     methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
@@ -445,10 +457,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     Label orTrue = new Label();
                     Label end = new Label();
 
+                    pushOnStack = true;
                     binary.expression1.accept(this);
                     methodVisitor.visitJumpInsn(Opcodes.IFNE, orTrue);
 
                     binary.expression2.accept(this);
+                    pushOnStack = pushOnStackState;
                     methodVisitor.visitJumpInsn(Opcodes.IFNE, orTrue);
                     methodVisitor.visitInsn(Opcodes.ICONST_0);
                     methodVisitor.visitJumpInsn(Opcodes.GOTO, end);
@@ -633,6 +647,8 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
                     } else {
                         pushOnStack = true;
+                        leftExpr.expression.accept(this);
+                        methodVisitor.visitInsn(Opcodes.POP);
                         assign.rightExpr.accept(this);
                         pushOnStack = pushOnStackState;
 
@@ -645,7 +661,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                     }
 
                 }
-                //TODO: Instvar
             }
 
             case PLUSASSIGN -> {
@@ -685,6 +700,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         else pushOnStack = true;
 
         methodCall.methodOwnerPrefix.accept(this);
+        pushOnStack = true;
         methodCall.arguments.forEach(argument -> argument.accept(this));
         pushOnStack = pushOnStackState;
         String type = methodCall.methodOwnerPrefix.getType() instanceof ReferenceType ref ? ref.type : null;
@@ -854,6 +870,14 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         ReferenceType owner = (ReferenceType) instVar.expression.getType();
 
         if (((InstVar) crement.expression).isStatic) {
+
+            boolean pushOnStackState = pushOnStack;
+            pushOnStack = true;
+            instVar.expression.accept(this);
+            if(!(instVar.expression instanceof Class)) methodVisitor.visitInsn(Opcodes.POP);
+
+            pushOnStack = pushOnStackState;
+
             methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
 
             if (!pre && pushOnStack) {

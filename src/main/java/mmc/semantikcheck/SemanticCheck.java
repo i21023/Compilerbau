@@ -141,6 +141,7 @@ public class SemanticCheck implements SemanticVisitor {
     public TypeCheckResult typeCheck(Constructor toCheck) {
         boolean valid = true;
 
+        methodIsStatic = false;
         currentScope.pushScope();
 
         for (Parameter parameter : toCheck.parameters) { //Für jeden Parameter im Konstruktor durchgehen
