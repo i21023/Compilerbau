@@ -32,6 +32,15 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
+        ArrayList<Method> methods = new ArrayList<Method>();
+        Method method1 = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
+        Method method2 = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))), AccessModifier.PUBLIC, false);
+        Method method3 = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))), AccessModifier.PUBLIC, false);
+        Method method4 = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))), AccessModifier.PRIVATE, false);
+        methods.add(method1);
+        methods.add(method2);
+        methods.add(method3);
+        methods.add(method4);
 
     }
 
@@ -213,6 +222,12 @@ public class SemanticCheck implements SemanticVisitor {
         var lExpr = toCheck.leftExpr;
         var rExpr = toCheck.rightExpr;
 
+/*        //a = a;
+        if (lExpr.equals(rExpr)) {
+            errors.add(new Exception("Cannot assign to self"));
+            valid = false;
+        }*/
+
         assign = true;
         var leftExpr = lExpr.accept(this);
         assign = false;
@@ -224,6 +239,19 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         valid = CheckType.isInitalised(currentScope,rExpr,lExpr);
+        //---Info: deprecated!---
+        //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
+        /*if(toCheck.operator != Operator.ASSIGN){
+            if(leftExpr.getType() != INT && rightExpr.getType() != INT){
+                errors.add(new Exception("Error in line " + toCheck.startLine + ": mismatch types in Assign-Statement: Both Types need to be Integer and not"
+                        + leftExpr.getType() + " and "
+                        + rightExpr.getType()));
+                valid = false;
+            }
+        }
+        else{
+            toCheck.type = lExpr.getType();
+        }*/
 
         toCheck.type = lExpr.getType();
 

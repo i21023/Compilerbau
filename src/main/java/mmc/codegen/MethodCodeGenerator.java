@@ -664,23 +664,38 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
             }
 
             case PLUSASSIGN -> {
-                new Assign(assign.leftExpr, new Binary(Operator.PLUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+                if(assign.leftExpr instanceof InstVar i)
+                    crementInstVar(i, assign.rightExpr, Operator.PLUS, true);
+                else
+                    new Assign(assign.leftExpr, new Binary(Operator.PLUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
             }
 
             case MINUSASSIGN -> {
-                new Assign(assign.leftExpr, new Binary(Operator.MINUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+                if(assign.leftExpr instanceof InstVar i)
+                    crementInstVar(i, assign.rightExpr, Operator.MINUS, true);
+                else
+                    new Assign(assign.leftExpr, new Binary(Operator.MINUS, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
             }
 
             case MULTASSIGN -> {
-                new Assign(assign.leftExpr, new Binary(Operator.MULT, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+                if(assign.leftExpr instanceof InstVar i)
+                    crementInstVar(i, assign.rightExpr, Operator.MULT, true);
+                else
+                    new Assign(assign.leftExpr, new Binary(Operator.MULT, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
             }
 
             case DIVASSIGN -> {
-                new Assign(assign.leftExpr, new Binary(Operator.DIV, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+                if(assign.leftExpr instanceof InstVar i)
+                    crementInstVar(i, assign.rightExpr, Operator.DIV, true);
+                else
+                    new Assign(assign.leftExpr, new Binary(Operator.DIV, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
             }
 
             case MODASSIGN -> {
-                new Assign(assign.leftExpr, new Binary(Operator.MOD, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
+                if(assign.leftExpr instanceof InstVar i)
+                    crementInstVar(i, assign.rightExpr, Operator.MOD, true);
+                else
+                    new Assign(assign.leftExpr, new Binary(Operator.MOD, assign.leftExpr, assign.rightExpr), assign.type).accept(this);
             }
 
             default -> {
@@ -763,29 +778,29 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                 case INCPRE -> {
                     switch(vartype){
                         case 0 -> crementLocalVar(crement, true, true);
-                        case 1 -> crementFieldVar(crement, true, true);
-                        case 2 -> crementInstVar(crement, true, true);
+                        case 1 -> crementFieldVar((LocalOrFieldVar) crement.expression, new IntExpr(1), Operator.PLUS, true);
+                        case 2 -> crementInstVar((InstVar) crement.expression, new IntExpr(1), Operator.PLUS, true);
                     }
                 }
                 case INCSUF -> {
                     switch(vartype){
                         case 0 -> crementLocalVar(crement, true, false);
-                        case 1 -> crementFieldVar(crement, true, false);
-                        case 2 -> crementInstVar(crement, true, false);
+                        case 1 -> crementFieldVar((LocalOrFieldVar) crement.expression, new IntExpr(1), Operator.PLUS, false);
+                        case 2 -> crementInstVar((InstVar) crement.expression, new IntExpr(1), Operator.PLUS, false);
                     }
                 }
                 case DECPRE -> {
                     switch(vartype){
                         case 0 -> crementLocalVar(crement, false, true);
-                        case 1 -> crementFieldVar(crement, false, true);
-                        case 2 -> crementInstVar(crement, false, true);
+                        case 1 -> crementFieldVar((LocalOrFieldVar) crement.expression, new IntExpr(1), Operator.MINUS, true);
+                        case 2 -> crementInstVar((InstVar) crement.expression, new IntExpr(1), Operator.MINUS, true);
                     }
                 }
                 case DECSUF -> {
                     switch(vartype){
                         case 0 -> crementLocalVar(crement, false, false);
-                        case 1 -> crementFieldVar(crement, false, false);
-                        case 2 -> crementInstVar(crement, false, false);
+                        case 1 -> crementFieldVar((LocalOrFieldVar) crement.expression, new IntExpr(1), Operator.MINUS, false);
+                        case 2 -> crementInstVar((InstVar) crement.expression, new IntExpr(1), Operator.MINUS, false);
                     }
                 }
                 default -> throw new IllegalArgumentException("Crement Expression cannot have Operator: " + crement.operator);
@@ -811,67 +826,76 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     }
 
-    public void crementFieldVar(Crement crement, boolean amount, boolean pre) {
+    public void crementFieldVar(LocalOrFieldVar localOrFieldVar, IExpression amount, Operator operator, boolean pre) {
 
-        String name = ((LocalOrFieldVar) crement.expression).name;
+        boolean pushOnStackState = pushOnStack;
 
-        if (!((LocalOrFieldVar) crement.expression).isStatic) {
+        if (!localOrFieldVar.isStatic) {
             methodVisitor.visitVarInsn(Opcodes.ALOAD, 0);
             methodVisitor.visitInsn(Opcodes.DUP);
-            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, name,
-                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+            methodVisitor.visitFieldInsn(Opcodes.GETFIELD, currentClassName, localOrFieldVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
 
             if (!pre && pushOnStack) {
                 methodVisitor.visitInsn(Opcodes.DUP_X1);
             }
 
-            if (amount) {
-                methodVisitor.visitInsn(Opcodes.ICONST_1);
-            } else {
-                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            pushOnStack = true;
+            amount.accept(this);
+            pushOnStack = pushOnStackState;
+
+            switch(operator){
+                case PLUS -> methodVisitor.visitInsn(Opcodes.IADD);
+                case MINUS -> methodVisitor.visitInsn(Opcodes.ISUB);
+                case MULT -> methodVisitor.visitInsn(Opcodes.IMUL);
+                case DIV -> methodVisitor.visitInsn(Opcodes.IDIV);
+                case MOD -> methodVisitor.visitInsn(Opcodes.IREM);
             }
-            methodVisitor.visitInsn(Opcodes.IADD);
 
             if (pre && pushOnStack) {
                 methodVisitor.visitInsn(Opcodes.DUP_X1);
             }
 
-            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, name,
-                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+            methodVisitor.visitFieldInsn(Opcodes.PUTFIELD, currentClassName, localOrFieldVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
         } else {
             //methodVisitor.visitInsn(Opcodes.DUP);
-            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, name,
-                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+            methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, currentClassName, localOrFieldVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
 
             if (!pre && pushOnStack) {
                 methodVisitor.visitInsn(Opcodes.DUP);
             }
 
-            if (amount) {
-                methodVisitor.visitInsn(Opcodes.ICONST_1);
-            } else {
-                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            pushOnStack = true;
+            amount.accept(this);
+            pushOnStack = pushOnStackState;
+
+            switch(operator){
+                case PLUS -> methodVisitor.visitInsn(Opcodes.IADD);
+                case MINUS -> methodVisitor.visitInsn(Opcodes.ISUB);
+                case MULT -> methodVisitor.visitInsn(Opcodes.IMUL);
+                case DIV -> methodVisitor.visitInsn(Opcodes.IDIV);
+                case MOD -> methodVisitor.visitInsn(Opcodes.IREM);
             }
-            methodVisitor.visitInsn(Opcodes.IADD);
 
             if (pre && pushOnStack) {
                 methodVisitor.visitInsn(Opcodes.DUP);
             }
 
-            methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, name,
-                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(name)));
+            methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, currentClassName, localOrFieldVar.name,
+                    GeneratorHelpFunctions.getDescriptor(null, fieldVars.get(localOrFieldVar.name)));
         }
     }
 
-    public void crementInstVar(Crement crement, boolean amount, boolean pre) {
+    public void crementInstVar(InstVar instVar, IExpression amount, Operator operator, boolean pre) {
 
-        InstVar instVar = (InstVar) crement.expression;
+        boolean pushOnStackState = pushOnStack;
 
         ReferenceType owner = (ReferenceType) instVar.expression.getType();
 
-        if (((InstVar) crement.expression).isStatic) {
+        if (instVar.isStatic) {
 
-            boolean pushOnStackState = pushOnStack;
             pushOnStack = true;
             instVar.expression.accept(this);
             if(!(instVar.expression instanceof Class)) methodVisitor.visitInsn(Opcodes.POP);
@@ -884,12 +908,18 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                 methodVisitor.visitInsn(Opcodes.DUP);
             }
 
-            if (amount) {
-                methodVisitor.visitInsn(Opcodes.ICONST_1);
-            } else {
-                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            pushOnStack = true;
+            amount.accept(this);
+            pushOnStack = pushOnStackState;
+
+            switch(operator){
+                case PLUS -> methodVisitor.visitInsn(Opcodes.IADD);
+                case MINUS -> methodVisitor.visitInsn(Opcodes.ISUB);
+                case MULT -> methodVisitor.visitInsn(Opcodes.IMUL);
+                case DIV -> methodVisitor.visitInsn(Opcodes.IDIV);
+                case MOD -> methodVisitor.visitInsn(Opcodes.IREM);
             }
-            methodVisitor.visitInsn(Opcodes.IADD);
+
 
             if (pre && pushOnStack) {
                 methodVisitor.visitInsn(Opcodes.DUP);
@@ -898,9 +928,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
             methodVisitor.visitFieldInsn(Opcodes.PUTSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
 
         } else {
-            boolean pushOnStackState = pushOnStack;
+
             pushOnStack = true;
-            ((InstVar) crement.expression).expression.accept(this);
+            instVar.expression.accept(this);
             pushOnStack = pushOnStackState;
 
             methodVisitor.visitInsn(Opcodes.DUP);
@@ -912,12 +942,17 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                 methodVisitor.visitInsn(Opcodes.DUP_X1);
             }
 
-            if (amount) {
-                methodVisitor.visitInsn(Opcodes.ICONST_1);
-            } else {
-                methodVisitor.visitInsn(Opcodes.ICONST_M1);
+            pushOnStack = true;
+            amount.accept(this);
+            pushOnStack = pushOnStackState;
+
+            switch(operator){
+                case PLUS -> methodVisitor.visitInsn(Opcodes.IADD);
+                case MINUS -> methodVisitor.visitInsn(Opcodes.ISUB);
+                case MULT -> methodVisitor.visitInsn(Opcodes.IMUL);
+                case DIV -> methodVisitor.visitInsn(Opcodes.IDIV);
+                case MOD -> methodVisitor.visitInsn(Opcodes.IREM);
             }
-            methodVisitor.visitInsn(Opcodes.IADD);
 
             if (pre && pushOnStack) {
                 methodVisitor.visitInsn(Opcodes.DUP_X1);
