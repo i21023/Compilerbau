@@ -42,14 +42,15 @@ statement_expr: method_call_statement| new_statement | assign_statement | cremen
 method_call_statement: method_owner_prefix? method_chain* (ID LEFT_BRACKET argumentList? RIGHT_BRACKET);
 //example a.hello().hello2(); methode1 ( expr , expr );
 method_owner_prefix: (THIS | inst_var | new_statement | ID | STRING) DOT;
-method_chain: (ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT) | ID DOT;
+method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
 new_statement: NEW type LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
 assign_statement: (inst_var | ID) assign_op expr; // example this.a = c + 3; x += 3;
 crement_statement: (pre_cre_op (ID | inst_var)) | ((ID | inst_var) suf_cre_op); //example a++; ++a
 
 //Instanciate variable
-inst_var: ((THIS | new_statement) DOT ID) | (((THIS DOT) | (new_statement DOT))? (ID DOT)+ ID); // example this.a
+inst_var: (THIS DOT | new_statement DOT | ID DOT | method_chain DOT) inst_var_in_between* ID; // example this.a
+inst_var_in_between: ID DOT | method_chain;
 
 //expression
 expr: logical_or_expr;

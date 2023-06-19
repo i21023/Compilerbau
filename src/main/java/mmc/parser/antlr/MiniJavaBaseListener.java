@@ -461,6 +461,18 @@ public class MiniJavaBaseListener implements MiniJavaListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInst_var_in_between(MiniJavaParser.Inst_var_in_betweenContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInst_var_in_between(MiniJavaParser.Inst_var_in_betweenContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpr(MiniJavaParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}

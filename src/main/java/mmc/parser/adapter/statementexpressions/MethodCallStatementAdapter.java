@@ -1,7 +1,6 @@
 package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.expressions.IExpression;
-import mmc.ast.expressions.InstVar;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.expressions.StringExpr;
 import mmc.ast.expressions.This;
@@ -62,16 +61,11 @@ public class MethodCallStatementAdapter {
                                                           int startLine, int stopLine) {
 
         if (position > 0) {
-            if (methodChain.get(position).LEFT_BRACKET() == null) {
-                return new InstVar(methodChain.get(position).ID().getText(),
-                        generatePreviousMethodCall(methodChain, position - 1, methodOwnerPrefix, startLine, stopLine),
-                        methodChain.get(position).start.getLine(), methodChain.get(position).stop.getLine());
-            } else {
-                return new MethodCall(generatePreviousMethodCall(methodChain, position - 1, methodOwnerPrefix, startLine, stopLine),
-                        methodChain.get(position).ID().getText(),
-                        getMethodArguments(methodChain.get(position).argumentList()),
-                        startLine, stopLine);
-            }
+            return new MethodCall(generatePreviousMethodCall(methodChain, position - 1, methodOwnerPrefix, startLine, stopLine),
+                    methodChain.get(position).ID().getText(),
+                    getMethodArguments(methodChain.get(position).argumentList()),
+                    startLine, stopLine);
+
         } else {
             return new MethodCall(methodOwnerPrefix,
                     methodChain.get(0).ID().getText(),
@@ -80,7 +74,7 @@ public class MethodCallStatementAdapter {
         }
     }
 
-    private static List<IExpression> getMethodArguments(MiniJavaParser.ArgumentListContext argumentList) {
+    public static List<IExpression> getMethodArguments(MiniJavaParser.ArgumentListContext argumentList) {
         List<IExpression> arguments = new ArrayList<>();
         if (argumentList != null) {
             if (argumentList.COMMA().size() > 0) {

@@ -8,6 +8,8 @@ class Main {
 
     public static void foo() {
         System.out.println(Test.getInstance().test2.getTest3().a.charAt(1));
+        Test test = new Test();
+        test.a = "";
     }
 }
 

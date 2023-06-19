@@ -233,6 +233,12 @@ public interface MiniJavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInst_var(MiniJavaParser.Inst_varContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniJavaParser#inst_var_in_between}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInst_var_in_between(MiniJavaParser.Inst_var_in_betweenContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniJavaParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
