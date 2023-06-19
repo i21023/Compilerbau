@@ -14,7 +14,7 @@ public class NewStatementAdapter {
         List<IExpression> arguments = new ArrayList<>();
         if (newStatement.argumentList() != null) {
             if (newStatement.argumentList().COMMA().size() > 0) {
-                for (int i = 0; i < newStatement.argumentList().COMMA().size(); i++) {
+                for (int i = 0; i <= newStatement.argumentList().COMMA().size(); i++) {
                     arguments.add(ExpressionAdapter.adapt(newStatement.argumentList().expr(i)));
                 }
             } else {

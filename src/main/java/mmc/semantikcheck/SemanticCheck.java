@@ -209,8 +209,8 @@ public class SemanticCheck implements SemanticVisitor {
             resultType = VOID;
         }
         if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
-            errors.add(new Exception("Error in Line: " + toCheck.startLine + " Method-Declaration " + toCheck.name + " with type "
-                    + toCheck.getType() + " has at least one Mismatching return Type"));
+            errors.add(new Exception("Error in line " + toCheck.startLine + ": method declaration " + toCheck.name + " with type "
+                    + toCheck.getType() + " has at least one mismatching return type"));
             valid = false;
         }
         return new TypeCheckResult(valid, resultType);
@@ -474,14 +474,16 @@ public class SemanticCheck implements SemanticVisitor {
                 toCheck.type = ifResult.getType();
 
             } else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
-                // Typen müssen übereinstimmen
-                if (!Objects.equals(elseBlockType, ifBlockType)) {
-                    errors.add(new Exception(
-                            "Type mismatch: cannot convert from " + elseBlockType + " to " + ifBlockType));
-                    valid = false;
-                } else {
-                    toCheck.type = ifBlockType;
-                    //Falls der Typ gleich ist, wählt er den Typ vom if Block
+                if(valid){
+                    // Typen müssen übereinstimmen
+                    if (!Objects.equals(elseBlockType, ifBlockType)) {
+                        errors.add(new Exception(
+                                "Error in line "+ toCheck.startLine + " Type mismatch: cannot convert from " + elseBlockType + " to " + ifBlockType));
+                        valid = false;
+                    } else {
+                        toCheck.type = ifBlockType;
+                        //Falls der Typ gleich ist, wählt er den Typ vom if Block
+                    }
                 }
             }
         } else {

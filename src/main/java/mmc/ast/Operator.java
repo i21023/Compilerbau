@@ -37,7 +37,7 @@ public enum Operator {
     AND("&&"),
     OR("||");
 
-    private String description;
+    private final String description;
 
     private Operator(String description) {
         this.description = description;
