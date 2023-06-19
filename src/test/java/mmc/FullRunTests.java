@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FullRunTests {
 
@@ -113,6 +114,52 @@ public class FullRunTests {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    @DisplayName("Inline Ifs Test")
+    public void InlineIfsTest() {
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/Testcases/InlineIfs.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+            Program genTast = generateTypedast(program);
+            ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+            HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
+
+            try {
+                // Name der Klasse, die instanziert werden soll
+                String className = "InlineIfs";
+
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+
+                // Klasse laden
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+
+                java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+
+                // Instanz der Klasse erstellen
+                Object instance = constructor.newInstance();
+                java.lang.reflect.Method method = instance.getClass().getMethod("method", boolean.class);
+
+                assertTrue((boolean) method.invoke(instance, true));
+
+                assertTrue((boolean) method.invoke(instance, false));
+
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    Throwable cause = ((InvocationTargetException) e).getTargetException();
+                    cause.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                    assertTrue(true);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            assertTrue(true);
         }
     }
 }

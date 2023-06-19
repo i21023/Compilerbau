@@ -18,10 +18,12 @@ import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ressources.helpers.Classwriter;
+import ressources.helpers.ReflectionHelper;
 import ressources.helpers.Resources;
 
 import java.io.IOException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,6 +49,23 @@ public class ByteCodeTest {
         HashMap<String, byte[]> code = codeGen.getBytecode(testTast);
 
         Classwriter.WriteClassFile("EmptyClass", "src/main/ressources_tests", code);
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "EmptyClass";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -739,10 +758,10 @@ public class ByteCodeTest {
 
     }
 
-    public void staticInstVarCallOnReference(){
+    public void staticInstVarCallOnReference() {
         Method MainMethod = new MainMethod(new Block(new ArrayList<>(Arrays.asList(new MethodCall(new Class("Main", new ReferenceType("Main")), "foo", new ArrayList<>(), BasicType.VOID, true)))));
 
-        Method foo = new Method(BasicType.VOID, "foo", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+        Method foo = new Method(BasicType.VOID, "foo", new ArrayList<>(), new Block(new ArrayList<>(Arrays.asList(
                 new MethodCall(
                         new InstVar("out",
                                 new Class("java/lang/System",
@@ -757,7 +776,7 @@ public class ByteCodeTest {
         ClassDecl main = new ClassDecl("Main", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(foo, MainMethod)),
                 new ArrayList<Constructor>());
 
-        Method getInstance = new Method(new ReferenceType("Test"), "getInstance", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+        Method getInstance = new Method(new ReferenceType("Test"), "getInstance", new ArrayList<>(), new Block(new ArrayList<>(Arrays.asList(
                 new Return(new ReferenceType("Test"), new New("Test", new ArrayList<>())
                 )))), AccessModifier.DEFAULT, true);
 
@@ -769,10 +788,10 @@ public class ByteCodeTest {
         Program program = new Program(new ArrayList<>(Arrays.asList(main, test)));
     }
 
-    public void staticMethodCallOnReference(){
+    public void staticMethodCallOnReference() {
         Method MainMethod = new MainMethod(new Block(new ArrayList<>(Arrays.asList(new MethodCall(new Class("Main", new ReferenceType("Main")), "foo", new ArrayList<>(), BasicType.VOID, true)))));
 
-        Method foo = new Method(BasicType.VOID, "foo", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+        Method foo = new Method(BasicType.VOID, "foo", new ArrayList<>(), new Block(new ArrayList<>(Arrays.asList(
                 new MethodCall(
                         new InstVar("out",
                                 new Class("java/lang/System",
@@ -786,7 +805,7 @@ public class ByteCodeTest {
         ClassDecl main = new ClassDecl("Main", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(foo, MainMethod)),
                 new ArrayList<Constructor>());
 
-        Method getInstance = new Method(new ReferenceType("Test"), "getInstance", new ArrayList<>() , new Block(new ArrayList<>(Arrays.asList(
+        Method getInstance = new Method(new ReferenceType("Test"), "getInstance", new ArrayList<>(), new Block(new ArrayList<>(Arrays.asList(
                 new Return(new ReferenceType("Test"), new New("Test", new ArrayList<>())
                 )))), AccessModifier.DEFAULT, true);
 
