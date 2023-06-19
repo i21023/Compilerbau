@@ -26,8 +26,12 @@ public class MultiplicativeExprAdapter {
         return switch (operator) {
             case "*" -> Operator.MULT;
             case "/" -> Operator.DIV;
+            case "%" -> Operator.MOD;
             default -> null;
         };
     }
 
+    public String test() {
+        return "test";
+    }
 }

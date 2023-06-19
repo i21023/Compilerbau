@@ -42,7 +42,7 @@ statement_expr: method_call_statement| new_statement | assign_statement | cremen
 method_call_statement: method_owner_prefix? method_chain* (ID LEFT_BRACKET argumentList? RIGHT_BRACKET);
 //example a.hello().hello2(); methode1 ( expr , expr );
 method_owner_prefix: (THIS | inst_var | new_statement | ID | STRING) DOT;
-method_chain: ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT;
+method_chain: (ID LEFT_BRACKET argumentList? RIGHT_BRACKET DOT) | ID DOT;
 new_statement: NEW type LEFT_BRACKET argumentList? RIGHT_BRACKET;
 argumentList: expr (COMMA expr)*;
 assign_statement: (inst_var | ID) assign_op expr; // example this.a = c + 3; x += 3;
@@ -82,7 +82,7 @@ bitwise_and_op: '&'; // bindet stärker als bitwise_or_op, aber schwächer als r
 equality_op: '==' | '!=';
 relational_op: '<' | '>' | '<=' | '>=';
 add_sub_op: '+' | '-';
-mul_div_op: '*' | '/';
+mul_div_op: '*' | '/' | '%';
 pre_cre_op: '++' | '--';
 suf_cre_op: '++' | '--';
 assign_op: '=' | '+=' | '-=' | '*=' | '/=' | '%=';
