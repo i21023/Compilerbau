@@ -61,4 +61,5 @@ public class ClassDecl implements Visitable {
     public void accept(IClassCodeVisitor visitor) {
         visitor.visit(this);
     }
+
 }
