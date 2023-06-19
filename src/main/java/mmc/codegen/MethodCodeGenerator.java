@@ -920,7 +920,6 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
                 case MOD -> methodVisitor.visitInsn(Opcodes.IREM);
             }
 
-            methodVisitor.visitInsn(Opcodes.IADD);
 
             if (pre && pushOnStack) {
                 methodVisitor.visitInsn(Opcodes.DUP);

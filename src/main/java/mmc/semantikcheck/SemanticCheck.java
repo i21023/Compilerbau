@@ -247,9 +247,9 @@ public class SemanticCheck implements SemanticVisitor {
         valid = CheckType.isInitalised(currentScope,rExpr,lExpr);
         //---Info: deprecated!---
         //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
-        /*if(toCheck.operator != Operator.ASSIGN){
-            if(leftExpr.getType() != INT && rightExpr.getType() != INT){
-                errors.add(new Exception("Error in line " + toCheck.startLine + ": mismatch types in Assign-Statement: Both Types need to be Integer and not"
+        if(toCheck.operator != Operator.ASSIGN){
+            if(!((leftExpr.getType() == INT || leftExpr.getType() == CHAR) && (rightExpr.getType() == INT || rightExpr.getType() == CHAR))){
+                errors.add(new Exception("Error in line " + toCheck.startLine + ": mismatch types in assign: both types need to be int or char and not "
                         + leftExpr.getType() + " and "
                         + rightExpr.getType()));
                 valid = false;
@@ -257,13 +257,13 @@ public class SemanticCheck implements SemanticVisitor {
         }
         else{
             toCheck.type = lExpr.getType();
-        }*/
+        }
 
         toCheck.type = lExpr.getType();
 
 
         //int a = "Hello";
-        if (!Objects.equals(lExpr.getType(), rExpr.getType())) {
+        if (!Objects.equals(lExpr.getType(), rExpr.getType()) && valid) {
             errors.add(new Exception("Error in line " + toCheck.startLine + ": incompatible types: " + lExpr.getType() + " cannot be converted to " + rExpr.getType()));
             valid = false;
         } else {
