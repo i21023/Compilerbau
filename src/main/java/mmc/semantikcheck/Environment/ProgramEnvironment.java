@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ProgramEnvironment {
-    private HashMap<String, ClassEnvironment> classes;
-    private ArrayList<String> mains;
+    public HashMap<String, ClassEnvironment> classes;
+    public ArrayList<String> mains;
 
     public ProgramEnvironment(Program program) {
         classes = new HashMap<>();
@@ -41,7 +41,6 @@ public class ProgramEnvironment {
         }
         return classes;
     }
-
 
     public HashMap<String, ClassEnvironment> getClasses() {
         return classes;
