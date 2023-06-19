@@ -184,7 +184,7 @@ public class TastTests {
         Program tast = new Program(Arrays.asList(classes2));
 
 
-        assertEquals(tast, genTast); //While funktioniert noch nicht richtig. Type wird nicht gesetzt
+        assertEquals(tast, genTast);
     }
 
 

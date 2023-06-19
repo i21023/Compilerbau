@@ -15,62 +15,17 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class CheckType {
-/*    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, boolean isStatic) {
-        if (type instanceof ReferenceType) { //Wenn mein Typ kein BasicType ist
-            var objectClass = (ReferenceType) type;
-            var declaredClassnames = context.getClasses(); //Alle Klassen holen
-            var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
-            var field = classContext.getFields().get(identifier);
-            if (field == null) {
-                return null;
-            }
-            if(field.getIsStatic() != isStatic){
-                if(isStatic || SemanticCheck.methodIsStatic){
-                    throw new Exception(
-                            "Cannot make a static reference to the non-static field " + objectClass.type + "." + identifier);
-                }else{
-                    throw new Exception(
-                            "The static field " + identifier + " should be accessed in a static way" );
-                }
-            }
-            var am = field.getAccessModifier();
-            if (am == AccessModifier.PRIVATE) {
-                if (objectClass.type.equals(currentClass.name)) {
-                    return field;
-                } else {
-                    throw new Exception(
-                            "The Field " + objectClass.type + "." + identifier + " is not visible");
-                }
-            } else {
-                return field;
-            }
-        } else {
-            throw new Exception("Field " + identifier + " is missing in Type " + type);
-
-        }
-
-    }*/
 
     public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, int line) {
         if (type instanceof ReferenceType) {
             var objectClass = (ReferenceType) type;
             var declaredClassnames = context.getClasses();
             var classContext = declaredClassnames.get(objectClass.getType());
-            var field = classContext.getFields().get(identifier);
+            var field = classContext.fields.get(identifier);
             if (field == null) {
                 return null;
             }
-
-            if (field.getAccessModifier() == AccessModifier.PRIVATE) {
-                if (objectClass.getType().equals(currentClass.name)) {
-                    return field;
-                } else {
-                    throw new Exception(
-                            "Error in line " + line + ": the field " + objectClass.getType() + "." + identifier + " is not visible");
-                }
-            } else {
-                return field;
-            }
+            return field;
         } else {
             throw new Exception("Error in line " + line + ": the field " + identifier + " is missing in class " + type);
 
@@ -84,19 +39,19 @@ public class CheckType {
         var objectClass = (ReferenceType) newDecl.getType();
         var declaredClassnames = ev.getClasses();
         var classContext = declaredClassnames.get(objectClass.type);
-        var constructors = classContext.getConstructors();
+        var constructors = classContext.constructors;
         if(constructors.isEmpty()){
-            ConstructorEnvironment constructorEnvironment = new ConstructorEnvironment(new Constructor());
+            ConstructorEnvironment constructorEnvironment = new ConstructorEnvironment(new Constructor()); //Automatisch Konstruktor einfügen wenn keiner vorhanden
             constructors.add(constructorEnvironment);
         }
         for (var constructor : constructors) {
-            if (constructor.getParameterTypes().size() == newDecl.arguments.size()) {
+            if (constructor.parameterTypes.size() == newDecl.arguments.size()) {
                 boolean isSame = true;
-                for (int i = 0; i < constructor.getParameterTypes().size(); i++) {
-                    var parameterType = constructor.getParameterTypes().get(i);
+                for (int i = 0; i < constructor.parameterTypes.size(); i++) {
+                    var parameterType = constructor.parameterTypes.get(i);
                     var argument = newDecl.arguments.get(i);
                     if (!parameterType.equals(argument.getType())) {
-                        isSame = false;
+                        isSame = false; //Schauen ob die Parameter gleich sind
                         break;
                     }
                 }
@@ -106,89 +61,6 @@ public class CheckType {
             }
         }
         throw new Exception("Error in line " + newDecl.startLine + ": no declared constructor " + generateConstructorCallString(newDecl) + " in class " + newDecl.getType());
-    }
-
-    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
-        boolean failedBecauseNotVisible = false;
-
-        if (type instanceof ReferenceType referenceType) {
-
-            var declaredClassnames = ev.getClasses(); //ProgramEnvironment Classes holen
-            var classContext = declaredClassnames.get(referenceType.type); //Hashmap den typ heraus filtern
-            if (classContext == null) { //Wenn Typ nicht enthalten
-                throw new Exception("No declared Class " + toCheck.name + " with Arguments: "
-                        + toCheck.type + " in Type " + type);
-            }
-
-            //Schauen ob Methoden enthalten
-            var foundMethods = new ArrayList<MethodEnvironment>();
-            var methods = classContext.getMethods().get(toCheck.name);
-            if (methods == null) {
-                throw new Exception("Error in line " + toCheck.startLine + ": no declared method " + generateMethodCallString(toCheck) + " in class " + type);
-            }
-            for (var method : methods) { //Für jede Methode Parameter checken Polymorphy
-                if (method.getParameterTypes().size() == toCheck.arguments.size()) { //Schauen ob beim Methode Call alle Parameter mitgegeben wurden
-                    boolean isSame = true;
-                    for (int i = 0; i < method.getParameterTypes().size(); i++) {
-                        Type parameterType = method.getParameterTypes().get(i);
-                        IExpression argument = toCheck.arguments.get(i);
-                        if (!((argument instanceof JNull && parameterType instanceof ReferenceType)
-                                || (!(argument instanceof JNull) && parameterType.equals(argument.getType())))) {
-                            isSame = false;
-                            break;
-                        }
-                    }
-                    if (isSame) {  //Access überprüfen
-                        var accessModifier = method.getAccessModifier();
-                        boolean canAccess;
-                        if (accessModifier == AccessModifier.PRIVATE) {
-                            canAccess = referenceType.type.equals(currentClass.name); //Gleiche bezeichnung suchen
-                            if (!canAccess) {
-                                failedBecauseNotVisible = true;
-                            }
-                        } else {
-                            canAccess = true;
-                        }
-                        if (canAccess) {
-                            foundMethods.add(method);
-                        }
-                    }
-                }
-            }
-            if (foundMethods.size() == 0) {
-                if (failedBecauseNotVisible)
-                    throw new Exception("Error in line " + toCheck.startLine + ": method " + generateMethodCallString(toCheck) + " in class " + type + " is not visible");
-                else
-                    throw new Exception("Error in line " + toCheck.startLine + ": no declared method " + generateMethodCallString(toCheck) + " in class " + type);
-
-            } else if (foundMethods.size() == 1) {
-                for (int i = 0; i < foundMethods.get(0).getParameterTypes().size(); i++) {
-                    var parameterType = foundMethods.get(0).getParameterTypes().get(i);
-                    var argument = toCheck.arguments.get(i);
-                    if (argument instanceof JNull) {
-                        ((JNull)argument).type = parameterType;
-                    }
-                }
-                return foundMethods.get(0);
-            } else {
-                throw new Exception("Error in line " + toCheck.startLine + ": cannot resolve method call " + generateMethodCallString(toCheck)
-                        + " in class " + type + ". multiple methods found.");
-            }
-        } else {
-            throw new Exception("Error in line " + toCheck.startLine +  ": base type " + type + " does not have methods");
-        }
-    }
-
-    public static ClassEnvironment getClassInType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
-        var objectClass = (ReferenceType) localVarDecl.type;
-        var declaredClassnames = ev.getClasses(); //Alle Klassen holen
-
-        var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
-        if(classContext == null){
-            throw new Exception(
-                    "Error in line " + localVarDecl.startLine + ": class " + localVarDecl.getType() + " not found");
-        }
-        return classContext;
     }
 
     public static boolean isInitalised(ScopeEnvironment currentScope, IExpression rExpr,IExpression lExpr ){
@@ -223,6 +95,98 @@ public class CheckType {
         }
         //Feld schauen ob dieses initialisiert wurde
         return valid;
+    }
+
+    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
+        boolean notVisible = false;
+        //Möchte schauen ob Methode visible
+        //Und Polymophie, Methoden ohne Parameter können nicht gleich heißen mit unterschiedlichen schon
+        if (type instanceof ReferenceType referenceType) {
+            var declaredClasses = ev.getClasses();
+            var classContext = declaredClasses.get(referenceType.type);
+
+            if (classContext == null) { //Typ als KLasse existiert nicht
+                throw new Exception("Error in line: "+ toCheck.startLine + " Class " + toCheck.name + " with Arguments: " + toCheck.type + " in Type " + type + " not found.");
+            }
+
+            var foundMethods = new ArrayList<MethodEnvironment>();
+            var methods = classContext.methods.get(toCheck.name);
+
+            if (methods == null) {
+                throw new Exception("Error in line: "+ toCheck.startLine + " No method " + generateMethodCallString(toCheck) + " declared in class " + type + ".");
+            }
+            //Schauen ob Methoden enthalten, mit unterschiedlichen Parameter --> Polymorphie
+            for (var method : methods) {
+                if (method.parameterTypes.size() == toCheck.arguments.size()) {
+                    boolean isSame = true;
+
+                    for (int i = 0; i < method.parameterTypes.size(); i++) {
+                        var parameterType = method.parameterTypes.get(i);
+                        var argument = toCheck.arguments.get(i);
+
+                        if (!((argument instanceof JNull && parameterType instanceof ReferenceType)
+                                || (!(argument instanceof JNull) && parameterType.equals(argument.getType())))) {
+                            isSame = false;
+                            break;
+                        }
+                    }
+
+                    if (isSame) {
+                        var accessModifier = method.accessModifier;
+                        boolean canAccess;
+
+                        if (accessModifier == AccessModifier.PRIVATE) {
+                            canAccess = referenceType.type.equals(currentClass.name);
+
+                            if (!canAccess) {
+                                notVisible = true;
+                            }
+                        } else {
+                            canAccess = true;
+                        }
+
+                        if (canAccess) {
+                            foundMethods.add(method);
+                        }
+                    }
+                }
+            }
+
+            if (foundMethods.size() == 0) {
+                if (notVisible)
+                    throw new Exception("Error in line: "+ toCheck.startLine + " Method " + generateMethodCallString(toCheck) + " in class " + type + " is not visible.");
+                else
+                    throw new Exception("Error in line: "+ toCheck.startLine +" No method " + generateMethodCallString(toCheck) + " declared in class " + type + ".");
+            } else if (foundMethods.size() == 1) {
+                for (int i = 0; i < foundMethods.get(0).parameterTypes.size(); i++) {
+                    var parameterType = foundMethods.get(0).parameterTypes.get(i);
+                    var argument = toCheck.arguments.get(i);
+
+                    if (argument instanceof JNull) {
+                        ((JNull)argument).type = parameterType;
+                    }
+                }
+
+                return foundMethods.get(0);
+            } else {
+                throw new Exception("Error in line: "+ toCheck.startLine + " Unable to resolve method call " + generateMethodCallString(toCheck) + " in class " + type + ". Multiple methods found.");
+            }
+        } else {
+            throw new Exception("Error in line: "+ toCheck.startLine + " Base type " + type + " does not have methods.");
+        }
+    }
+
+
+    public static ClassEnvironment getClassInType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
+        var objectClass = (ReferenceType) localVarDecl.type;
+        var declaredClassnames = ev.getClasses(); //Alle Klassen holen
+
+        var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
+        if(classContext == null){
+            throw new Exception(
+                    "Error in line " + localVarDecl.startLine + ": class " + localVarDecl.getType() + " not found");
+        }
+        return classContext;
     }
 
 

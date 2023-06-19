@@ -28,7 +28,7 @@ public class ProgramEnvironment {
         program.classes.forEach(clazz -> {
             ClassEnvironment cc = new ClassEnvironment(clazz);
             classes.put(clazz.name, cc);
-            if (cc.hasMain()) {
+            if (cc.hasMain) {
                 mains.add(clazz.name);
             }
         });
@@ -84,9 +84,6 @@ public class ProgramEnvironment {
         stringMethods.add(isEmpty);
         stringMethods.add(indexOfChar);
         stringMethods.add(indexOfString);
-
-        /* MethodCall ( InstVar ("out", Class("java/lang/System", new ReferenceType("java/lang/System"), true) "println)
-        * new MethodCall(new InstVar("out"), new LocalOrFieldVar("System"), "println")*/
 
         ClassDecl SystemClass = new ClassDecl("java/lang/System", new ArrayList<>(),
                 new ArrayList<>(),

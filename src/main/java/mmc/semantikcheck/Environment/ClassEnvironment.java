@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClassEnvironment {
-    private HashMap<String, FieldEnvironment> fields;
-    private ArrayList<ConstructorEnvironment> constructors;
-    private HashMap<String, ArrayList<MethodEnvironment>> methods;
-    private boolean hasMain = false;
+    public HashMap<String, FieldEnvironment> fields;
+    public ArrayList<ConstructorEnvironment> constructors;
+    public HashMap<String, ArrayList<MethodEnvironment>> methods;
+    public boolean hasMain = false;
 
     public ClassEnvironment(ClassDecl clazz) {
         fields = new HashMap<>();
@@ -24,20 +24,6 @@ public class ClassEnvironment {
             }
             methods.get(method.name).add(new MethodEnvironment(method));
         });
-    }
-
-    public boolean hasMain() {
-        return hasMain;
-    }
-    public HashMap<String, FieldEnvironment> getFields() {
-        return fields;
-    }
-
-    public ArrayList<ConstructorEnvironment> getConstructors() {
-        return constructors;
-    }
-    public HashMap<String, ArrayList<MethodEnvironment>> getMethods() {
-        return methods;
     }
 
 }

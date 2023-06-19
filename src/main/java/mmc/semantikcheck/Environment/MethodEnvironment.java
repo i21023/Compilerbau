@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MethodEnvironment {
-    private AccessModifier accessModifier;
-    private Type type;
-    private List<Type> parameterTypes;
-    private boolean isStatic;
+    public AccessModifier accessModifier;
+    public Type type;
+    public List<Type> parameterTypes;
+    public boolean isStatic;
 
     public MethodEnvironment(Method method) {
         this.accessModifier = method.accessModifier;
@@ -22,22 +22,5 @@ public class MethodEnvironment {
         this.parameterTypes = method.parameters.stream().map(Parameter::getType)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
-    public AccessModifier getAccessModifier() {
-        return accessModifier;
-    }
-
-    public Type getType() {
-        return type;
-    }
-    
-    public List<Type> getParameterTypes() {
-        return parameterTypes;
-    }
-
-    public boolean getIsStatic(){
-        return isStatic;
-    }
-
 
 }

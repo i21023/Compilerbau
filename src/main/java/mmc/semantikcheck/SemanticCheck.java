@@ -32,22 +32,7 @@ public class SemanticCheck implements SemanticVisitor {
 
 
     public static void main(String[] args) {
-        ArrayList<Method> methods = new ArrayList<Method>();
-        Method method1 = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
-        Method method2 = new Method(BasicType.INT, "method2", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new IntExpr(1)))), AccessModifier.PUBLIC, false);
-        Method method3 = new Method(BasicType.BOOL, "method3", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new BoolExpr(true)))), AccessModifier.PUBLIC, false);
-        Method method4 = new Method(BasicType.CHAR, "method4", new ArrayList<Parameter>(), new Block(Arrays.asList(new Return(new CharExpr('c')))), AccessModifier.PRIVATE, false);
-        methods.add(method1);
-        methods.add(method2);
-        methods.add(method3);
-        methods.add(method4);
 
-        ClassDecl classDecl = new ClassDecl("ClassWithMultipleMethods", new ArrayList<Field>(),
-                methods, new ArrayList<Constructor>());
-        ArrayList<ClassDecl> classDecls = new ArrayList<ClassDecl>();
-        classDecls.add(classDecl);
-        Program prog = new Program(classDecls);
-        generateTypedast(prog);
     }
 
     public static Program generateTypedast(Program program) { //Erstelle getypter Baum
@@ -187,7 +172,7 @@ public class SemanticCheck implements SemanticVisitor {
                 break;
             }
             if (method.isSameDeclaration(toCheck)) {
-                errors.add(new Exception("Error in line " + toCheck.startLine + ": method " + toCheck.name + " is already defined in class "+ getClass.name));
+                errors.add(new Exception("Error in line " + toCheck.startLine + ": Method " + toCheck.name + " is already defined in class "+ getClass.name));
                 valid = false;
             }
         }
@@ -212,7 +197,7 @@ public class SemanticCheck implements SemanticVisitor {
             resultType = VOID;
         }
         if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
-            errors.add(new Exception("Method-Declaration " + toCheck.name + " with type "
+            errors.add(new Exception("Error in Line: " + toCheck.startLine + " Method-Declaration " + toCheck.name + " with type "
                     + toCheck.getType() + " has at least one Mismatching return Type"));
             valid = false;
         }
@@ -227,12 +212,6 @@ public class SemanticCheck implements SemanticVisitor {
         var lExpr = toCheck.leftExpr;
         var rExpr = toCheck.rightExpr;
 
-/*        //a = a;
-        if (lExpr.equals(rExpr)) {
-            errors.add(new Exception("Cannot assign to self"));
-            valid = false;
-        }*/
-
         assign = true;
         var leftExpr = lExpr.accept(this);
         assign = false;
@@ -244,19 +223,6 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         valid = CheckType.isInitalised(currentScope,rExpr,lExpr);
-        //---Info: deprecated!---
-        //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
-        /*if(toCheck.operator != Operator.ASSIGN){
-            if(leftExpr.getType() != INT && rightExpr.getType() != INT){
-                errors.add(new Exception("Error in line " + toCheck.startLine + ": mismatch types in Assign-Statement: Both Types need to be Integer and not"
-                        + leftExpr.getType() + " and "
-                        + rightExpr.getType()));
-                valid = false;
-            }
-        }
-        else{
-            toCheck.type = lExpr.getType();
-        }*/
 
         toCheck.type = lExpr.getType();
 
@@ -410,10 +376,10 @@ public class SemanticCheck implements SemanticVisitor {
             if (!Objects.equals(resultType, toCheck.getType())) { //Expression muss zum LocalVar Typ passen
                 if (toCheck.type instanceof ReferenceType){
                     errors.add(new Exception(
-                            "Type mismatch: cannot convert from " + resultType + " to " + ((ReferenceType)toCheck.getType()).type));
+                            "Error in line: "+ toCheck.startLine + " Type mismatch: cannot convert from " + resultType + " to " + ((ReferenceType)toCheck.getType()).type));
             }else {
                 errors.add(new Exception(
-                        "Type mismatch: cannot convert from " + resultType + " to " + toCheck.getType()));
+                        "Error in line: "+ toCheck.startLine + " Type mismatch: cannot convert from " + resultType + " to " + toCheck.getType()));
             }
                 valid = false;
             }
@@ -443,11 +409,11 @@ public class SemanticCheck implements SemanticVisitor {
 
         if(expressionResult.isValid()){
             valid = valid && expressionResult.isValid();
-            boolean isBool = (Objects.equals(BasicType.BOOL,toCheck.expression.getType()) || expressionResult.getType() instanceof ReferenceType);
+            boolean isBool = (Objects.equals(BasicType.BOOL,toCheck.expression.getType()));
             if (!isBool) {
                 errors.add(
-                                new Exception("Error in line " + toCheck.startLine +
-                                        ": incompatible types: " + expressionResult.getType() + " cannot be converted to " + BOOL));
+                        new Exception("Error in line " + toCheck.startLine +
+                                ": incompatible types: " + expressionResult.getType() + " cannot be converted to " + BOOL));
                 valid = false;
             }
         }
@@ -593,7 +559,7 @@ public class SemanticCheck implements SemanticVisitor {
             try {
                 var method = CheckType.getMethodInType(toCheck, new ReferenceType(getClass.name), programEnvironment, getClass);
 
-                if(method.getIsStatic()){
+                if(method.isStatic){
                     toCheck.methodOwnerPrefix = new Class(getClass.name, new ReferenceType(getClass.name));
                 }
                 else{
@@ -627,15 +593,15 @@ public class SemanticCheck implements SemanticVisitor {
                 toCheck.methodOwnerPrefix = new Class(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name, new ReferenceType(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name));
             }
 
-            if(isStatic && !method.getIsStatic()){
+            if(isStatic && !method.isStatic){
                 errors.add(
                         new Exception("Trying to call a nonstatic method with a static reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
                 return new TypeCheckResult(false, null);
             }
 
-            toCheck.type = method.getType();
-            toCheck.isStatic = method.getIsStatic();
-            return new TypeCheckResult(valid, method.getType());
+            toCheck.type = method.type;
+            toCheck.isStatic = method.isStatic;
+            return new TypeCheckResult(valid, method.type);
 
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage()));
@@ -755,15 +721,23 @@ public class SemanticCheck implements SemanticVisitor {
             var fieldVar = CheckType.getFieldInType(toCheck.name,
                     new ReferenceType(getClass.name), programEnvironment, getClass, toCheck.startLine);
 
-
             if (fieldVar != null) {
-                if(!fieldVar.getIsStatic() && methodIsStatic){
+                if(!fieldVar.isStatic && methodIsStatic){
                     errors.add(new Exception("Error in line " + toCheck.startLine + ": non-static field variable " + toCheck.name + " cannot be referenced from a static context"));
                     return new TypeCheckResult(false, null);
                 }
-                toCheck.type = fieldVar.getType();
-                toCheck.isStatic = fieldVar.getIsStatic();
-                return new TypeCheckResult(true, fieldVar.getType());
+                //Schauen ob drauf zugreifen
+                if (fieldVar.accessModifier == AccessModifier.PRIVATE) {
+                    Type type = new ReferenceType(getClass.name);
+                    var objectClass = (ReferenceType) type;
+                    if (!(objectClass.getType().equals(getClass.name))) {
+                        errors.add(new Exception("Error in line " + toCheck.startLine + ": the field " + objectClass.getType() + "." + toCheck.name + " is not visible"));
+                        return new TypeCheckResult(false, null);
+                    }
+                }
+                toCheck.type = fieldVar.type;
+                toCheck.isStatic = fieldVar.isStatic;
+                return new TypeCheckResult(true, fieldVar.type);
             }
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage()));
@@ -815,8 +789,16 @@ public class SemanticCheck implements SemanticVisitor {
                         new Exception("Error in line " + toCheck.startLine + ": field variable " + toCheck.name + " not found in Class: " + type));
                 valid = false;
             }
+            //Schauen ob drauf zugreifen
+            if (nextInstVar.accessModifier == AccessModifier.PRIVATE) {
+                var objectClass = (ReferenceType) type;
+                if (!(objectClass.getType().equals(getClass.name))) {
+                    errors.add(new Exception("Error in line " + toCheck.startLine + ": the field " + objectClass.getType() + "." + toCheck.name + " is not visible"));
+                    valid = false;
+                }
+            }
 
-            if(toCheck.expression instanceof Class c && !nextInstVar.getIsStatic()){
+            if(toCheck.expression instanceof Class c && !nextInstVar.isStatic){
                 errors.add(
                         new Exception("Error in line " + toCheck.startLine + ": non-static instance variable " + toCheck.name + " in class " + c.name + " cannot be referenced from a static context"));
                 return new TypeCheckResult(false, null);
@@ -824,10 +806,10 @@ public class SemanticCheck implements SemanticVisitor {
 
 
 
-            toCheck.isStatic = nextInstVar.getIsStatic();
+            toCheck.isStatic = nextInstVar.isStatic;
 
             valid = valid && checkResult.isValid();
-            var newType = nextInstVar == null ? null : nextInstVar.getType();
+            var newType = nextInstVar == null ? null : nextInstVar.type;
             toCheck.type = newType;
             return new TypeCheckResult(valid, newType);
         } catch (java.lang.Exception e) {

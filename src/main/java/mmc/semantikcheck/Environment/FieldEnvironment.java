@@ -6,12 +6,13 @@ import mmc.ast.ReferenceType;
 import mmc.ast.Type;
 import mmc.ast.main.Field;
 
+import java.util.HashMap;
+
 public class FieldEnvironment {
 
-    private AccessModifier accessModifier;
-    private Type type;
-
-    private boolean isStatic;
+    public AccessModifier accessModifier;
+    public Type type;
+    public boolean isStatic;
 
     public FieldEnvironment(Field field) {
         accessModifier = field.accessModifier;
@@ -19,12 +20,4 @@ public class FieldEnvironment {
         isStatic = field.isStatic;
     }
 
-    public AccessModifier getAccessModifier() {
-        return accessModifier;
-    }
-
-    public Type getType() {
-        return type;
-    }
-    public boolean getIsStatic(){ return isStatic; }
 }
