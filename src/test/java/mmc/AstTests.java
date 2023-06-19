@@ -188,7 +188,7 @@ public class AstTests {
                         new Binary(Operator.EQUAL, new LocalOrFieldVar("a"), new IntExpr(0)),
                         new Binary(Operator.EQUAL, new LocalOrFieldVar("b"), new IntExpr(0)))),
                 new While(new Binary(Operator.NOTEQUAL, new LocalOrFieldVar("b"), new IntExpr(1)),
-                        new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")), null),
+                        new Block(Arrays.asList(new Assign(Operator.PLUSASSIGN, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")),
                                 new Crement(BasicType.INT, new LocalOrFieldVar("b"), Operator.DECSUF)))),
                 new Return(new LocalOrFieldVar("c"))));
         ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(new Method(BasicType.INT, "mult", MethodParam, MethodBody, AccessModifier.PUBLIC, false)));
@@ -284,7 +284,7 @@ public class AstTests {
                 new For(Arrays.asList(new LocalVarDecl("i", BasicType.INT, new IntExpr(0))),
                         new Binary(Operator.LESS, new LocalOrFieldVar("i"), new LocalOrFieldVar("b")),
                         Arrays.asList(new Crement(BasicType.INT, new LocalOrFieldVar("i"), Operator.INCSUF)),
-                        new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c"), new Binary(Operator.PLUS, new LocalOrFieldVar("c"), new LocalOrFieldVar("a")))))),
+                        new Block(Arrays.asList(new Assign(Operator.PLUSASSIGN, new LocalOrFieldVar("c"), new LocalOrFieldVar("a"))))),
                 new Return(new LocalOrFieldVar("c"))
         )), AccessModifier.PUBLIC, false);
 
@@ -487,7 +487,11 @@ public class AstTests {
     @DisplayName("FieldVarClassTest")
     public void FieldVarClassTest() {
 
-        ClassDecl classes = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(new Field(BasicType.INT, "x", AccessModifier.DEFAULT, new IntExpr(5), false))), new ArrayList<Method>(), new ArrayList<Constructor>());
+        ClassDecl classes = new ClassDecl("FieldVarClass",
+                new ArrayList<Field>(
+                        Arrays.asList(
+                                new Field(BasicType.INT, "x", AccessModifier.PUBLIC, new IntExpr(5), false))),
+                new ArrayList<Method>(), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
         try {

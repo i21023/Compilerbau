@@ -16,10 +16,10 @@ public class Assign implements IStatementExpression {
     public Type type;
     public int startLine; public int stopLine;
 
-    public Assign(IExpression pLeftExpr, IExpression pRightExpr, int pStartLine, int pStopLine) {
+    public Assign(Operator pOperator, IExpression pLeftExpr, IExpression pRightExpr, int pStartLine, int pStopLine) {
         leftExpr = pLeftExpr;
         rightExpr = pRightExpr;
-        operator = Operator.ASSIGN;
+        operator = pOperator;
         startLine = pStartLine;
         stopLine = pStopLine;
     }
@@ -29,6 +29,12 @@ public class Assign implements IStatementExpression {
         rightExpr = pRightExpr;
         type = pType;
         operator = Operator.ASSIGN;
+    }
+
+    public Assign(Operator pOperator, IExpression pLeftExpr, IExpression pRightExpr) {
+        leftExpr = pLeftExpr;
+        rightExpr = pRightExpr;
+        operator = pOperator;
     }
 
     public Assign(IExpression pLeftExpr, IExpression pRightExpr) {

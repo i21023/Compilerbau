@@ -378,6 +378,16 @@ public interface MiniJavaListener extends ParseTreeListener {
 	 */
 	void exitInst_var(MiniJavaParser.Inst_varContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniJavaParser#inst_var_in_between}.
+	 * @param ctx the parse tree
+	 */
+	void enterInst_var_in_between(MiniJavaParser.Inst_var_in_betweenContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniJavaParser#inst_var_in_between}.
+	 * @param ctx the parse tree
+	 */
+	void exitInst_var_in_between(MiniJavaParser.Inst_var_in_betweenContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniJavaParser#expr}.
 	 * @param ctx the parse tree
 	 */
