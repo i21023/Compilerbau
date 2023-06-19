@@ -95,7 +95,7 @@ public class SemanticCheck implements SemanticVisitor {
             var checkResult = field.accept(this);
             valid = valid && checkResult.isValid();
             if (valid) {
-                fieldNames.add(field.name); //Wenn feld valid in identifier speichern TODO: Und wenn nicht? Wird kein Fehler ausgegeben sondern einfach ignoriert
+                fieldNames.add(field.name); //Wenn feld valid in identifier speichern
             }
         }
 
@@ -197,15 +197,14 @@ public class SemanticCheck implements SemanticVisitor {
         // gesetzt ist, ist dieser der Rückgabewert der Methode
         var checkResult = toCheck.block.accept(this);
         valid = valid && checkResult.isValid();
-        currentScope.popScope(); //Stack runter nehmen
+        currentScope.popScope(); //Parameter Stack runter nehmen
 
         var resultType = checkResult.getType();
         if(resultType == null){
             resultType = VOID;
         }
         if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
-            errors.add(new Exception("Error in line " + toCheck.startLine + ": method declaration " + toCheck.name + " with type "
-                    + toCheck.getType() + " has at least one mismatching return type"));
+            errors.add(new Exception("Error in line " + toCheck.startLine + ": Method declaration " + toCheck.name + " must return a result of type " + toCheck.type));
             valid = false;
         }
         return new TypeCheckResult(valid, resultType);
@@ -570,9 +569,9 @@ public class SemanticCheck implements SemanticVisitor {
             valid = parameter.accept(this).isValid();
         }
 
-        if(toCheck.methodOwnerPrefix instanceof This){
+        if(toCheck.methodOwnerPrefix instanceof This){ //schauen ob this aufgerufen wird
             try {
-                if (methodIsStatic){
+                if (methodIsStatic){ //This nicht in static method aufrufen
                     errors.add(new Exception("non-static method " + toCheck.name + " cannot be referenced from a static context"));
                     return new TypeCheckResult(false, null);
                 }
@@ -647,7 +646,7 @@ public class SemanticCheck implements SemanticVisitor {
             String varName = ((LocalOrFieldVar) toCheck.expression).name;
             var scope = currentScope.getLocalVar(varName);
             if(scope == null){
-                errors.add(new Exception("Local or Field Variable " + varName + " doesn't exist"));
+                errors.add(new Exception("Local Variable " + varName + " doesn't exist"));
                 valid = false;
             }else if(scope.isInitialized == false){
                 valid = false;
@@ -751,7 +750,7 @@ public class SemanticCheck implements SemanticVisitor {
                     new ReferenceType(getClass.name), programEnvironment, getClass, toCheck.startLine);
 
             if (fieldVar != null) {
-                if(!fieldVar.isStatic && methodIsStatic){
+                if(!fieldVar.isStatic && methodIsStatic){ //kein nicht static feld in einer static methode aufrufen
                     errors.add(new Exception("Error in line " + toCheck.startLine + ": non-static field variable " + toCheck.name + " cannot be referenced from a static context"));
                     return new TypeCheckResult(false, null);
                 }
@@ -827,7 +826,7 @@ public class SemanticCheck implements SemanticVisitor {
                 }
             }
 
-            if(toCheck.expression instanceof Class c && !nextInstVar.isStatic){
+            if(toCheck.expression instanceof Class c && !nextInstVar.isStatic){ //Wenn Lokal or Field aber nicht static
                 errors.add(
                         new Exception("Error in line " + toCheck.startLine + ": non-static instance variable " + toCheck.name + " in class " + c.name + " cannot be referenced from a static context"));
                 return new TypeCheckResult(false, null);
@@ -874,17 +873,14 @@ public class SemanticCheck implements SemanticVisitor {
 
         //Die Operatoren, welche wir unterstützen
         Operator operator = toCheck.operator;
-
+        boolean isBinaryOperator = (operator == Operator.SINGLEAND || operator == Operator.SINGLEOR);
+        boolean isArithmeticOperator = (operator == Operator.PLUS || operator == Operator.MINUS
+                || operator == Operator.MULT || operator == Operator.DIV || operator == Operator.MOD);
         boolean isCompareOperator = (operator == Operator.EQUAL
                 || operator == Operator.NOTEQUAL || operator == Operator.LESS
                 || operator == Operator.LESSEQUAL || operator == Operator.GREATER
                 || operator == Operator.GREATEREQUAL);
-
         boolean isLogicalOperator = (operator == Operator.AND || operator == Operator.OR);
-        boolean isBinaryOperator = (operator == Operator.SINGLEAND || operator == Operator.SINGLEOR);
-        boolean isArithmeticOperator = (operator == Operator.PLUS || operator == Operator.MINUS
-                || operator == Operator.MULT || operator == Operator.DIV || operator == Operator.MOD);
-
 
         //Nur zwei gleiche Typen vergleichen
         if (sameType && !lIsReference) { // Wenn 2 gleiche BaseTypes miteinander verglichen werden
