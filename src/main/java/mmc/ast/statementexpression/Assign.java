@@ -31,6 +31,12 @@ public class Assign implements IStatementExpression {
         operator = Operator.ASSIGN;
     }
 
+    public Assign(Operator pOperator, IExpression pLeftExpr, IExpression pRightExpr) {
+        leftExpr = pLeftExpr;
+        rightExpr = pRightExpr;
+        operator = pOperator;
+    }
+
     public Assign(IExpression pLeftExpr, IExpression pRightExpr) {
         leftExpr = pLeftExpr;
         rightExpr = pRightExpr;
