@@ -84,6 +84,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
     @Override
     public void visit(Constructor constructor) {
+
+        localVars.push("this");
+
         List<Type> parameterTypes = constructor.parameters.stream().map(parameter -> parameter.type).collect(Collectors.toList());
 
         methodVisitor = classWriter.visitMethod(GeneratorHelpFunctions.getAccessModifier(constructor.accessModifier, false),
@@ -870,8 +873,9 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
 
             boolean pushOnStackState = pushOnStack;
             pushOnStack = true;
-            ((InstVar) crement.expression).expression.accept(this);
-            methodVisitor.visitInsn(Opcodes.POP);
+            instVar.expression.accept(this);
+            if(!(instVar.expression instanceof Class)) methodVisitor.visitInsn(Opcodes.POP);
+
             pushOnStack = pushOnStackState;
 
             methodVisitor.visitFieldInsn(Opcodes.GETSTATIC, owner.type, instVar.name, GeneratorHelpFunctions.getDescriptor(null, instVar.type));
