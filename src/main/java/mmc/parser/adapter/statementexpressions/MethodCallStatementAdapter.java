@@ -1,6 +1,7 @@
 package mmc.parser.adapter.statementexpressions;
 
 import mmc.ast.expressions.IExpression;
+import mmc.ast.expressions.InstVar;
 import mmc.ast.expressions.LocalOrFieldVar;
 import mmc.ast.expressions.StringExpr;
 import mmc.ast.expressions.This;
@@ -42,6 +43,7 @@ public class MethodCallStatementAdapter {
             }
         }
 
+
         if (methodCallStatement.method_chain() != null && methodCallStatement.method_chain().size() > 0) {
             methodOwnerPrefix = generatePreviousMethodCall(methodCallStatement.method_chain(),
                     methodCallStatement.method_chain().size() - 1, methodOwnerPrefix, startLine, stopLine);
@@ -55,15 +57,21 @@ public class MethodCallStatementAdapter {
         );
     }
 
-    private static MethodCall generatePreviousMethodCall(List<MiniJavaParser.Method_chainContext> methodChain,
-                                                         int position, IExpression methodOwnerPrefix,
-                                                         int startLine, int stopLine) {
+    private static IExpression generatePreviousMethodCall(List<MiniJavaParser.Method_chainContext> methodChain,
+                                                          int position, IExpression methodOwnerPrefix,
+                                                          int startLine, int stopLine) {
 
         if (position > 0) {
-            return new MethodCall(generatePreviousMethodCall(methodChain, position - 1, methodOwnerPrefix, startLine, stopLine),
-                    methodChain.get(position).ID().getText(),
-                    getMethodArguments(methodChain.get(position).argumentList()),
-                    startLine, stopLine);
+            if (methodChain.get(position).LEFT_BRACKET() == null) {
+                return new InstVar(methodChain.get(position).ID().getText(),
+                        generatePreviousMethodCall(methodChain, position - 1, methodOwnerPrefix, startLine, stopLine),
+                        methodChain.get(position).start.getLine(), methodChain.get(position).stop.getLine());
+            } else {
+                return new MethodCall(generatePreviousMethodCall(methodChain, position - 1, methodOwnerPrefix, startLine, stopLine),
+                        methodChain.get(position).ID().getText(),
+                        getMethodArguments(methodChain.get(position).argumentList()),
+                        startLine, stopLine);
+            }
         } else {
             return new MethodCall(methodOwnerPrefix,
                     methodChain.get(0).ID().getText(),
