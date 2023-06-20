@@ -58,6 +58,11 @@ public class ClassDecl implements Visitable {
     }
 
     @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
+    @Override
     public void accept(IClassCodeVisitor visitor) {
         visitor.visit(this);
     }

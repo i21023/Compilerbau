@@ -35,6 +35,11 @@ public class Class implements IExpression {
     }
 
     @Override
+    public int getStartLine() {
+        return -1;
+    }
+
+    @Override
     public Type getType() {
         return type;
     }

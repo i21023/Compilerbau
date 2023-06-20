@@ -44,6 +44,11 @@ public class IntExpr implements IExpression {
     }
 
     @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
+    @Override
     public Type getType() {
         return type;
     }

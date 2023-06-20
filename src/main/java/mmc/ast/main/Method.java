@@ -68,6 +68,11 @@ public class Method implements Visitable {
     }
 
     @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
+    @Override
     public void accept(IMethodCodeVisitor visitor) {
         visitor.visit(this);
     }

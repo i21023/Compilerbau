@@ -70,6 +70,11 @@ public class Assign implements IStatementExpression {
     }
 
     @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
+    @Override
     public Type getType() {
         return type;
     }

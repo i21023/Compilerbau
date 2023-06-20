@@ -60,4 +60,9 @@ public class Block implements IStatement {
     public void accept(IMethodCodeVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
+    }
 }
