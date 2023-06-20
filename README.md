@@ -3,6 +3,7 @@
 <p>Herzlich willkommen bei unserem Mini-Java Compiler vom 4. Semester.</p>
 
 <h2>Unterstützte Java-Syntax</h2>
+
 ```plain
 //Base-Types:
 int, booelan, char, String
@@ -29,21 +30,7 @@ NOT("!"), SINGLEAND("&"), SINGLEOR("|"), AND("&&"), OR("||");
 if...else, while, for
 
 //Andere Keywörter:
-class, new, this, null, static
-
-//Besonderheiten:
-          - statically-imported Methods: 
-              - System.out.print 
-              - System.out.println 
-              - java.lang.String
-          - Assign-Operatoren
-          - Increment und Decrement
-          - Inline und Inline initialisierung
-          - main Methode
-          - Bindungsstärke der Operatoren
-          - Verkettung von Methodenaufrufen und Instanzvariablen
-          - Semantik Fehlerbehandlung
-          - Statische Methoden und Felder          
+class, new, this, null, static        
 ```
 <h2>Besonderheiten</h2>
 
