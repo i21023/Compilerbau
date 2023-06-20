@@ -3,6 +3,7 @@ package mmc;
 import mmc.compiler.Compiler;
 import mmc.compiler.ICompiler;
 
+import java.io.File;
 import java.util.Scanner;
 
 
@@ -48,6 +49,12 @@ public class Main {
         if (useCustomOutDir.equalsIgnoreCase("ja")) {
             System.out.println("Bitte geben Sie das Ausgabeverzeichnis ein:");
             outDir = scanner.nextLine();
+
+            File directory = new File(outDir);
+            if (!directory.exists() || !directory.isDirectory()) {
+                System.out.println("Das angegebene Ausgabeverzeichnis existiert nicht.");
+                return;
+            }
         }
 
         if (fileName.startsWith("\"") && fileName.endsWith("\"")) {
