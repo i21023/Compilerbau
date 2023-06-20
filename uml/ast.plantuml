@@ -1,0 +1,286 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+enum AccessModifier << enumeration >> {
+  + PRIVATE: 
+  + DEFAULT: 
+  + PUBLIC: 
+  + PROTECTED: 
+}
+class Assign {
+  + leftExpr: IExpression
+  + rightExpr: IExpression
+  + operator: Operator
+  + type: Type
+  + stopLine: int
+  + startLine: int
+}
+enum BasicType << enumeration >> {
+  - description: String
+  + INT: 
+  + BOOL: 
+  + CHAR: 
+  + VOID: 
+}
+class Binary {
+  + expression2: IExpression
+  + startLine: int
+  + type: Type
+  + operator: Operator
+  + expression1: IExpression
+  + stopLine: int
+}
+class Block {
+  + stopLine: int
+  + statements: List<IStatement>
+  + startLine: int
+  + type: Type
+}
+class BoolExpr {
+  + value: boolean
+  + stopLine: int
+  + startLine: int
+  + type: Type
+}
+class CharExpr {
+  + value: char
+  + type: Type
+  + stopLine: int
+  + startLine: int
+}
+class Class {
+  + name: String
+  + type: Type
+}
+class ClassDecl {
+  + startLine: int
+  + stopLine: int
+  + methods: List<Method>
+  + fields: List<Field>
+  + accessModifier: AccessModifier
+  + constructors: List<Constructor>
+  + name: String
+}
+class Constructor {
+  + parameters: List<Parameter>
+  + stopLine: int
+  + statement: Block
+  + type: Type
+  + accessModifier: AccessModifier
+  + startLine: int
+}
+class Crement {
+  + operator: Operator
+  + type: Type
+  + stopLine: int
+  + startLine: int
+  + expression: IExpression
+}
+class Field {
+  + name: String
+  + type: Type
+  + accessModifier: AccessModifier
+  + isStatic: boolean
+  + expression: IExpression
+  + stopLine: int
+  + startLine: int
+}
+class For {
+  + condition: IExpression
+  + updateStatements: List<IStatementExpression>
+  + type: Type
+  + startLine: int
+  + statementBlock: Block
+  + initStatements: List<IStatement>
+  + stopLine: int
+}
+interface IExpression << interface >>
+interface IStatement << interface >>
+interface IStatementExpression << interface >>
+class If {
+  + type: Type
+  + expression: IExpression
+  + blockIf: IStatement
+  + startLine: int
+  + blockElse: IStatement
+  + stopLine: int
+}
+class InstVar {
+  + name: String
+  + stopLine: int
+  + expression: IExpression
+  + startLine: int
+  + type: Type
+  + isStatic: boolean
+}
+class IntExpr {
+  + type: Type
+  + startLine: int
+  + value: int
+  + stopLine: int
+}
+class JNull {
+  + stopLine: int
+  + startLine: int
+  + type: Type
+}
+class LocalOrFieldVar {
+  + name: String
+  + isStatic: boolean
+  + startLine: int
+  + stopLine: int
+  + type: Type
+}
+class LocalVarDecl {
+  + stopLine: int
+  + name: String
+  + startLine: int
+  + type: Type
+  + expression: IExpression
+}
+class MainMethod
+class Method {
+  + accessModifier: AccessModifier
+  + parameters: List<Parameter>
+  + name: String
+  + isStatic: boolean
+  + block: Block
+  + startLine: int
+  + stopLine: int
+  + type: Type
+}
+class MethodCall {
+  + arguments: List<IExpression>
+  + isStatic: boolean
+  + name: String
+  + stopLine: int
+  + methodOwnerPrefix: IExpression
+  + type: Type
+  + startLine: int
+}
+class New {
+  + stopLine: int
+  + arguments: List<IExpression>
+  + name: String
+  + startLine: int
+  + type: Type
+}
+enum Operator << enumeration >> {
+  + MULT: 
+  + MOD: 
+  + PLUSASSIGN: 
+  + ASSIGN: 
+  + OR: 
+  + DECSUF: 
+  + AND: 
+  + MINUS: 
+  - description: String
+  + GREATER: 
+  + NOT: 
+  + DECPRE: 
+  + GREATEREQUAL: 
+  + INCSUF: 
+  + DIV: 
+  + NOTEQUAL: 
+  + LESS: 
+  + MODASSIGN: 
+  + MULTASSIGN: 
+  + EQUAL: 
+  + PLUS: 
+  + SINGLEAND: 
+  + DIVASSIGN: 
+  + MINUSASSIGN: 
+  + INCPRE: 
+  + LESSEQUAL: 
+  + SINGLEOR: 
+}
+class Parameter {
+  + stopLine: int
+  + type: Type
+  + startLine: int
+  + name: String
+}
+class Program {
+  + classes: List<ClassDecl>
+  + startLine: int
+  + programEnvironment: ProgramEnvironment
+  + stopLine: int
+}
+class ReferenceType {
+  + type: String
+  + stopLine: int
+  + startLine: int
+}
+class Return {
+  + expression: IExpression
+  + stopLine: int
+  + startLine: int
+  + type: Type
+}
+class StringExpr {
+  - type: Type
+  + startLine: int
+  + stopLine: int
+  + value: String
+}
+class This {
+  + startLine: int
+  + stopLine: int
+  + type: Type
+}
+interface Type << interface >>
+class Unary {
+  + startLine: int
+  + stopLine: int
+  + operator: Operator
+  + expression: IExpression
+  + type: Type
+}
+interface Visitable << interface >>
+class While {
+  + type: Type
+  + expression: IExpression
+  + startLine: int
+  + statement: IStatement
+  + stopLine: int
+}
+
+Assign                -[#008200,dashed]-^  IStatementExpression 
+BasicType             -[#008200,dashed]-^  Type                 
+Binary                -[#008200,dashed]-^  IExpression          
+Block                 -[#008200,dashed]-^  IStatement           
+BoolExpr              -[#008200,dashed]-^  IExpression          
+CharExpr              -[#008200,dashed]-^  IExpression          
+Class                 -[#008200,dashed]-^  IExpression          
+ClassDecl             -[#008200,dashed]-^  Visitable            
+Constructor           -[#008200,dashed]-^  Visitable            
+Crement               -[#008200,dashed]-^  IStatementExpression 
+Field                 -[#008200,dashed]-^  Visitable            
+For                   -[#008200,dashed]-^  IStatement           
+IExpression           -[#008200,plain]-^  Visitable            
+IStatement            -[#008200,plain]-^  Visitable            
+IStatementExpression  -[#008200,plain]-^  IExpression          
+IStatementExpression  -[#008200,plain]-^  IStatement           
+If                    -[#008200,dashed]-^  IStatement           
+InstVar               -[#008200,dashed]-^  IExpression          
+IntExpr               -[#008200,dashed]-^  IExpression          
+JNull                 -[#008200,dashed]-^  IExpression          
+LocalOrFieldVar       -[#008200,dashed]-^  IExpression          
+LocalVarDecl          -[#008200,dashed]-^  IStatement           
+MainMethod            -[#000082,plain]-^  Method               
+MainMethod            -[#008200,dashed]-^  Visitable            
+Method                -[#008200,dashed]-^  Visitable            
+MethodCall            -[#008200,dashed]-^  IStatementExpression 
+New                   -[#008200,dashed]-^  IStatementExpression 
+Parameter             -[#008200,dashed]-^  Visitable            
+Program               -[#008200,dashed]-^  Visitable            
+ReferenceType         -[#008200,dashed]-^  Type                 
+Return                -[#008200,dashed]-^  IStatement           
+StringExpr            -[#008200,dashed]-^  IExpression          
+This                  -[#008200,dashed]-^  IExpression          
+Unary                 -[#008200,dashed]-^  IExpression          
+While                 -[#008200,dashed]-^  IStatement           
+@enduml

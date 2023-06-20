@@ -1,0 +1,83 @@
+digraph "package" {
+
+splines  = ortho;
+fontname = "Inconsolata";
+
+node [colorscheme = ylgnbu4];
+edge [colorscheme = dark28, dir = both];
+
+AccessModifier       [shape = record, pos = "9.931,27.351!"    , label = "{ \<\<enumeration\>\>\nAccessModifier | + PRIVATE : \l + DEFAULT : \l + PUBLIC : \l + PROTECTED : \l }"];
+Assign               [shape = record, pos = "0.410,32.611!"    , label = "{ Assign | + leftExpr : IExpression\l + rightExpr : IExpression\l + operator : Operator\l + type : Type\l + stopLine : int\l + startLine : int\l }"];
+BasicType            [shape = record, pos = "9.931,29.837!"    , label = "{ \<\<enumeration\>\>\nBasicType | - description : String\l + INT : \l + BOOL : \l + CHAR : \l + VOID : \l }"];
+Binary               [shape = record, pos = "-2.736,20.294!"   , label = "{ Binary | + expression2 : IExpression\l + startLine : int\l + type : Type\l + operator : Operator\l + expression1 : IExpression\l + stopLine : int\l }"];
+Block                [shape = record, pos = "-0.104,23.684!"   , label = "{ Block | + stopLine : int\l + statements : List\<IStatement\>\l + startLine : int\l + type : Type\l }"];
+BoolExpr             [shape = record, pos = "-0.333,17.503!"   , label = "{ BoolExpr | + value : boolean\l + stopLine : int\l + startLine : int\l + type : Type\l }"];
+CharExpr             [shape = record, pos = "3.458,17.503!"    , label = "{ CharExpr | + value : char\l + type : Type\l + stopLine : int\l + startLine : int\l }"];
+Class                [shape = record, pos = "0.764,15.016!"    , label = "{ Class | + name : String\l + type : Type\l }"];
+ClassDecl            [shape = record, pos = "0.410,37.524!"    , label = "{ ClassDecl | + startLine : int\l + stopLine : int\l + methods : List\<Method\>\l + fields : List\<Field\>\l + accessModifier : AccessModifier\l + constructors : List\<Constructor\>\l + name : String\l }"];
+Constructor          [shape = record, pos = "4.056,37.524!"    , label = "{ Constructor | + parameters : List\<Parameter\>\l + stopLine : int\l + statement : Block\l + type : Type\l + accessModifier : AccessModifier\l + startLine : int\l }"];
+Crement              [shape = record, pos = "-2.826,29.514!"   , label = "{ Crement | + operator : Operator\l + type : Type\l + stopLine : int\l + startLine : int\l + expression : IExpression\l }"];
+Field                [shape = record, pos = "11.456,37.524!"   , label = "{ Field | + name : String\l + type : Type\l + accessModifier : AccessModifier\l + isStatic : boolean\l + expression : IExpression\l + stopLine : int\l + startLine : int\l }"];
+For                  [shape = record, pos = "-2.688,26.781!"   , label = "{ For | + condition : IExpression\l + updateStatements : List\<IStatementExpression\>\l + type : Type\l + startLine : int\l + statementBlock : Block\l + initStatements : List\<IStatement\>\l + stopLine : int\l }"];
+IExpression          [shape = record, pos = "-6.005,19.729!"   , label = "{ \<\<interface\>\>\nIExpression |  }"];
+IStatement           [shape = record, pos = "-5.998,26.083!"   , label = "{ \<\<interface\>\>\nIStatement |  }"];
+IStatementExpression [shape = record, pos = "-6.269,30.945!"   , label = "{ \<\<interface\>\>\nIStatementExpression |  }"];
+If                   [shape = record, pos = "1.618,26.781!"    , label = "{ If | + type : Type\l + expression : IExpression\l + blockIf : IStatement\l + startLine : int\l + blockElse : IStatement\l + stopLine : int\l }"];
+InstVar              [shape = record, pos = "-0.056,20.294!"   , label = "{ InstVar | + name : String\l + stopLine : int\l + expression : IExpression\l + startLine : int\l + type : Type\l + isStatic : boolean\l }"];
+IntExpr              [shape = record, pos = "5.250,17.503!"    , label = "{ IntExpr | + type : Type\l + startLine : int\l + value : int\l + stopLine : int\l }"];
+JNull                [shape = record, pos = "-2.736,15.016!"   , label = "{ JNull | + stopLine : int\l + startLine : int\l + type : Type\l }"];
+LocalOrFieldVar      [shape = record, pos = "-2.736,17.503!"   , label = "{ LocalOrFieldVar | + name : String\l + isStatic : boolean\l + startLine : int\l + stopLine : int\l + type : Type\l }"];
+LocalVarDecl         [shape = record, pos = "-2.688,23.684!"   , label = "{ LocalVarDecl | + stopLine : int\l + name : String\l + startLine : int\l + type : Type\l + expression : IExpression\l }"];
+MainMethod           [shape = record, pos = "8.153,34.202!"    , label = "{ MainMethod |  }"];
+Method               [shape = record, pos = "7.597,37.524!"    , label = "{ Method | + accessModifier : AccessModifier\l + parameters : List\<Parameter\>\l + name : String\l + isStatic : boolean\l + block : Block\l + startLine : int\l + stopLine : int\l + type : Type\l }"];
+MethodCall           [shape = record, pos = "-2.826,32.611!"   , label = "{ MethodCall | + arguments : List\<IExpression\>\l + isStatic : boolean\l + name : String\l + stopLine : int\l + methodOwnerPrefix : IExpression\l + type : Type\l + startLine : int\l }"];
+New                  [shape = record, pos = "2.882,32.611!"    , label = "{ New | + stopLine : int\l + arguments : List\<IExpression\>\l + name : String\l + startLine : int\l + type : Type\l }"];
+Operator             [shape = record, pos = "10.014,24.965!"   , label = "{ \<\<enumeration\>\>\nOperator | + MULT : \l + MOD : \l + PLUSASSIGN : \l + ASSIGN : \l + OR : \l + DECSUF : \l + AND : \l + MINUS : \l - description : String\l + GREATER : \l + NOT : \l + DECPRE : \l + GREATEREQUAL : \l + INCSUF : \l + DIV : \l + NOTEQUAL : \l + LESS : \l + MODASSIGN : \l + MULTASSIGN : \l + EQUAL : \l + PLUS : \l + SINGLEAND : \l + DIVASSIGN : \l + MINUSASSIGN : \l + INCPRE : \l + LESSEQUAL : \l + SINGLEOR : \l }"];
+Parameter            [shape = record, pos = "6.514,33.528!"    , label = "{ Parameter | + stopLine : int\l + type : Type\l + startLine : int\l + name : String\l }"];
+Program              [shape = record, pos = "-3.931,37.524!"   , label = "{ Program | + classes : List\<ClassDecl\>\l + startLine : int\l + programEnvironment : ProgramEnvironment\l + stopLine : int\l }"];
+ReferenceType        [shape = record, pos = "12.125,29.837!"   , label = "{ ReferenceType | + type : String\l + stopLine : int\l + startLine : int\l }"];
+Return               [shape = record, pos = "2.882,23.684!"    , label = "{ Return | + expression : IExpression\l + stopLine : int\l + startLine : int\l + type : Type\l }"];
+StringExpr           [shape = record, pos = "1.569,17.503!"    , label = "{ StringExpr | - type : Type\l + startLine : int\l + stopLine : int\l + value : String\l }"];
+This                 [shape = record, pos = "-0.986,15.016!"   , label = "{ This | + startLine : int\l + stopLine : int\l + type : Type\l }"];
+Type                 [shape = record, pos = "9.375,30.753!"    , label = "{ \<\<interface\>\>\nType |  }"];
+Unary                [shape = record, pos = "2.528,20.294!"    , label = "{ Unary | + startLine : int\l + stopLine : int\l + operator : Operator\l + expression : IExpression\l + type : Type\l }"];
+Visitable            [shape = record, pos = "-6.269,35.069!"   , label = "{ \<\<interface\>\>\nVisitable |  }"];
+While                [shape = record, pos = "4.201,26.781!"    , label = "{ While | + type : Type\l + expression : IExpression\l + startLine : int\l + statement : IStatement\l + stopLine : int\l }"];
+
+Assign               -> IStatementExpression [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+BasicType            -> Type                 [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Binary               -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Block                -> IStatement           [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+BoolExpr             -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+CharExpr             -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Class                -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+ClassDecl            -> Visitable            [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Constructor          -> Visitable            [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Crement              -> IStatementExpression [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Field                -> Visitable            [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+For                  -> IStatement           [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+IExpression          -> Visitable            [color = "#008200", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+IStatement           -> Visitable            [color = "#008200", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+IStatementExpression -> IExpression          [color = "#008200", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+IStatementExpression -> IStatement           [color = "#008200", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+If                   -> IStatement           [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+InstVar              -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+IntExpr              -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+JNull                -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+LocalOrFieldVar      -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+LocalVarDecl         -> IStatement           [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+MainMethod           -> Method               [color = "#000082", style = solid , arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+MainMethod           -> Visitable            [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Method               -> Visitable            [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+MethodCall           -> IStatementExpression [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+New                  -> IStatementExpression [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Parameter            -> Visitable            [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Program              -> Visitable            [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+ReferenceType        -> Type                 [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Return               -> IStatement           [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+StringExpr           -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+This                 -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+Unary                -> IExpression          [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+While                -> IStatement           [color = "#008200", style = dashed, arrowtail = none    , arrowhead = normal  , taillabel = "", label = "", headlabel = ""];
+
+}
