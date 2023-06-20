@@ -87,23 +87,34 @@ Compilerbau [MachMalCompiler]/
 
 ### Parser
 
-Implementiert von Nina Schmid und Hannes Kollert.
+Implementiert von Hannes Kollert und Nina Schmid.
 
-* ANTLR - Grammatik für Java-Subset
-* Adapter für die Generierung des Abstrakten Syntax Baums
+* Der [Parser](./src/main/java/mmc/parser) übersetzt Java-Quellcode in eine abstrakte Syntax. 
+* Zur Erzeugung des Parsers wird der Parser-Generator ANTLR verwendet. 
+* Die Grammatik zum Parsen des Java-Quellcodes wird in einer separaten [Datei](./src/main/java/mmc/parser/MiniJava.g4) definiert. 
+* Aus der Grammatik werden Klassen generiert, die den Parser repräsentieren. 
+* Durch das Parsen des Quellcodes entsteht schrittweise ein Syntaxbaum. 
+* Um die abstrakte Syntax zu erzeugen, werden [Adapter](./src/main/java/mmc/parser/adapter) verwendet. 
+* Es werden auftretende Fehler gehandelt und über die Konsole kommuniziert.
 
 ### Semantik Check + Typisierung
 
 Implementiert von Emma Weiß.
 
-* Semantik-Visitors um den gesamten Syntax Baum zu typisieren
-* Semantische Fehlerbehandlung
+* Der [Semantik-Check](./src/main/java/mmc/semantikcheck) übersetzt die abstrakte Syntax in eine getypte abstrakte Syntax.
+* Der Semantik-Check verwendet Regeln aus der Vorlesung, um zu prüfen, ob der Code konsistent typisiert ist.
+* Der Semantik-Check leitet die Typen der Ausdrücke im Code ab.
+* Es werden auftretende Fehler gehandelt und über die Konsole kommuniziert.
 
 ### Bytecode
 
 Implementiert von Julian Schmidt.
 
-* Übersetzung vom Typisierten Abstrakten Syntax Baum zu Java-Bytecode mit ASM
+* Der [Bytecode-Generator](./src/main/java/mmc/codegen) übersetzt die typisierte abstrakte Syntax in Bytecode.
+* Hierfür wird die Java-Bibliothek ASM verwendet.
+* Der Abstrakte Syntaxbaum wird durchlaufen und mittels des ASM ClassWriters Bytecode generiert.
+* Das Ergebnis des Bytecode-Generators ist eine Hashmap, bei der jeder Eintrag aus dem Klassennamen und dem zugehörigen Bytecode besteht.
+* Der Bytecode der Hashmaps wird in .class-Dateien geschrieben.
 
 ### Testen</h3>
 
