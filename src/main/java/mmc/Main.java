@@ -6,46 +6,62 @@ import mmc.compiler.ICompiler;
 import java.util.Scanner;
 
 
-public class Main {
-    //ToDo: .jar Ausführen testen
-    public static void main(String[] args) {
 
+public class Main {
+    // ToDo: .jar Ausführen testen
+
+    public static void main(String[] args) {
         System.out.println("Willkommen beim Java-Compiler MachMalCompiler!");
 
-        if (args.length == 0) {
-            // Keine Argumente übergeben, Eingabeaufforderung für Dateinamen anzeigen
-            System.out.println("Bitte geben Sie den Dateinamen ein:");
-            Scanner scanner = new Scanner(System.in);
-            String fileName = scanner.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
 
-            // Prüfen, ob ein benutzerdefiniertes Ausgabeverzeichnis angegeben werden soll
-            System.out.println("Möchten Sie ein eigenes Ausgabeverzeichnis angeben? (ja/nein)");
-            String useCustomOutDir = scanner.nextLine();
-            String outDir = "";
+        while (running) {
+            System.out.println("Bitte wählen Sie eine Option:");
+            System.out.println("1. Dateiname eingeben");
+            System.out.println("2. Programm beenden");
 
-            if (useCustomOutDir.equalsIgnoreCase("ja")) {
-                // Benutzer möchte ein eigenes Ausgabeverzeichnis angeben
-                System.out.println("Bitte geben Sie das Ausgabeverzeichnis ein:");
-                outDir = scanner.nextLine();
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    compileJavaFile(scanner);
+                    break;
+                case "2":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Ungültige Auswahl. Bitte wählen Sie erneut.");
+                    break;
             }
-
-            // Prüfen, ob der Dateiname in Anführungszeichen steht und diese entfernen
-            if (fileName.startsWith("\"") && fileName.endsWith("\"")) {
-                fileName = fileName.substring(1, fileName.length() - 1);
-            }
-
-            if (fileName.endsWith(".java")) {
-                // Kompilierung durchführen
-                ICompiler compiler = new Compiler();
-                compiler.compile(fileName, outDir);
-                System.out.println("Kompilierung abgeschlossen.");
-            } else {
-                System.out.println("Ungültiger Dateiname. Bitte geben Sie eine Java-Datei ein.");
-            }
-        } else {
-            System.out.println("Bitte kein Argument übergeben.");
         }
 
         System.out.println("Das Programm wird beendet.");
+    }
+
+    private static void compileJavaFile(Scanner scanner) {
+        System.out.println("Bitte geben Sie den Dateinamen ein:");
+        String fileName = scanner.nextLine();
+
+        System.out.println("Möchten Sie ein eigenes Ausgabeverzeichnis angeben? (ja/nein)");
+        String useCustomOutDir = scanner.nextLine();
+        String outDir = "";
+
+        if (useCustomOutDir.equalsIgnoreCase("ja")) {
+            System.out.println("Bitte geben Sie das Ausgabeverzeichnis ein:");
+            outDir = scanner.nextLine();
+        }
+
+        if (fileName.startsWith("\"") && fileName.endsWith("\"")) {
+            fileName = fileName.substring(1, fileName.length() - 1);
+        }
+
+        if (fileName.endsWith(".java")) {
+            ICompiler compiler = new Compiler();
+            compiler.compile(fileName, outDir);
+            System.out.println("Kompilierung abgeschlossen.");
+        } else {
+            System.out.println("Ungültiger Dateiname. Bitte geben Sie eine Java-Datei ein.");
+        }
     }
 }
