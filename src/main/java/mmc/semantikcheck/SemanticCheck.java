@@ -134,7 +134,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         if(toCheck.expression != null){
             TypeCheckResult expressionResult = toCheck.expression.accept(this);
-            if(!toCheck.getType().equals(expressionResult.getType())){
+            if(!toCheck.getType().equals(toCheck.expression.getType())){
                 errors.add(new Exception("Error in line " + toCheck.startLine + ": incompatible types: " + toCheck.getType() + " cannot be converted to " + expressionResult.getType()));
                 return new TypeCheckResult(false, null);
             }
