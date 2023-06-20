@@ -16,6 +16,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ressources.helpers.Classwriter;
 import ressources.helpers.ReflectionHelper;
 import ressources.helpers.Resources;
 
@@ -338,7 +339,7 @@ public class FailTests {
                 Object instance = constructor.newInstance();
                 java.lang.reflect.Method getX = instance.getClass().getMethod("getX");
                 getX.invoke(instance);
-                System.out.println("Failure, it compiled.");
+                //System.out.println("Failure, it compiled.");
                 assertTrue(true);
             } catch (Exception e) {
                 if (e instanceof InvocationTargetException) {

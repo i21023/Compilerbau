@@ -130,11 +130,14 @@ Implementiert von Micha Hölle.
 ### Ausführung in IDE
 Das Projekt wurde mit [maven](https://maven.apache.org/) als Paketverwaltungsprogramm entwickelt.
 Zur Ausführung aus einer IDE muss diese demnach mit maven kompatibel sein und maven installiert sein.
-Nach dem Öffnen des Projekts kann die [Main-Methode](./src/main/java/mmc/Main.java) ausgeführt werden, um den Compiler zu starten.
+Nach dem Öffnen des Projekts muss in den Run-Configurations mindestens die zu kompilierende Datei als erstes Argument hinterlegt werden.
+Als zweites Argument kann noch ein vom Objektordner abweichendes Output-Directory mitgegeben werden.
+Anschließend kann die [Main-Methode](./src/main/java/mmc/Main.java) ausgeführt werden, um den Compiler zu starten.
 
 ### Ausführung mit .jar-Datei
 Der Compiler kann außerdem mithilfe einer Jar-Datei gestartet werden.
-Die aktuellste Jar-Datei [Jar-Datei](./MachMalCompiler.jar) kann mit dem Befehl ```java -jar MachMalCompiler.jar``` ausgeführt werden.
+Die aktuellste [Jar-Datei](./MachMalCompiler.jar) kann mit dem Befehl
+```java -jar MachMalCompiler.jar <.java-Dateipfad> <optional: Output-Directory>``` ausgeführt werden.
 
 ### Generell
 1. Nach dem Starten des Compilers muss zunächst die zu kompilierende ```.java```-Datei als Dateipfad übergeben werden.
