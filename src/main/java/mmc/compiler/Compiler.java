@@ -1,8 +1,11 @@
 package mmc.compiler;
 
+import mmc.ast.AccessModifier;
+import mmc.ast.main.ClassDecl;
 import mmc.ast.main.Program;
 import mmc.codegen.ProgramCodeGenerator;
 import mmc.codegen.visitors.IProgramCodeVisitor;
+import mmc.semantikcheck.Exception;
 import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStreams;
 
@@ -62,7 +65,7 @@ public class Compiler implements ICompiler {
                 for (File f : files) {
                     try {
                         Files.move(f.toPath(), new File(f.getParentFile(), "$Recycle.Bin").toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    } catch (Exception e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Fehler beim Löschen der alten Dateien.");
                     }
@@ -79,6 +82,10 @@ public class Compiler implements ICompiler {
                 Program program = astGenerator.generateSyntaxTree(CharStreams.fromStream(inputStream));
 
                 System.out.println("Syntaxbaum wurde generiert.");
+
+                if (hasPublicClassWithNotMatchingName(program, file)) {
+                    throw new Exception("The file contains a public class that does not match the file name.");
+                }
 
                 // Führe die semantische Überprüfung durch und generiere den typisierten AST
                 SemanticCheck tAst = new SemanticCheck();
@@ -109,5 +116,15 @@ public class Compiler implements ICompiler {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private boolean hasPublicClassWithNotMatchingName(Program program, File file) {
+        String fileNameWithoutExtension = file.getName().replaceFirst("[.][^.]+$", "");
+        for (ClassDecl classDeclaration : program.classes) {
+            if (!classDeclaration.name.equals(fileNameWithoutExtension) && classDeclaration.accessModifier == AccessModifier.PUBLIC) {
+                return true;
+            }
+        }
+        return false;
     }
 }
