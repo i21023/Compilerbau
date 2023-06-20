@@ -199,11 +199,21 @@ public class SemanticCheck implements SemanticVisitor {
         valid = valid && checkResult.isValid();
         currentScope.popScope(); //Parameter Stack runter nehmen
 
-        var resultType = checkResult.getType();
-        if(resultType == null){
-            resultType = VOID;
+        if(!checkResult.isValid()){
+            return new TypeCheckResult(false, null);
         }
-        if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
+
+        var resultType = checkResult.getType();
+
+        if(toCheck.type == VOID){
+            return new TypeCheckResult(valid, resultType);
+        }
+        else if(resultType == null){ //not all paths return a value
+            errors.add(new Exception("Error in line " + toCheck.startLine + ": not all paths of method " + CheckType.generateMethodString(toCheck) + " return a value"));
+            return new TypeCheckResult(false, null);
+        }
+        else if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
+            //Bemerkung: Fall kann glaub nicht eintreten, da schon bei return geschaut wird, ob der Typ stimmt
             errors.add(new Exception("Error in line " + toCheck.startLine + ": Method declaration " + toCheck.name + " must return a result of type " + toCheck.type));
             valid = false;
         }
@@ -456,16 +466,17 @@ public class SemanticCheck implements SemanticVisitor {
             valid = valid && elseBlockResult.isValid();
             var elseBlockType = elseBlockResult.getType();
 
-
             // Folgendes if else ist für die Bestimmung des Rückgabetyps
             if (ifBlockType == null && elseBlockType != null) {
                 //Falls if keinen return Typ nehmen wir den Typ von else
-                toCheck.type = elseBlockType;
+                return new TypeCheckResult(true, null);
+                //toCheck.type = elseBlockType;
             } else if (ifBlockType != null && elseBlockType == null) {
                 //Falls else keinen return Typ nehmen wir den Typ von if
-                toCheck.type = ifResult.getType();
+                return new TypeCheckResult(true, null);
+                //toCheck.type = ifResult.getType();
 
-            } else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
+            } /*else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
                 if(valid){
                     // Typen müssen übereinstimmen
                     if (!Objects.equals(elseBlockType, ifBlockType)) {
@@ -477,12 +488,16 @@ public class SemanticCheck implements SemanticVisitor {
                         //Falls der Typ gleich ist, wählt er den Typ vom if Block
                     }
                 }
-            }
+            }*/
+                else{
+                    return new TypeCheckResult(valid, ifBlockType);
+                }
         } else {
-            toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
+            return new TypeCheckResult(valid, null);
+            //toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
         }
 
-        return new TypeCheckResult(valid, toCheck.getType());
+        //return new TypeCheckResult(valid, toCheck.getType());
     }
 
     @Override
@@ -496,20 +511,21 @@ public class SemanticCheck implements SemanticVisitor {
             checkResult = statement.accept(this);
             Type statementReturnType = checkResult.getType();
 
-            if (statementReturnType != null) { //keine änderung des Block Return Typs
-
-                if (blockReturnType == null) { //Setzen den Return Type wenn null
-                    blockReturnType = checkResult.getType();
-                } else {
-                    // wenn es 2 verschiedene return Types gibt error
-                    if (!blockReturnType.equals(checkResult.getType())) {
-                        errors.add(new Exception(
-                                "Return types are mismatching in a single Block, got:" + blockReturnType
-                                        + " and " + checkResult.getType()));
-                        valid = false;
-                    }
-                }
+            if(!checkResult.isValid()){
+                valid = false;
+                break;
             }
+
+            if(blockReturnType != null){
+                errors.add(new Exception("Error at line " + statement.getStartLine() + ": unreachable code"));
+                valid = false;
+                break;
+            }
+
+            if (statementReturnType != null && blockReturnType == null) { //keine änderung des Block Return Typs
+                blockReturnType = checkResult.getType();
+            }
+
             valid = valid && checkResult.isValid();
         }
         toCheck.type = blockReturnType; //Type mitgeben

@@ -47,4 +47,9 @@ public class Parameter implements Visitable {
         return visitor.typeCheck(this);
     }
 
+    @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
 }

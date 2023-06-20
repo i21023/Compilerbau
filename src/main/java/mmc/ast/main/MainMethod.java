@@ -30,4 +30,9 @@ public class MainMethod extends Method implements Visitable {
     public void accept(IMethodCodeVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
+    }
 }

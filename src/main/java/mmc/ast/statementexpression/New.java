@@ -59,4 +59,9 @@ public class New implements IStatementExpression {
     public void accept(IMethodCodeVisitor visitor) {
         visitor.visit(this);
     }
+
+    @Override
+    public int getStartLine() {
+        return startLine;
+    }
 }

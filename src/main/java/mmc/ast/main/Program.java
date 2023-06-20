@@ -38,6 +38,11 @@ public class Program implements Visitable {
     }
 
     @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
+    @Override
     public void accept(IProgramCodeVisitor visitor) {
         visitor.visit(this);
     }

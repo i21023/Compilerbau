@@ -204,4 +204,24 @@ public class CheckType {
         s.append(")");
         return s.toString();
     }
+
+    public static String generateMethodString(Method method){
+        StringBuilder s = new StringBuilder();
+        s.append(method.type);
+        s.append(" ");
+        s.append(method.name);
+        s.append("(");
+        for(int i = 0; i < method.parameters.size(); i++){
+
+            s.append(method.parameters.get(i).getType().toString());
+            s.append(" ");
+            s.append(method.parameters.get(i).name);
+            if(i < method.parameters.size() - 1){
+                s.append(",");
+            }
+
+        }
+        s.append(")");
+        return s.toString();
+    }
 }

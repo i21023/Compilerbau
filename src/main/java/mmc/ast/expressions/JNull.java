@@ -38,6 +38,11 @@ public class JNull implements IExpression {
     }
 
     @Override
+    public int getStartLine() {
+        return startLine;
+    }
+
+    @Override
     public Type getType() {
         return type;
     }

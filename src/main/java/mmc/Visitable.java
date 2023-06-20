@@ -17,4 +17,7 @@ public interface Visitable {
     }
 
     TypeCheckResult accept(SemanticVisitor visitor);
+
+    public int getStartLine();
+
 }
