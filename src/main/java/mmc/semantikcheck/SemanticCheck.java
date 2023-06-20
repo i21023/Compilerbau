@@ -358,7 +358,7 @@ public class SemanticCheck implements SemanticVisitor {
             }
             toCheck.type = toCheck.expression.getType();
         }
-        if (currentMethodReturnType != null && !currentMethodReturnType.equals(toCheck.getType())) {
+        if (currentMethodReturnType != null && !currentMethodReturnType.equals(toCheck.getType())) { //wenn es mit dem gespeicherten returnTyp nicht passt dann exception
             if(currentMethodReturnType instanceof ReferenceType){
                 errors.add(
                 new Exception("Error in line " + toCheck.startLine + ": return type mismatch: cannot convert from " + returnExpression.getType()
@@ -431,7 +431,6 @@ public class SemanticCheck implements SemanticVisitor {
         // Condition überprüfen
         var expressionResult = toCheck.expression.accept(this);
 
-
         if(expressionResult.isValid()){
             valid = valid && expressionResult.isValid();
             boolean isBool = (Objects.equals(BasicType.BOOL,toCheck.expression.getType()));
@@ -446,9 +445,8 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
 
-        //if Block überprüfen
+        //Block ueberpruefen
         var ifResult = toCheck.blockIf.accept(this);
-
         var ifBlockType = ifResult.getType();
         valid = valid && ifResult.isValid();
 
@@ -511,7 +509,6 @@ public class SemanticCheck implements SemanticVisitor {
                         valid = false;
                     }
                 }
-
             }
             valid = valid && checkResult.isValid();
         }

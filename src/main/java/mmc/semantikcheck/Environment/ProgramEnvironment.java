@@ -62,6 +62,11 @@ public class ProgramEnvironment {
         stringParams.add(new Parameter(new ReferenceType("java/lang/String"), "s1"));
 
         Constructor stringConstructor = new Constructor(new Block(), new ArrayList<>(List.of(new Parameter(new ReferenceType("java/lang/String"), "s1"))), AccessModifier.PUBLIC);
+        Constructor stringConstructor2 = new Constructor(new Block(), new ArrayList<>(),AccessModifier.PUBLIC);
+
+        ArrayList<Constructor> constructorString = new ArrayList<>();
+        constructorString.add(stringConstructor2);
+        constructorString.add(stringConstructor);
 
         Method concatString = new Method(
                 new ReferenceType("java/lang/String"),"concat",stringParams,new Block(),AccessModifier.PUBLIC, false);
@@ -96,9 +101,8 @@ public class ProgramEnvironment {
 
         ClassDecl StringClass = new ClassDecl("java/lang/String", new ArrayList<>(),
                 stringMethods,
-                new ArrayList<>(Arrays.asList(
-                        stringConstructor
-                )));
+                constructorString
+                );
 
         //println
         Method printlnString = new Method(BasicType.VOID,"println",stringParams,new Block(),AccessModifier.PUBLIC,false);

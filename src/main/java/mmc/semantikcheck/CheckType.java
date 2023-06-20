@@ -30,10 +30,7 @@ public class CheckType {
             throw new Exception("Error in line " + line + ": the field " + identifier + " is missing in class " + type);
 
         }
-
     }
-
-
 
     public static ConstructorEnvironment getConstructor(New newDecl, ProgramEnvironment ev) {
         var objectClass = (ReferenceType) newDecl.getType();
@@ -93,25 +90,21 @@ public class CheckType {
                 }
             }
         }
-        //Feld schauen ob dieses initialisiert wurde
         return valid;
     }
 
     public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
         boolean notVisible = false;
         //Möchte schauen ob Methode visible
-        //Und Polymophie, Methoden ohne Parameter können nicht gleich heißen mit unterschiedlichen schon
+        //Und Polymorphie, Methoden ohne Parameter können nicht gleich heißen mit unterschiedlichen schon
         if (type instanceof ReferenceType referenceType) {
             var declaredClasses = ev.getClasses();
             var classContext = declaredClasses.get(referenceType.type);
-
             if (classContext == null) { //Typ als KLasse existiert nicht
                 throw new Exception("Error in line: "+ toCheck.startLine + " Class " + toCheck.name + " with Arguments: " + toCheck.type + " in Type " + type + " not found.");
             }
-
             var foundMethods = new ArrayList<MethodEnvironment>();
             var methods = classContext.methods.get(toCheck.name);
-
             if (methods == null) {
                 throw new Exception("Error in line: "+ toCheck.startLine + " No method " + generateMethodCallString(toCheck) + " declared in class " + type + ".");
             }
@@ -119,7 +112,6 @@ public class CheckType {
             for (var method : methods) {
                 if (method.parameterTypes.size() == toCheck.arguments.size()) {
                     boolean isSame = true;
-
                     for (int i = 0; i < method.parameterTypes.size(); i++) {
                         var parameterType = method.parameterTypes.get(i);
                         var argument = toCheck.arguments.get(i);
@@ -130,28 +122,22 @@ public class CheckType {
                             break;
                         }
                     }
-
                     if (isSame) {
-                        var accessModifier = method.accessModifier;
                         boolean canAccess;
-
-                        if (accessModifier == AccessModifier.PRIVATE) {
+                        if (method.accessModifier == AccessModifier.PRIVATE) {
                             canAccess = referenceType.type.equals(currentClass.name);
-
                             if (!canAccess) {
                                 notVisible = true;
                             }
                         } else {
                             canAccess = true;
                         }
-
                         if (canAccess) {
                             foundMethods.add(method);
                         }
                     }
                 }
             }
-
             if (foundMethods.size() == 0) {
                 if (notVisible)
                     throw new Exception("Error in line: "+ toCheck.startLine + " Method " + generateMethodCallString(toCheck) + " in class " + type + " is not visible.");
@@ -166,7 +152,6 @@ public class CheckType {
                         ((JNull)argument).type = parameterType;
                     }
                 }
-
                 return foundMethods.get(0);
             } else {
                 throw new Exception("Error in line: "+ toCheck.startLine + " Unable to resolve method call " + generateMethodCallString(toCheck) + " in class " + type + ". Multiple methods found.");
@@ -175,7 +160,6 @@ public class CheckType {
             throw new Exception("Error in line: "+ toCheck.startLine + " Base type " + type + " does not have methods.");
         }
     }
-
 
     public static ClassEnvironment getClassInType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
         var objectClass = (ReferenceType) localVarDecl.type;
@@ -188,7 +172,6 @@ public class CheckType {
         }
         return classContext;
     }
-
 
     private static String generateMethodCallString(MethodCall methodcall){
         StringBuilder s = new StringBuilder();
