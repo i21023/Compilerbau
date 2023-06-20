@@ -1,5 +1,5 @@
 public class StaticCall{
-private int x =5;
+private static int x =5;
 }
 
 class test{
