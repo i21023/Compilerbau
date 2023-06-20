@@ -211,4 +211,57 @@ public class FullRunTests {
             assertTrue(true);
         }
     }
+
+    @Test
+    @DisplayName("Verkettung")
+    public void Verkettung() {
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/Testcases/Verkettung.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+            Program genTast = generateTypedast(program);
+            ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+            HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
+
+            try {
+                // Name der Klasse, die instanziert werden soll
+                String className = "Verkettung";
+
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+
+
+                // Klasse laden
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+                java.lang.Class<?> Test1 = classLoader.defineClass("Test1", code.get("Test1"));
+                java.lang.Class<?> Test2 = classLoader.defineClass("Test2", code.get("Test2"));
+                java.lang.Class<?> Test3 = classLoader.defineClass("Test3", code.get("Test3"));
+                java.lang.Class<?> Test4 = classLoader.defineClass("Test4", code.get("Test4"));
+
+                java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+
+                // Instanz der Klasse erstellen
+                Object instance = constructor.newInstance();
+                String[] args = {""};
+
+                java.lang.reflect.Method main = instance.getClass().getMethod("getFinalInt");
+
+                //System.out.println(Ackermann.invoke(instance, 3, 12));
+                assertEquals(3, main.invoke(instance));
+
+
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    Throwable cause = ((InvocationTargetException) e).getTargetException();
+                    cause.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                    assertTrue(true);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            assertTrue(true);
+        }
+    }
 }
