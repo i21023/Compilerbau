@@ -116,27 +116,27 @@ Implementiert von Julian Schmidt.
 * Das Ergebnis des Bytecode-Generators ist eine Hashmap, bei der jeder Eintrag aus dem Klassennamen und dem zugehörigen Bytecode besteht.
 * Der Bytecode der Hashmaps wird in .class-Dateien geschrieben.
 
-### Testen</h3>
+### Testen
 
 Implementiert von Micha Hölle.
 
-- Tests zur Überprüfung, ob der abstrakte Syntaxbaum korrekt generiert wird.
-- Tests zur Überprüfung, ob der Semantic-Check den AST korrekt eingibt und Fehler auslöst.
-- Tests zur Überprüfung, ob der Byte-Code korrekt generiert wird (Getestet mit Java-Reflections).
-- Integrationstests für den gesamten Compiler zur Überprüfung verschiedener Anwendungsfälle.
+- [Tests](./src/test/java/mmc/AstTests.java) zur Überprüfung, ob der abstrakte Syntaxbaum korrekt generiert wird.
+- [Tests](./src/test/java/mmc/TastTests.java) zur Überprüfung, ob der Semantic-Check den AST korrekt eingibt und Fehler auslöst.
+- [Tests](./src/test/java/mmc/ByteCodeTest.java) zur Überprüfung, ob der Byte-Code korrekt generiert wird (Getestet mit Java-Reflections).
+- [Integrationstests](./src/test/java/mmc/FullRunTests.java) und [Fehler-Tests](./src/test/java/mmc/FailTests.java) für den gesamten Compiler zur Überprüfung verschiedener Anwendungsfälle.
 
-## Installationsanleitung
+## Ausführungsanleitung
 
 ### Ausführung in IDE
 Das Projekt wurde mit [maven](https://maven.apache.org/) als Paketverwaltungsprogramm entwickelt.
-Zur Ausführung aus einer IDE muss diese demnach mit maven kompatibel sein und dieses installiert sein.
-Nach dem Öffnen des Projekts kann die Main-Methode mmc/Main.java ausgeführt werden, um den Compiler zu starten.
+Zur Ausführung aus einer IDE muss diese demnach mit maven kompatibel sein und maven installiert sein.
+Nach dem Öffnen des Projekts kann die [Main-Methode](./src/main/java/mmc/Main.java) ausgeführt werden, um den Compiler zu starten.
 
 ### Ausführung mit .jar-Datei
 Der Compiler kann außerdem mithilfe einer Jar-Datei gestartet werden.
 Die aktuellste Jar-Datei [Jar-Datei](./MachMalCompiler.jar) kann mit dem Befehl ```java -jar MachMalCompiler.jar``` ausgeführt werden.
 
-### Generelles
+### Generell
 1. Nach dem Starten des Compilers muss zunächst die zu kompilierende ```.java```-Datei als Dateipfad übergeben werden.
 2. Anschließend kann ggf. ein gewünschter Pfad zur Ablage der generierten ```.class```-Dateien angeben werden
 3. Wird kein eigener Ablagepfad angegeben, wird im Ordner des Jar-Files ein ```gen```-Ordner erstellt, welcher die Output-Dateien erhält.
