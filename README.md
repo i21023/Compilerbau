@@ -123,9 +123,9 @@ Nach dem Öffnen des Projekts kann die Main-Methode mmc/Main.java ausgeführt we
 
 ### Ausführung mit .jar-Datei
 Der Compiler kann außerdem mithilfe einer Jar-Datei gestartet werden.
-Die aktuellste Jar-Datei [Jar-Datei](./target/MachMalCompiler.jar) kann mit dem Befehl ```java -jar MachMalCompiler.jar``` ausgeführt werden.
+Die aktuellste Jar-Datei [Jar-Datei](./MachMalCompiler.jar) kann mit dem Befehl ```java -jar MachMalCompiler.jar``` ausgeführt werden.
 
 ### Generelles
-1. Nach dem Starten des Compilers muss zunächst die Datei als Dateipfad übergeben werden.
-2. Anschließend kann ggf. ein gewünschter Pfad zur Ablage der generierten .class Dateien angeben werden
+1. Nach dem Starten des Compilers muss zunächst die zu kompilierende ```.java```-Datei als Dateipfad übergeben werden.
+2. Anschließend kann ggf. ein gewünschter Pfad zur Ablage der generierten ```.class```-Dateien angeben werden
 3. Wird kein eigener Ablagepfad angegeben, wird im Ordner des Jar-Files ein ```gen```-Ordner erstellt, welcher die Output-Dateien erhält.

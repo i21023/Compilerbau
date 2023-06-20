@@ -57,6 +57,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <outputDirectory>${project.basedir}</outputDirectory>
                             <finalName>MachMalCompiler</finalName>
                         </configuration>
                     </execution>
