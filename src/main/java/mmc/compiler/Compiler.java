@@ -48,7 +48,7 @@ public class Compiler implements ICompiler {
         if (outDir == null || outDir.isEmpty()) {
             outDir = outDirPath;
         } else {
-            outDir = new File(outDir).getAbsolutePath();
+            outDir = new File(outDir).getAbsolutePath() + File.separator + "gen";
         }
 
         // Erzeuge den Ausgabeordner, falls er nicht existiert
