@@ -1,11 +1,11 @@
-<h1>MachMalCompiler</h1>
+# MachMalCompiler
 
-<p>Herzlich willkommen bei unserem Mini-Java Compiler vom 4. Semester.</p>
+Herzlich willkommen bei unserem Mini-Java Compiler vom 4. Semester.
 
-<h2>Unterstützte Java-Syntax</h2>
+## Unterstützte Java-Syntax
 
 ```plain
-//Base-Types:
+//(Base-)Types:
 int, booelan, char, String
 
 //Access-Modifier:
@@ -27,12 +27,12 @@ GREATER(">"), LESS("<"), GREATEREQUAL(">="), LESSEQUAL("<="), EQUAL("=="), NOTEQ
 NOT("!"), SINGLEAND("&"), SINGLEOR("|"), AND("&&"), OR("||");
 
 //Statements:
-if...else, while, for
+if...else, while, for (auch inline-Schreibweise)
 
 //Andere Keywörter:
 class, new, this, null, static        
 ```
-<h2>Besonderheiten</h2>
+## Besonderheiten
 
 | Funktionen                                                    | Beispiele                                                                          |
 |---------------------------------------------------------------|------------------------------------------------------------------------------------|
@@ -46,11 +46,11 @@ class, new, this, null, static
 | Bindungsstärke der Operatoren                                 | n == 0 && n == 1                                                                   |
 | Verkettung von Methodenaufrufen und Instanzvariablen          | test.getInstance().a = test2.get(i).str.concat("Hallo");                           |
 
-<h2>Verwendete Tools</h2>
-- [ANTLR4](https://www.antlr.org/) --> Wird verwendet, um den Code in einen abstrakten Syntaxbaum zu schreiben
--  [ASM](https://asm.ow2.io/) --> Wird verwendet, um Bytecode aus dem typisierten Syntaxbaum zu generieren
+## Verwendete Tools
+* [ANTLR4](https://www.antlr.org/) --> Wird verwendet, um den Code in einen abstrakten Syntaxbaum zu schreiben
+* [ASM](https://asm.ow2.io/) --> Wird verwendet, um Bytecode aus dem typisierten Syntaxbaum zu generieren
 
-<h2>Projektstruktur</h2>
+## Projektstruktur
 
 ```plain
 Compilerbau [MachMalCompiler]/
@@ -80,32 +80,32 @@ Compilerbau [MachMalCompiler]/
     │               └─── environment
     └── test
 ```
-<h2>Klassendiagramm</h2>
-![UML-Diagram](https://github.com/i21023/Compilerbau/blob/master/uml/AST_UML.svg)
+## Klassendiagramm
+![UML-Diagram](./uml/AST_UML.svg)
 
-<h2>Komponenten</h2>
+## Komponenten
 
-<h3>Parser</h3>
+### Parser
 
 Implementiert von Nina Schmid und Hannes Kollert.
 
-- ANTL - Grammatik für Java-Subset
-- Adapter für die Generierung des Abstrakten Syntax Baum
+* ANTLR - Grammatik für Java-Subset
+* Adapter für die Generierung des Abstrakten Syntax Baums
 
-<h3>Semantik Check + Typisierung</h3>
+### Semantik Check + Typisierung
 
 Implementiert von Emma Weiß.
 
-- Semantik-Visitors um den gesamten Syntax Baum zu typisieren
-- Semantische Fehlerbehandlung
+* Semantik-Visitors um den gesamten Syntax Baum zu typisieren
+* Semantische Fehlerbehandlung
 
-<h3>Bytecode</h3>
+### Bytecode
 
 Implementiert von Julian Schmidt.
 
-- Übersetzung vom Typisierten Abstrakten Syntax Baum zu Java-Bytecode mit ASM
+* Übersetzung vom Typisierten Abstrakten Syntax Baum zu Java-Bytecode mit ASM
 
-<h3>Testen</h3>
+### Testen</h3>
 
 Implementiert von Micha Hölle.
 
@@ -114,4 +114,18 @@ Implementiert von Micha Hölle.
 - Tests zur Überprüfung, ob der Byte-Code korrekt generiert wird (Getestet mit Java-Reflections).
 - Integrationstests für den gesamten Compiler zur Überprüfung verschiedener Anwendungsfälle.
 
-<h2>Installationsanleitung</h2>
+## Installationsanleitung
+
+### Ausführung in IDE
+Das Projekt wurde mit [maven](https://maven.apache.org/) als Paketverwaltungsprogramm entwickelt.
+Zur Ausführung aus einer IDE muss diese demnach mit maven kompatibel sein und dieses installiert sein.
+Nach dem Öffnen des Projekts kann die Main-Methode mmc/Main.java ausgeführt werden, um den Compiler zu starten.
+
+### Ausführung mit .jar-Datei
+Der Compiler kann außerdem mithilfe einer Jar-Datei gestartet werden.
+Die aktuellste Jar-Datei [Jar-Datei](./target/MachMalCompiler.jar) kann mit dem Befehl ```java -jar MachMalCompiler.jar``` ausgeführt werden.
+
+### Generelles
+1. Nach dem Starten des Compilers muss zunächst die Datei als Dateipfad übergeben werden.
+2. Anschließend kann ggf. ein gewünschter Pfad zur Ablage der generierten .class Dateien angeben werden
+3. Wird kein eigener Ablagepfad angegeben, wird im Ordner des Jar-Files ein ```gen```-Ordner erstellt, welcher die Output-Dateien erhält.
