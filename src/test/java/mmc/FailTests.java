@@ -84,8 +84,6 @@ public class FailTests {
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
             try {
-
-
                 // Name der Klasse, die instanziert werden soll
                 String className = "MathFail";
 
@@ -134,8 +132,6 @@ public class FailTests {
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
             try {
-
-
                 // Name der Klasse, die instanziert werden soll
                 String className = "PrivateCall";
 
@@ -143,8 +139,6 @@ public class FailTests {
 
                 // Klasse laden
                 java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
-
-
                 className = "Caller";
 
                 java.lang.Class<?> test = classLoader.defineClass(className, code.get(className));
@@ -488,6 +482,4 @@ public class FailTests {
             assertTrue(true);
         }
     }
-
-
 }
