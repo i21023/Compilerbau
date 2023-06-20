@@ -430,6 +430,7 @@ public class TastTests {
         ClassDecl classes2 = new ClassDecl("BooleanOperator", Fields2, new ArrayList<Method>(Arrays.asList(method12, method22)), new ArrayList<Constructor>());
         Program tast = new Program(Arrays.asList(classes2));
 
+
         assertEquals(tast, genTast);
     }
 

@@ -469,10 +469,12 @@ public class SemanticCheck implements SemanticVisitor {
             // Folgendes if else ist für die Bestimmung des Rückgabetyps
             if (ifBlockType == null && elseBlockType != null) {
                 //Falls if keinen return Typ nehmen wir den Typ von else
+                toCheck.type = elseBlockType;
                 return new TypeCheckResult(true, null);
                 //toCheck.type = elseBlockType;
             } else if (ifBlockType != null && elseBlockType == null) {
                 //Falls else keinen return Typ nehmen wir den Typ von if
+                toCheck.type = ifBlockType;
                 return new TypeCheckResult(true, null);
                 //toCheck.type = ifResult.getType();
 
@@ -490,9 +492,11 @@ public class SemanticCheck implements SemanticVisitor {
                 }
             }*/
                 else{
+                    toCheck.type = ifBlockType;
                     return new TypeCheckResult(valid, ifBlockType);
                 }
         } else {
+            toCheck.type = ifBlockType;
             return new TypeCheckResult(valid, null);
             //toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
         }
@@ -521,8 +525,7 @@ public class SemanticCheck implements SemanticVisitor {
                 valid = false;
                 break;
             }
-
-            if (statementReturnType != null && blockReturnType == null) { //keine änderung des Block Return Typs
+            else if (statementReturnType != null) { //keine änderung des Block Return Typs
                 blockReturnType = checkResult.getType();
             }
 
@@ -564,9 +567,11 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         if(toCheck.type instanceof ReferenceType){
-            return new TypeCheckResult(valid, newClass);
+            toCheck.type = newClass;
+            return new TypeCheckResult(valid, null);
         }
-        return new TypeCheckResult(valid, newClass);
+        toCheck.type = newClass;
+        return new TypeCheckResult(valid, null);
     }
 
     @Override
@@ -641,7 +646,7 @@ public class SemanticCheck implements SemanticVisitor {
 
             toCheck.type = method.type;
             toCheck.isStatic = method.isStatic;
-            return new TypeCheckResult(valid, method.type);
+            return new TypeCheckResult(valid, null);
 
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage()));
@@ -654,6 +659,8 @@ public class SemanticCheck implements SemanticVisitor {
         boolean valid = true;
         var typeCheckResult = toCheck.expression.accept(this);
         Type expressionType = toCheck.expression.getType();
+
+        if(!typeCheckResult.isValid()) return new TypeCheckResult(false, null);
 
         if(toCheck.expression instanceof LocalOrFieldVar){
             String varName = ((LocalOrFieldVar) toCheck.expression).name;
@@ -815,7 +822,10 @@ public class SemanticCheck implements SemanticVisitor {
 
         //Typ herausfinden
         var checkResult = toCheck.expression.accept(this);
-        var type = checkResult.getType();
+
+        if(!checkResult.isValid()) return new TypeCheckResult(false, null);
+
+        var type = toCheck.expression.getType();
         if (type instanceof BasicType) {
             errors.add(new Exception("Error in line " + toCheck.startLine +
                     ": type " + type + " is a base type and does not offer any instance variables or methods"));
