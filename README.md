@@ -47,10 +47,10 @@ class, new, this, null, static
 | Verkettung von Methodenaufrufen und Instanzvariablen          | test.getInstance().a = test2.get(i).str.concat("Hallo");                           |
 
 <h2>Verwendete Tools</h2>
-* [ANTLR4](https://www.antlr.org/)
-    * Wird verwendet, um den Code in einen abstrakten Syntaxbaum zu schreiben
-* [ASM](https://asm.ow2.io/)
-    * Wird verwendet, um Bytecode aus dem typisierten Syntaxbaum zu generieren
+- [ANTLR4](https://www.antlr.org/)
+  - Wird verwendet, um den Code in einen abstrakten Syntaxbaum zu schreiben
+-  [ASM](https://asm.ow2.io/)
+   - Wird verwendet, um Bytecode aus dem typisierten Syntaxbaum zu generieren
 
 <h2>Projektstruktur</h2>
 
@@ -105,7 +105,7 @@ Implementiert von Emma Weiß.
 
 Implementiert von Julian Schmidt.
 
-- Übersetzung von Abstrakten Syntax Baum zu Java-Bytecode mit ASM
+- Übersetzung vom Typisierten Abstrakten Syntax Baum zu Java-Bytecode mit ASM
 
 <h3>Testen</h3>
 
@@ -116,4 +116,4 @@ Implementiert von Micha Hölle.
 - Tests zur Überprüfung, ob der Byte-Code korrekt generiert wird (Getestet mit Java-Reflections).
 - Integrationstests für den gesamten Compiler zur Überprüfung verschiedener Anwendungsfälle.
 
-<h2 style="color: #55b2ca;">Installationsanleitung</h2>
+<h2>Installationsanleitung</h2>
