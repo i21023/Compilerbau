@@ -8,8 +8,6 @@ import java.util.Scanner;
 
 
 public class Main {
-    // ToDo: .jar Ausführen testen
-
     public static void main(String[] args) {
         System.out.println("Willkommen beim Java-Compiler MachMalCompiler!");
 
