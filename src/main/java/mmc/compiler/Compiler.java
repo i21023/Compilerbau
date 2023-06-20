@@ -29,13 +29,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Compiler implements ICompiler {
-    //ToDo: für Abgabe überflüssige Elemente löschen und einheitlich mit Interfaces arbeiten; Factory einfügen?
 
     @Override
     public void compile(String fileName, String outDir) {
         // get the filename without the extension
         File file = new File(fileName);
 
+        //ToDo: outdir dynamisch von aufrufendem Ordner oder so
         if (outDir.equals("")) {
             outDir = "compile";
             File outDirectory = new File(outDir);

@@ -8,7 +8,7 @@ import mmc.semantikcheck.TypeCheckResult;
 public class LocalOrFieldVar implements IExpression {
     public String name;
     public Type type;
-    public boolean isStatic; //TODO: @Emma bitte im Semantikcheck setzen :)
+    public boolean isStatic;
     public int startLine;
     public int stopLine;
 

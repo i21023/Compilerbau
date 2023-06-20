@@ -10,7 +10,7 @@ public class InstVar implements IExpression {
     public String name;
     public IExpression expression;
     public Type type;
-    public boolean isStatic; //TODO: @Emma bitte im Semantikcheck setzen :)
+    public boolean isStatic;
     public int startLine;
     public int stopLine;
 
