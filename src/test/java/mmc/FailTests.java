@@ -1,6 +1,14 @@
 package mmc;
 
-import mmc.ast.main.Program;
+import mmc.ast.AccessModifier;
+import mmc.ast.BasicType;
+import mmc.ast.Operator;
+import mmc.ast.expressions.Binary;
+import mmc.ast.expressions.BoolExpr;
+import mmc.ast.expressions.IntExpr;
+import mmc.ast.expressions.StringExpr;
+import mmc.ast.main.*;
+import mmc.ast.statements.*;
 import mmc.codegen.ProgramCodeGenerator;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
@@ -13,6 +21,8 @@ import ressources.helpers.Resources;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static mmc.semantikcheck.SemanticCheck.generateTypedast;
@@ -481,5 +491,50 @@ public class FailTests {
             e.printStackTrace();
             assertTrue(true);
         }
+    }
+
+    //FailTests
+    @Test
+    @DisplayName("While-Fail-Test")
+    public void WhileFailTest() {
+        boolean HasFailed = false;
+        Block WhileBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
+        While WhileStmt = new While(new Binary(Operator.EQUAL, new IntExpr(5), new BoolExpr(false)), WhileBlock);
+        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(WhileStmt))), AccessModifier.PUBLIC, false);
+        ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        try {
+            Program tast = generateTypedast(prog);
+            assertEquals(prog, tast);
+        } catch (Exception e) {
+            e.printStackTrace();
+            HasFailed = true;
+        }
+        assertEquals(true, HasFailed);
+
+    }
+
+    @Test
+    @DisplayName("If-Fail-Test")
+    public void IfFailTest() {
+        boolean HasFailed = false;
+
+        Block IfBlock = new Block(Arrays.asList(new Return(new BoolExpr(true))));
+        If Ifstm = new If(IfBlock, new Block(), new Binary(Operator.EQUAL, new IntExpr(3), new StringExpr("Hallo")));
+        Method method = new Method(BasicType.BOOL, "Fails", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(Ifstm))), AccessModifier.PUBLIC, false);
+        ClassDecl classDecl = new ClassDecl("FailTestIf", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
+
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        try {
+            Program tast = generateTypedast(prog);
+        } catch (Exception e) {
+            e.printStackTrace();
+            HasFailed = true;
+        }
+        assertEquals(true, HasFailed);
+
     }
 }

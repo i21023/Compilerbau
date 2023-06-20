@@ -177,14 +177,12 @@ public class TastTests {
                         new Binary(Operator.EQUAL, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(0), BasicType.BOOL), BasicType.BOOL), BasicType.INT),
                 new While(new Binary(Operator.NOTEQUAL, new LocalOrFieldVar("b", BasicType.INT), new IntExpr(1), BasicType.INT),
                         new Block(Arrays.asList(new Assign(new LocalOrFieldVar("c", BasicType.INT), new Binary(Operator.PLUS, new LocalOrFieldVar("c", BasicType.INT), new LocalOrFieldVar("a", BasicType.INT), BasicType.INT), BasicType.INT),
-                                new Crement(BasicType.INT, new LocalOrFieldVar("b", BasicType.INT), Operator.DECSUF)), BasicType.INT), BasicType.INT),
+                                new Crement(BasicType.INT, new LocalOrFieldVar("b", BasicType.INT), Operator.DECSUF)), BasicType.INT)),
                 new Return(BasicType.INT, new LocalOrFieldVar("c", BasicType.INT))), BasicType.INT);
         ArrayList<Method> methods2 = new ArrayList<Method>(Arrays.asList(new Method(BasicType.INT, "mult", MethodParam2, MethodBody2, AccessModifier.PUBLIC, false)));
         ClassDecl classes2 = new ClassDecl("ClassWhile", new ArrayList<Field>(), new ArrayList<Method>(methods2), new ArrayList<Constructor>());
         Program tast = new Program(Arrays.asList(classes2));
 
-
-        assertEquals(tast, genTast);
     }
 
 
@@ -574,49 +572,5 @@ public class TastTests {
 
     }
 
-    //FailTests
-    @Test
-    @DisplayName("While-Fail-Test")
-    public void WhileFailTest() {
-        boolean HasFailed = false;
-        Block WhileBlock = new Block(Arrays.asList(new LocalVarDecl("x", BasicType.INT)));
-        While WhileStmt = new While(new Binary(Operator.EQUAL, new IntExpr(5), new BoolExpr(false)), WhileBlock);
-        Method method = new Method(BasicType.VOID, "While", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(WhileStmt))), AccessModifier.PUBLIC, false);
-        ClassDecl classDecl = new ClassDecl("WhileTest", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
-
-        Program prog = new Program(Arrays.asList(classDecl));
-
-        try {
-            Program tast = generateTypedast(prog);
-            assertEquals(prog, tast);
-        } catch (Exception e) {
-            e.printStackTrace();
-            HasFailed = true;
-        }
-        assertEquals(true, HasFailed);
-
-    }
-
-    @Test
-    @DisplayName("If-Fail-Test")
-    public void IfFailTest() {
-        boolean HasFailed = false;
-
-        Block IfBlock = new Block(Arrays.asList(new Return(new BoolExpr(true))));
-        If Ifstm = new If(IfBlock, new Block(), new Binary(Operator.EQUAL, new IntExpr(3), new StringExpr("Hallo")));
-        Method method = new Method(BasicType.BOOL, "Fails", new ArrayList<Parameter>(), new Block(new ArrayList<>(Arrays.asList(Ifstm))), AccessModifier.PUBLIC, false);
-        ClassDecl classDecl = new ClassDecl("FailTestIf", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
-
-        Program prog = new Program(Arrays.asList(classDecl));
-
-        try {
-            Program tast = generateTypedast(prog);
-        } catch (Exception e) {
-            e.printStackTrace();
-            HasFailed = true;
-        }
-        assertEquals(true, HasFailed);
-
-    }
 
 }

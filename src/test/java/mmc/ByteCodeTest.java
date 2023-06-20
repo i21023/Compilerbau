@@ -14,6 +14,8 @@ import mmc.ast.statementexpression.New;
 import mmc.ast.statements.*;
 import mmc.codegen.ProgramCodeGenerator;
 
+import mmc.compiler.ISyntaxTreeGenerator;
+import mmc.compiler.SyntaxTreeGenerator;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -50,7 +53,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(testTast);
 
-        Classwriter.WriteClassFile("EmptyClass", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("EmptyClass", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "EmptyClass";
@@ -89,7 +92,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("ContructorWithParam", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("ContructorWithParam", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "ContructorWithParam";
@@ -124,7 +127,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("ContructorWithVar", "src/main/ressources_tests", code);
+        /* Classwriter.WriteClassFile("ContructorWithVar", "src/main/ressources_tests", code);*/
 
         try {
             // Name der Klasse, die instanziert werden soll
@@ -157,7 +160,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("FieldVarClass", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("FieldVarClass", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "FieldVarClass";
@@ -197,7 +200,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("FieldVarClassMutable", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("FieldVarClassMutable", "src/main/ressources_tests", code);*/
 
         try {
             // Name der Klasse, die instanziert werden soll
@@ -243,7 +246,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("LocalVarGet", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "LocalVarGet";
@@ -289,7 +292,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("binaryTest", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("binaryTest", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "binaryTest";
@@ -333,7 +336,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("ForLoop", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("ForLoop", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "ForLoop";
@@ -374,7 +377,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("newTest", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("newTest", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "newTest";
@@ -420,7 +423,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("forLoopTest", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("forLoopTest", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "forLoopTest";
@@ -460,7 +463,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("stringTest", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("stringTest", "src/main/ressources_tests", code);*/
         try {
             // Name der Klasse, die instanziert werden soll
             String className = "stringTest";
@@ -509,7 +512,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
 
         try {
             // Name der Klasse, die instanziert werden soll
@@ -579,7 +582,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
 
         try {
             // Name der Klasse, die instanziert werden soll
@@ -630,7 +633,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
 
         try {
             // Name der Klasse, die instanziert werden soll
@@ -697,7 +700,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
 
         try {
             // Name der Klasse, die instanziert werden soll
@@ -745,7 +748,7 @@ public class ByteCodeTest {
         ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
         HashMap<String, byte[]> code = codeGen.getBytecode(prog);
 
-        Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
 
         try {
             // Name der Klasse, die instanziert werden soll
@@ -757,6 +760,7 @@ public class ByteCodeTest {
             // Instanz der Klasse erstellen
             Object instance = constructor.newInstance();
             java.lang.reflect.Method foo = instance.getClass().getMethod("foo");
+            foo.invoke(instance);
         } catch (Exception e) {
             if (e instanceof InvocationTargetException) {
                 Throwable cause = ((InvocationTargetException) e).getTargetException();
@@ -768,14 +772,39 @@ public class ByteCodeTest {
     }
 
     @Test
-    public void initStaticReferenceFieldVar() { //ToDo: weiter machen mit Automatisierung
+    public void initStaticReferenceFieldVar() {
 
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(
                 Arrays.asList(new Field(new ReferenceType("java/lang/String"), "a", AccessModifier.PUBLIC, new StringExpr("Test"), false))
         ), new ArrayList<Method>(),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(Arrays.asList(classDecl));
+        Program prog = new Program(Arrays.asList(classDecl));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Test";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            java.lang.reflect.Field x = instance.getClass().getField("a");
+            System.out.println(x.get(instance));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test
@@ -810,7 +839,34 @@ public class ByteCodeTest {
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+        Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Test";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            java.lang.reflect.Method fib = instance.getClass().getMethod("fib", int.class);
+
+            assertEquals(13, fib.invoke(instance, 7));
+            System.out.println(fib.invoke(instance, 7));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -861,10 +917,41 @@ public class ByteCodeTest {
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method, method1)),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+        Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Test";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            java.lang.reflect.Method fib = instance.getClass().getMethod("fib", int.class);
+            String[] args = {""};
+
+            java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+            main.invoke(null, (Object) args);
+
+            assertEquals(13, fib.invoke(instance, 7));
+            System.out.println(fib.invoke(instance, 7));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
     }
 
-
+    @Test
     public void incrementInstVar() {
 
         //Class Bar needs to be in the same folder
@@ -888,44 +975,52 @@ public class ByteCodeTest {
 
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/Bar.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
-    }
+            Program program = astGenerator.generateSyntaxTree(file);
+            Program genTast = generateTypedast(program);
 
-    public void assignStaticInstVar() {
 
-        //Class Bar needs to be in the same folder
-        /*
-        class Bar{
-            public static int i = 0;
-            public int j = 1;
+            Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
 
-            public void foo(){
-            System.out.println(i);
+            ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+            HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+            HashMap<String, byte[]> code2 = codeGen.getBytecode(genTast);
+
+            /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+            Classwriter.WriteClassFile("Bar", "src/main/ressources_tests", code);*/
+
+            try {
+                // Name der Klasse, die instanziert werden soll
+                String className = "Test";
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+                // Klasse laden
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+                java.lang.Class<?> Bar = classLoader.defineClass("Bar", code.get("Bar"));
+                java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+                // Instanz der Klasse erstellen
+                Object instance = constructor.newInstance();
+                String[] args = {""};
+
+                java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+                main.invoke(null, (Object) args);
+
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    Throwable cause = ((InvocationTargetException) e).getTargetException();
+                    cause.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                }
             }
+        } catch (Exception e) {
+
         }
-        */
-
-        Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                new LocalVarDecl("p", new ReferenceType("Bar"), new New("Bar", new ArrayList<>())),
-                new Assign(new InstVar("i", new Class("Bar", new ReferenceType("Bar")), BasicType.INT, true), new IntExpr(10), BasicType.INT),
-                new MethodCall(
-                        new InstVar("out",
-                                new Class("java/lang/System",
-                                        new ReferenceType("java/lang/System")),
-                                new ReferenceType("java/io/PrintStream"), true), "println",
-                        new ArrayList<>(Arrays.asList(
-                                new InstVar("i", new Class("Bar", new ReferenceType("Bar")), BasicType.INT, true))
-                        ), BasicType.VOID),
-                new MethodCall(new LocalOrFieldVar("p", new ReferenceType("Bar"), false), "foo", new ArrayList<>(), BasicType.VOID)
-        ))));
-
-        ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
-                new ArrayList<Constructor>());
-
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
     }
 
+    @Test
     public void inlineNewInstVarWithCrement() {
 
 /*        class Test{
@@ -943,7 +1038,7 @@ public class ByteCodeTest {
         }*/
 
         Method method = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
-                new LocalVarDecl("p", BasicType.INT, new Crement(BasicType.INT, new InstVar("i", new New("Bar", new ArrayList<>()), BasicType.INT, false), Operator.INCPRE)),
+                new LocalVarDecl("p", BasicType.INT, new Crement(BasicType.INT, new InstVar("i", new Class("Bar", new ReferenceType("Bar"))), Operator.INCPRE)),
                 new Crement(BasicType.INT, new LocalOrFieldVar("p", BasicType.INT, false), Operator.DECPRE),
                 new MethodCall(
                         new InstVar("out",
@@ -959,10 +1054,52 @@ public class ByteCodeTest {
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/Bar.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+            Program genTast = generateTypedast(program);
+
+
+            Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+            ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+            HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+            HashMap<String, byte[]> code2 = codeGen.getBytecode(genTast);
+
+            /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+            Classwriter.WriteClassFile("Bar", "src/main/ressources_tests", code);*/
+
+            try {
+                // Name der Klasse, die instanziert werden soll
+                String className = "Test";
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+                // Klasse laden
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+                java.lang.Class<?> Bar = classLoader.defineClass("Bar", code.get("Bar"));
+                java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+                // Instanz der Klasse erstellen
+                Object instance = constructor.newInstance();
+                String[] args = {""};
+
+                java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+                main.invoke(null, (Object) args);
+
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    Throwable cause = ((InvocationTargetException) e).getTargetException();
+                    cause.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+
+        }
     }
 
-
+    @Test
     public void staticFib() {
 
         /*public class Test{
@@ -985,9 +1122,9 @@ public class ByteCodeTest {
                 new Block(new ArrayList<IStatement>(Arrays.asList(
                         new If(new Return(BasicType.INT, new LocalOrFieldVar("n", BasicType.INT, false)),
                                 new Return(BasicType.INT, new Binary(Operator.PLUS,
-                                        new MethodCall(new This(new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
+                                        new MethodCall(new Class("Test", new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
                                                 new Binary(Operator.MINUS, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(1), BasicType.INT))), BasicType.INT, true),
-                                        new MethodCall(new This(new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
+                                        new MethodCall(new Class("Test", new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(
                                                 new Binary(Operator.MINUS, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(2), BasicType.INT))), BasicType.INT, true))),
                                 new Binary(Operator.OR,
                                         new Binary(Operator.EQUAL, new LocalOrFieldVar("n", BasicType.INT, false), new IntExpr(0)),
@@ -1002,15 +1139,47 @@ public class ByteCodeTest {
                                         new ReferenceType("java/lang/System")),
                                 new ReferenceType("java/io/PrintStream"), true), "println",
                         new ArrayList<>(Arrays.asList(
-                                new MethodCall(new This(new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(new IntExpr(30))), BasicType.INT, true))), BasicType.VOID)
+                                new MethodCall(new Class("Test", new ReferenceType("Test")), "fib", new ArrayList<>(Arrays.asList(new IntExpr(30))), BasicType.INT, true))), BasicType.VOID)
         ))));
 
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method, method1)),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+        Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Test";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            //java.lang.reflect.Method fib = instance.getClass().getMethod("fib", int.class);
+            String[] args = {""};
+
+            java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+            main.invoke(null, (Object) args);
+
+            //assertEquals(13, fib.invoke(instance, 7));
+            //System.out.println(fib.invoke(instance, 7));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
     }
 
+    @Test
     public void callStaticMethodFromOtherClass() {
         //Klasse Bar gegeben:
         /* class Bar{
@@ -1042,7 +1211,51 @@ public class ByteCodeTest {
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/Bar.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+            Program genTast = generateTypedast(program);
+
+
+            Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+            ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+            HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+            HashMap<String, byte[]> code2 = codeGen.getBytecode(genTast);
+
+            /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);
+            Classwriter.WriteClassFile("Bar", "src/main/ressources_tests", code);*/
+
+            try {
+                // Name der Klasse, die instanziert werden soll
+                String className = "Test";
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+                // Klasse laden
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+                java.lang.Class<?> Bar = classLoader.defineClass("Bar", code.get("Bar"));
+                java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+                // Instanz der Klasse erstellen
+                Object instance = constructor.newInstance();
+                String[] args = {""};
+
+                java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+                main.invoke(null, (Object) args);
+
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    Throwable cause = ((InvocationTargetException) e).getTargetException();
+                    cause.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+
     }
 
     @Test
@@ -1063,9 +1276,41 @@ public class ByteCodeTest {
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+        Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Test";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            //java.lang.reflect.Method fib = instance.getClass().getMethod("fib", int.class);
+            String[] args = {""};
+
+            java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+            main.invoke(null, (Object) args);
+
+            //assertEquals(13, fib.invoke(instance, 7));
+            //System.out.println(fib.invoke(instance, 7));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
     }
 
+    @Test
     public void stringEqual() {
         Method method1 = new MainMethod(new Block(new ArrayList<>(Arrays.asList(
 
@@ -1082,10 +1327,42 @@ public class ByteCodeTest {
         ClassDecl classDecl = new ClassDecl("Test", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)),
                 new ArrayList<Constructor>());
 
-        Program program = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+        Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(prog);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Test";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            //java.lang.reflect.Method fib = instance.getClass().getMethod("fib", int.class);
+            String[] args = {""};
+
+            java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+            main.invoke(null, (Object) args);
+
+            //assertEquals(13, fib.invoke(instance, 7));
+            //System.out.println(fib.invoke(instance, 7));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
 
     }
 
+    @Test
     public void staticInstVarCallOnReference() {
         Method MainMethod = new MainMethod(new Block(new ArrayList<>(Arrays.asList(new MethodCall(new Class("Main", new ReferenceType("Main")), "foo", new ArrayList<>(), BasicType.VOID, true)))));
 
@@ -1114,8 +1391,42 @@ public class ByteCodeTest {
                 new ArrayList<Constructor>());
 
         Program program = new Program(new ArrayList<>(Arrays.asList(main, test)));
+
+
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(program);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Main";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.Class<?> test2 = classLoader.defineClass("Test", code.get("Test"));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            //java.lang.reflect.Method fib = instance.getClass().getMethod("fib", int.class);
+            String[] args = {""};
+
+            java.lang.reflect.Method main1 = instance.getClass().getMethod("main", String[].class);
+            main1.invoke(null, (Object) args);
+
+            //assertEquals(13, fib.invoke(instance, 7));
+            //System.out.println(fib.invoke(instance, 7));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
     }
 
+    @Test
     public void staticMethodCallOnReference() {
         Method MainMethod = new MainMethod(new Block(new ArrayList<>(Arrays.asList(new MethodCall(new Class("Main", new ReferenceType("Main")), "foo", new ArrayList<>(), BasicType.VOID, true)))));
 
@@ -1147,6 +1458,37 @@ public class ByteCodeTest {
                 new ArrayList<Constructor>());
 
         Program program = new Program(new ArrayList<>(Arrays.asList(main, test)));
+        ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+        HashMap<String, byte[]> code = codeGen.getBytecode(program);
+
+        /*Classwriter.WriteClassFile("Test", "src/main/ressources_tests", code);*/
+
+        try {
+            // Name der Klasse, die instanziert werden soll
+            String className = "Main";
+            ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+            // Klasse laden
+            java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+            java.lang.Class<?> test2 = classLoader.defineClass("Test", code.get("Test"));
+            java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+            // Instanz der Klasse erstellen
+            Object instance = constructor.newInstance();
+            //java.lang.reflect.Method fib = instance.getClass().getMethod("fib", int.class);
+            String[] args = {""};
+
+            java.lang.reflect.Method main1 = instance.getClass().getMethod("main", String[].class);
+            main1.invoke(null, (Object) args);
+
+            //assertEquals(13, fib.invoke(instance, 7));
+            //System.out.println(fib.invoke(instance, 7));
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = ((InvocationTargetException) e).getTargetException();
+                cause.printStackTrace();
+            } else {
+                e.printStackTrace();
+            }
+        }
     }
 }
 

@@ -36,7 +36,7 @@ import java.util.HashMap;
 import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 import static org.junit.jupiter.api.Assertions.*;
 
-class MainTest {
+class ReflectionTest {
 
     @Test
     @DisplayName("Class with FieldVars and Method")
