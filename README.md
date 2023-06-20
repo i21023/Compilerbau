@@ -47,10 +47,8 @@ class, new, this, null, static
 | Verkettung von Methodenaufrufen und Instanzvariablen          | test.getInstance().a = test2.get(i).str.concat("Hallo");                           |
 
 <h2>Verwendete Tools</h2>
-- [ANTLR4](https://www.antlr.org/)
-  - Wird verwendet, um den Code in einen abstrakten Syntaxbaum zu schreiben
--  [ASM](https://asm.ow2.io/)
-   - Wird verwendet, um Bytecode aus dem typisierten Syntaxbaum zu generieren
+- [ANTLR4](https://www.antlr.org/) --> Wird verwendet, um den Code in einen abstrakten Syntaxbaum zu schreiben
+-  [ASM](https://asm.ow2.io/) --> Wird verwendet, um Bytecode aus dem typisierten Syntaxbaum zu generieren
 
 <h2>Projektstruktur</h2>
 
