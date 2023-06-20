@@ -200,10 +200,14 @@ public class SemanticCheck implements SemanticVisitor {
         currentScope.popScope(); //Parameter Stack runter nehmen
 
         var resultType = checkResult.getType();
-        if(resultType == null){
-            resultType = VOID;
+        if(toCheck.type == VOID){
+            return new TypeCheckResult(valid, resultType);
         }
-        if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
+        else if(resultType == null && toCheck.type != VOID){ //not all paths return a value
+            errors.add(new Exception("Error in line " + toCheck.startLine + ": Not all paths of method " + toCheck.name + " return a value"));
+            return new TypeCheckResult(false, null);
+        }
+        else if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
             errors.add(new Exception("Error in line " + toCheck.startLine + ": Method declaration " + toCheck.name + " must return a result of type " + toCheck.type));
             valid = false;
         }
@@ -456,16 +460,17 @@ public class SemanticCheck implements SemanticVisitor {
             valid = valid && elseBlockResult.isValid();
             var elseBlockType = elseBlockResult.getType();
 
-
             // Folgendes if else ist für die Bestimmung des Rückgabetyps
             if (ifBlockType == null && elseBlockType != null) {
                 //Falls if keinen return Typ nehmen wir den Typ von else
-                toCheck.type = elseBlockType;
+                return new TypeCheckResult(true, null);
+                //toCheck.type = elseBlockType;
             } else if (ifBlockType != null && elseBlockType == null) {
                 //Falls else keinen return Typ nehmen wir den Typ von if
-                toCheck.type = ifResult.getType();
+                return new TypeCheckResult(true, null);
+                //toCheck.type = ifResult.getType();
 
-            } else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
+            } /*else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
                 if(valid){
                     // Typen müssen übereinstimmen
                     if (!Objects.equals(elseBlockType, ifBlockType)) {
@@ -477,12 +482,16 @@ public class SemanticCheck implements SemanticVisitor {
                         //Falls der Typ gleich ist, wählt er den Typ vom if Block
                     }
                 }
-            }
+            }*/
+                else{
+                    return new TypeCheckResult(valid, ifBlockType);
+                }
         } else {
-            toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
+            return new TypeCheckResult(true, null);
+            //toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
         }
 
-        return new TypeCheckResult(valid, toCheck.getType());
+        //return new TypeCheckResult(valid, toCheck.getType());
     }
 
     @Override
