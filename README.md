@@ -80,7 +80,7 @@ Compilerbau [MachMalCompiler]/
     │               └─── environment
     └── test
 ```
-## Klassendiagramm
+## Klassendiagramm des abstrakten Syntaxbaums
 ![UML-Diagram](./uml/AST_UML.svg)
 
 ## Komponenten
