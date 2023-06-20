@@ -266,7 +266,7 @@ public class FullRunTests {
     }
 
     @Test
-    @DisplayName("Verkettung")
+    @DisplayName("StringMethods")
     public void StringMethods() {
         try {
             CharStream file = Resources.getFileInput("src/test/java/ressources/Testcases/StringMethods.java");
@@ -326,6 +326,55 @@ public class FullRunTests {
         } catch (IOException e) {
             e.printStackTrace();
 
+        }
+    }
+
+    @Test
+    @DisplayName("Fibbonacci")
+    public void Fibbonacci() {
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/Testcases/Fibbonacci.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+            Program genTast = generateTypedast(program);
+            ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+            HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
+
+            try {
+                // Name der Klasse, die instanziert werden soll
+                String className = "Fibbonacci";
+
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+
+                // Klasse laden
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+
+                java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+
+                // Instanz der Klasse erstellen
+                Object instance = constructor.newInstance();
+                String[] args = {""};
+
+                java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+                java.lang.reflect.Method Ackermann = instance.getClass().getMethod("getFibonacciNumberAt", int.class);
+                main.invoke(null, (Object) args);
+                //System.out.println(Ackermann.invoke(instance, 3, 12));
+                assertEquals(13, Ackermann.invoke(instance, 7));
+
+
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    Throwable cause = ((InvocationTargetException) e).getTargetException();
+                    cause.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                    assertTrue(true);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            assertTrue(true);
         }
     }
 }
