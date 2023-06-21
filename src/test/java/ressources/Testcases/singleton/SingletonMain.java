@@ -16,11 +16,12 @@ public class SingletonMain {
     }
 
     public static void addConstant() {
-        ClassSingleton duo = ClassSingleton.getInstance();
-        duo.x += 5;
-    }}
+        ClassSingleton.getInstance().x += 5;
 
- class ClassSingleton {
+    }
+}
+
+class ClassSingleton {
 
     private static ClassSingleton INSTANCE;
     private String info = "Initial info class";
