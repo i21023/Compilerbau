@@ -716,11 +716,12 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     public void visit(MethodCall methodCall) {
 
         boolean pushOnStackState = pushOnStack;
-
-        if(methodCall.isStatic) pushOnStack = false;
-        else pushOnStack = true;
-
+        pushOnStack = true;
         methodCall.methodOwnerPrefix.accept(this);
+
+        if(methodCall.isStatic){
+            if(!(methodCall.methodOwnerPrefix instanceof Class)) methodVisitor.visitInsn(Opcodes.POP);
+        }
         pushOnStack = true;
         methodCall.arguments.forEach(argument -> argument.accept(this));
         pushOnStack = pushOnStackState;
