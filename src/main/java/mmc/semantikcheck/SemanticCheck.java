@@ -412,10 +412,10 @@ public class SemanticCheck implements SemanticVisitor {
                 if (toCheck.type instanceof ReferenceType){
                     errors.add(new Exception(
                             "Error in line: "+ toCheck.startLine + " Type mismatch: cannot convert from " + resultType + " to " + ((ReferenceType)toCheck.getType()).type));
-            }else {
+                }else {
                 errors.add(new Exception(
                         "Error in line: "+ toCheck.startLine + " Type mismatch: cannot convert from " + resultType + " to " + toCheck.getType()));
-            }
+                }
                 valid = false;
             }
         }else{
@@ -922,7 +922,6 @@ public class SemanticCheck implements SemanticVisitor {
                         valid = false;
                     } else {
                         if(isArithmeticOperator){
-                            //variable = (condition ? valueIfTrue : valueIfFalse);
                             toCheck.type = INT;
                         }else if(isBinaryOperator){
                             toCheck.type = INT;
