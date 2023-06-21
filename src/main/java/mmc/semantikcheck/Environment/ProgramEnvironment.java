@@ -80,9 +80,6 @@ public class ProgramEnvironment {
         Method isEmpty = new Method(
                 BasicType.BOOL,"isEmpty", new ArrayList<>(),new Block(),AccessModifier.PUBLIC, false);
 
-        Method indexOfChar = new Method(
-                BasicType.INT,"indexOf", new ArrayList<>(List.of(new Parameter(BasicType.CHAR, "s1"))),new Block(),AccessModifier.PUBLIC, false);
-
         Method indexOfString = new Method(
                 BasicType.INT,"indexOf", new ArrayList<>(List.of(new Parameter(new ReferenceType("java/lang/String"), "s1"))),new Block(),AccessModifier.PUBLIC, false);
 
@@ -92,7 +89,6 @@ public class ProgramEnvironment {
         stringMethods.add(charAt);
         stringMethods.add(length);
         stringMethods.add(isEmpty);
-        stringMethods.add(indexOfChar);
         stringMethods.add(indexOfString);
 
         ClassDecl SystemClass = new ClassDecl("java/lang/System", new ArrayList<>(),

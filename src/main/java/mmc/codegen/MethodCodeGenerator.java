@@ -59,7 +59,7 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
         methodVisitor.visitCode();
         method.block.accept(this);
 
-
+        //Not a optimal solution since it might produce dead code,
         if (method.type == BasicType.VOID && (method.block.statements.size() == 0 || !(method.block.statements.get(method.block.statements.size() - 1) instanceof Return))) {
             new Return(BasicType.VOID, null).accept(this);
         }
