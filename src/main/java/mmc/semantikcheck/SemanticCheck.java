@@ -517,7 +517,6 @@ public class SemanticCheck implements SemanticVisitor {
 
             if(!checkResult.isValid()){
                 valid = false;
-                break;
             }
 
             if(blockReturnType != null){
@@ -590,7 +589,7 @@ public class SemanticCheck implements SemanticVisitor {
         if(toCheck.methodOwnerPrefix instanceof This){ //schauen ob this aufgerufen wird
             try {
                 if (methodIsStatic){ //This nicht in static method aufrufen
-                    errors.add(new Exception("non-static method " + toCheck.name + " cannot be referenced from a static context"));
+                    errors.add(new Exception("Error in line " + toCheck.getStartLine() + ": non-static method " + toCheck.name + " cannot be referenced from a static context"));
                     return new TypeCheckResult(false, null);
                 }
             }catch(Exception e){
@@ -612,7 +611,7 @@ public class SemanticCheck implements SemanticVisitor {
                         toCheck.methodOwnerPrefix = new This(new ReferenceType(getClass.name));
                     }
                     else{
-                        errors.add(new Exception("non-static method " + toCheck.name + " cannot be referenced from a static context"));
+                        errors.add(new Exception("Error in line " + toCheck.getStartLine() +": non-static method " + toCheck.name + " cannot be referenced from a static context"));
                         return new TypeCheckResult(false, null);
                     }
                 }
@@ -640,7 +639,7 @@ public class SemanticCheck implements SemanticVisitor {
 
             if(isStatic && !method.isStatic){
                 errors.add(
-                        new Exception("Trying to call a nonstatic method with a static reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
+                        new Exception("Error in line " + toCheck.getStartLine() + ": trying to call a non-static method with a static reference " + toCheck.name + " in class " + toCheck.methodOwnerPrefix.getType()));
                 return new TypeCheckResult(false, null);
             }
 
@@ -666,7 +665,7 @@ public class SemanticCheck implements SemanticVisitor {
             String varName = ((LocalOrFieldVar) toCheck.expression).name;
             var scope = currentScope.getLocalVar(varName);
             if(scope == null){
-                errors.add(new Exception("Local Variable " + varName + " doesn't exist"));
+                errors.add(new Exception("Error in line " + toCheck.getStartLine() + ": local variable " + varName + " doesn't exist"));
                 valid = false;
             }else if(scope.isInitialized == false){
                 valid = false;
@@ -678,7 +677,7 @@ public class SemanticCheck implements SemanticVisitor {
             toCheck.type = toCheck.expression.getType();
         } else {
             valid = false;
-            errors.add(new Exception("The Operator: " + toCheck.operator
+            errors.add(new Exception("Error in line " + toCheck.getStartLine() + ": the operator: " + toCheck.operator
                     + " is not defined for the argument type: " + toCheck.expression.getType()));
         }
 
@@ -692,8 +691,8 @@ public class SemanticCheck implements SemanticVisitor {
 
         valid = valid && toCheck.expression.accept(this).isValid();
 
-        var thrownError = new Exception("The Operator: " + toCheck.operator
-                + " is undefined for the argument type: " + toCheck.expression.getType());
+        var thrownError = new Exception("Error in line " + toCheck.getStartLine() + ": the operator: " + toCheck.operator
+                + " is not defined for the argument type: " + toCheck.expression.getType());
 
         boolean isBoolOperator = toCheck.operator == Operator.NOT;
         boolean isIntOperator = false;
@@ -731,7 +730,7 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(This toCheck) { //nochmal schauen
         if(methodIsStatic){
-            errors.add(new Exception("non-static variable this cannot be referenced from a static context"));
+            errors.add(new Exception("Error in line " + toCheck.getStartLine() + ": non-static variable this cannot be referenced from a static context"));
             return new TypeCheckResult(false, null);
         }
         toCheck.setType(getClass.name);

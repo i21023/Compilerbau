@@ -34,7 +34,7 @@ public class ClassCodeGenerator implements IClassCodeVisitor {
     @Override
     public void visit(ClassDecl classDecl) {
         //Generate Program Bytecode
-        classWriter.visit(Opcodes.V1_5, GeneratorHelpFunctions.getAccessModifier(/*classDecl.accessModifier*/AccessModifier.PUBLIC, false),
+        classWriter.visit(Opcodes.V1_5, GeneratorHelpFunctions.getAccessModifier(classDecl.accessModifier, false),
                 classDecl.name, null, "java/lang/Object", null);
 
         //Generate Field Bytecode
