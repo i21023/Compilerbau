@@ -22,7 +22,7 @@ import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-//hallo
+
 public class TastTests {
 
     @Test

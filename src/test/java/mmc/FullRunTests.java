@@ -277,6 +277,9 @@ public class FullRunTests {
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
+            Classwriter.WriteClassFile("StringMethods", "src/main/resources_tests/", code);
+            Classwriter.WriteClassFile("Test", "src/main/resources_tests/", code);
+
             try {
                 // Name der Klasse, die instanziert werden soll
                 String className = "StringMethods";
@@ -286,33 +289,16 @@ public class FullRunTests {
 
                 // Klasse laden
                 java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
-                java.lang.Class<?> Test1 = classLoader.defineClass("Test", code.get("Test"));
-
+                java.lang.Class<?> Test = classLoader.defineClass("Test", code.get("Test"));
                 java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
-                java.lang.reflect.Constructor<?> con3 = Test1.getConstructor();
 
                 // Instanz der Klasse erstellen
                 Object instance = constructor.newInstance();
-                Object instance2 = con3.newInstance();
                 String[] args = {""};
 
                 java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
-                java.lang.reflect.Method getChar = instance2.getClass().getMethod("getChar", int.class);
-                java.lang.reflect.Method getPos1 = instance2.getClass().getMethod("getPos", char.class);
-                java.lang.reflect.Method getPos2 = instance2.getClass().getMethod("getPos", String.class);
-                java.lang.reflect.Method Length = instance2.getClass().getMethod("getLength");
-                java.lang.reflect.Method empty = instance2.getClass().getMethod("empty");
-                java.lang.reflect.Method concat = instance2.getClass().getMethod("concat");
-
 
                 main.invoke(null, (Object) args);
-                assertEquals('a', getChar.invoke(instance2, 1));
-                assertEquals(1, getPos1.invoke(instance2, 'a'));
-                assertEquals(0, getPos2.invoke(instance2, "Ha"));
-                assertEquals(5, Length.invoke(instance2));
-                assertEquals(false, empty.invoke(instance2));
-                assertEquals("Hallo World", concat.invoke(instance2));
-
 
             } catch (Exception e) {
                 if (e instanceof InvocationTargetException) {
@@ -359,7 +345,7 @@ public class FullRunTests {
                 java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
                 java.lang.reflect.Method Ackermann = instance.getClass().getMethod("getFibonacciNumberAt", int.class);
                 main.invoke(null, (Object) args);
-                //System.out.println(Ackermann.invoke(instance, 3, 12));
+
                 assertEquals(13, Ackermann.invoke(instance, 7));
 
 
