@@ -41,6 +41,7 @@ public class ClassDecl implements Visitable {
         fields = pFiedls;
         methods = pMethods;
         constructors = pConstructors;
+        accessModifier = AccessModifier.PUBLIC;
     }
 
     @Override
