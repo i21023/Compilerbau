@@ -6,7 +6,7 @@ Herzlich willkommen bei unserem Mini-Java Compiler vom 4. Semester.
 
 ```plain
 //(Base-)Types:
-int, booelan, char, String
+int, boolean, char, String
 
 //Access-Modifier:
 public, private (Klassen Deklarationen ohne Access-Modifier)
