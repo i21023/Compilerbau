@@ -1,7 +1,7 @@
 grammar MiniJava;
 
 //Declarations
-program: (PACKAGE ID ('.' ID )* SEMICOLON)? public_class_decl;
+program: (PACKAGE ID ('.' ID )* SEMICOLON)? public_class_decl EOF;
 //Class
 public_class_decl: PUBLIC CLASS ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE class_decl* | class_decl+;
 class_decl: CLASS ID LEFT_BRACE (const_decl | method_decl | field_decl)*  RIGHT_BRACE;
