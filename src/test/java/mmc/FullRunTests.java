@@ -35,7 +35,7 @@ public class FullRunTests {
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
-            Classwriter.WriteClassFile("AllOperators", "src/main/resources_tests/", code);
+            //Classwriter.WriteClassFile("AllOperators", "src/main/resources_tests/", code);
 
             try {
                 // Name der Klasse, die instanziert werden soll
@@ -129,6 +129,7 @@ public class FullRunTests {
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
+
             try {
                 // Name der Klasse, die instanziert werden soll
                 String className = "InlineIfs";
@@ -174,6 +175,8 @@ public class FullRunTests {
             Program genTast = generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
+
+            //Classwriter.WriteClassFile("Ackermann", "src/main/resources_tests/", code);
 
             try {
                 // Name der Klasse, die instanziert werden soll
@@ -277,9 +280,9 @@ public class FullRunTests {
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
-            Classwriter.WriteClassFile("StringMethods", "src/main/resources_tests/", code);
+            /*Classwriter.WriteClassFile("StringMethods", "src/main/resources_tests/", code);
             Classwriter.WriteClassFile("Test", "src/main/resources_tests/", code);
-
+*/
             try {
                 // Name der Klasse, die instanziert werden soll
                 String className = "StringMethods";
@@ -327,6 +330,8 @@ public class FullRunTests {
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
+            //Classwriter.WriteClassFile("Fibbonacci", "src/main/resources_tests/", code);
+
             try {
                 // Name der Klasse, die instanziert werden soll
                 String className = "Fibbonacci";
@@ -343,10 +348,10 @@ public class FullRunTests {
                 String[] args = {""};
 
                 java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
-                java.lang.reflect.Method Ackermann = instance.getClass().getMethod("getFibonacciNumberAt", int.class);
+                java.lang.reflect.Method fib = instance.getClass().getMethod("getFibonacciNumberAt", int.class);
                 main.invoke(null, (Object) args);
 
-                assertEquals(13, Ackermann.invoke(instance, 7));
+                assertEquals(13, fib.invoke(instance, 7));
 
 
             } catch (Exception e) {
@@ -363,4 +368,56 @@ public class FullRunTests {
             assertTrue(true);
         }
     }
+
+    @Test
+    @DisplayName("Singleton")
+    public void Singleton() {
+        try {
+            CharStream file = Resources.getFileInput("src/test/java/ressources/Testcases/singleton/SingletonMain.java");
+            ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
+
+            Program program = astGenerator.generateSyntaxTree(file);
+            Program genTast = generateTypedast(program);
+            ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
+            HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
+
+
+            /*Classwriter.WriteClassFile("ClassSingleton", "src/main/resources_tests/", code);
+            Classwriter.WriteClassFile("SingletonMain", "src/main/resources_tests/", code);*/
+
+            try {
+                // Name der Klasse, die instanziert werden soll
+                String className = "SingletonMain";
+
+                ReflectionHelper.ByteArrayClassLoader classLoader = new ReflectionHelper.ByteArrayClassLoader();
+
+                // Klasse laden
+                java.lang.Class<?> loadedClass = classLoader.defineClass(className, code.get(className));
+                java.lang.Class<?> loadedClass2 = classLoader.defineClass("ClassSingleton", code.get("ClassSingleton"));
+
+                java.lang.reflect.Constructor<?> constructor = loadedClass.getConstructor();
+
+                // Instanz der Klasse erstellen
+                Object instance = constructor.newInstance();
+                String[] args = {""};
+
+                java.lang.reflect.Method main = instance.getClass().getMethod("main", String[].class);
+
+                main.invoke(null, (Object) args);
+
+
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    Throwable cause = ((InvocationTargetException) e).getTargetException();
+                    cause.printStackTrace();
+                } else {
+                    e.printStackTrace();
+                    assertTrue(true);
+                }
+            }
+
+        } catch (Exception e) {
+        }
+    }
+
 }
