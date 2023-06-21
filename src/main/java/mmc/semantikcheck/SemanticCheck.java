@@ -419,7 +419,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         try {
             if(toCheck.type instanceof ReferenceType) {
-                CheckType.getClassInType(toCheck, programEnvironment); //schauen ob es den Typ überhaupt gibt
+                CheckType.getClassType(toCheck, programEnvironment); //schauen ob es den Typ überhaupt gibt
             }
             currentScope.addLocalVar(toCheck, isInitialized);
         } catch (java.lang.Exception e) {
@@ -604,7 +604,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         if(toCheck.methodOwnerPrefix == null){
             try {
-                var method = CheckType.getMethodInType(toCheck, new ReferenceType(getClass.name), programEnvironment, getClass);
+                var method = CheckType.getMethodType(toCheck, new ReferenceType(getClass.name), programEnvironment, getClass);
 
                 if(method.isStatic){
                     toCheck.methodOwnerPrefix = new Class(getClass.name, new ReferenceType(getClass.name));
@@ -634,7 +634,7 @@ public class SemanticCheck implements SemanticVisitor {
 /*            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar l) {
                 isStatic = l.isStatic;
             }*/
-            var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
+            var method = CheckType.getMethodType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
 
 /*            if(isStatic && methodIsStatic){
                 toCheck.methodOwnerPrefix = new Class(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name, new ReferenceType(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name));
@@ -759,7 +759,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         // Schauen ob sie in der Klasse deklariert ist, Feld bekommen welches aufgerufen wird
         try {
-            var fieldVar = CheckType.getFieldInType(toCheck.name,
+            var fieldVar = CheckType.getFieldType(toCheck.name,
                     new ReferenceType(getClass.name), programEnvironment, getClass, toCheck.startLine);
 
             if (fieldVar != null) {
@@ -825,7 +825,7 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
         try {
-            var nextInstVar = CheckType.getFieldInType(toCheck.name, type,programEnvironment, this.getClass, toCheck.startLine);
+            var nextInstVar = CheckType.getFieldType(toCheck.name, type,programEnvironment, this.getClass, toCheck.startLine);
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class CheckType {
 
-    public static FieldEnvironment getFieldInType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, int line) {
+    public static FieldEnvironment getFieldType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, int line) {
         if (type instanceof ReferenceType) {
             var objectClass = (ReferenceType) type;
             var declaredClassnames = context.getClasses();
@@ -78,7 +78,6 @@ public class CheckType {
                     scope.isInitialized = true;
                 }
             }
-
         }else if (lExpr instanceof LocalOrFieldVar l && rExpr instanceof Binary){
             String varName = ((LocalOrFieldVar) lExpr).name;
             if (!SemanticCheck.getFields.contains(varName)) {
@@ -94,7 +93,19 @@ public class CheckType {
         return valid;
     }
 
-    public static MethodEnvironment getMethodInType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
+    public static ClassEnvironment getClassType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
+        var objectClass = (ReferenceType) localVarDecl.type;
+        var declaredClassnames = ev.getClasses(); //Alle Klassen holen
+
+        var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
+        if(classContext == null){
+            throw new Exception(
+                    "Error in line " + localVarDecl.startLine + ": class " + localVarDecl.getType() + " not found");
+        }
+        return classContext;
+    }
+
+    public static MethodEnvironment getMethodType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
         boolean notVisible = false;
         //Möchte schauen ob Methode visible
         //Und Polymorphie, Methoden ohne Parameter können nicht gleich heißen mit unterschiedlichen schon
@@ -112,18 +123,17 @@ public class CheckType {
             //Schauen ob Methoden enthalten, mit unterschiedlichen Parameter --> Polymorphie
             for (var method : methods) {
                 if (method.parameterTypes.size() == toCheck.arguments.size()) {
-                    boolean isSame = true;
+                    boolean same = true;
                     for (int i = 0; i < method.parameterTypes.size(); i++) {
                         var parameterType = method.parameterTypes.get(i);
-                        var argument = toCheck.arguments.get(i);
+                        var expression = toCheck.arguments.get(i);
 
-                        if (!((argument instanceof JNull && parameterType instanceof ReferenceType)
-                                || (!(argument instanceof JNull) && parameterType.equals(argument.getType())))) {
-                            isSame = false;
+                        if (!((expression instanceof JNull && parameterType instanceof ReferenceType) || (!(expression instanceof JNull) && parameterType.equals(expression.getType())))) {
+                            same = false;
                             break;
                         }
                     }
-                    if (isSame) {
+                    if (same) {
                         boolean canAccess;
                         if (method.accessModifier == AccessModifier.PRIVATE) {
                             canAccess = referenceType.type.equals(currentClass.name);
@@ -140,10 +150,11 @@ public class CheckType {
                 }
             }
             if (foundMethods.size() == 0) {
-                if (notVisible)
-                    throw new Exception("Error in line: "+ toCheck.startLine + " Method " + generateMethodCallString(toCheck) + " in class " + type + " is not visible.");
-                else
-                    throw new Exception("Error in line: "+ toCheck.startLine +" No method " + generateMethodCallString(toCheck) + " declared in class " + type + ".");
+                if (notVisible) {
+                    throw new Exception("Error in line: " + toCheck.startLine + " Method " + generateMethodCallString(toCheck) + " in class " + type + " is not visible.");
+                }else {
+                    throw new Exception("Error in line: " + toCheck.startLine + " No method " + generateMethodCallString(toCheck) + " declared in class " + type + ".");
+                }
             } else if (foundMethods.size() == 1) {
                 for (int i = 0; i < foundMethods.get(0).parameterTypes.size(); i++) {
                     var parameterType = foundMethods.get(0).parameterTypes.get(i);
@@ -160,18 +171,6 @@ public class CheckType {
         } else {
             throw new Exception("Error in line: "+ toCheck.startLine + " Base type " + type + " does not have methods.");
         }
-    }
-
-    public static ClassEnvironment getClassInType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
-        var objectClass = (ReferenceType) localVarDecl.type;
-        var declaredClassnames = ev.getClasses(); //Alle Klassen holen
-
-        var classContext = declaredClassnames.get(objectClass.type); //Schauen ob es den Typ als Klasse gibt
-        if(classContext == null){
-            throw new Exception(
-                    "Error in line " + localVarDecl.startLine + ": class " + localVarDecl.getType() + " not found");
-        }
-        return classContext;
     }
 
     private static String generateMethodCallString(MethodCall methodcall){
