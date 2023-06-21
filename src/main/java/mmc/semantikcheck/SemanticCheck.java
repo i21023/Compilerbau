@@ -229,10 +229,13 @@ public class SemanticCheck implements SemanticVisitor {
         var rExpr = toCheck.rightExpr;
 
         assign = true;
-        var leftExpr = lExpr.accept(this);
+        var leftExpr = toCheck.leftExpr.accept(this);
         assign = false;
-        currentNullType = leftExpr.getType();
+        currentNullType = toCheck.leftExpr.getType();
         var rightExpr = rExpr.accept(this);
+
+        Type rightType = toCheck.rightExpr.getType();
+        Type leftType = toCheck.leftExpr.getType();
 
         if(!rightExpr.isValid() || !leftExpr.isValid()){
             return new TypeCheckResult(false, null);
@@ -243,8 +246,8 @@ public class SemanticCheck implements SemanticVisitor {
         //---Info: deprecated!---
         //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
         if(toCheck.operator != Operator.ASSIGN){
-            if(!((leftExpr.getType() == INT || leftExpr.getType() == CHAR) && (rightExpr.getType() == INT || rightExpr.getType() == CHAR))){
-                errors.add(new Exception("Error in line " + toCheck.startLine + ": mismatch types in assign: both types need to be int or char and not "
+            if(!((leftType == INT || leftType == CHAR) && (rightType == INT || rightType == CHAR))){
+                errors.add(new Exception("Error in line " + toCheck.startLine + ": mismatch types in " + toCheck.operator + ": both types need to be int or char and not "
                         + leftExpr.getType() + " and "
                         + rightExpr.getType()));
                 valid = false;
@@ -628,6 +631,10 @@ public class SemanticCheck implements SemanticVisitor {
         var receiver = toCheck.methodOwnerPrefix.accept(this);
 
         valid = valid && receiver.isValid();
+
+        if(!valid){
+            return new TypeCheckResult(false, null);
+        }
 
         try {
             boolean isStatic = toCheck.methodOwnerPrefix instanceof Class;
