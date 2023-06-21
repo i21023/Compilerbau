@@ -33,9 +33,9 @@ public class CheckType {
     }
 
     public static ConstructorEnvironment getConstructor(New newDecl, ProgramEnvironment ev) {
-        var objectClass = (ReferenceType) newDecl.getType();
+        var newObjectClass = (ReferenceType) newDecl.getType();
         var declaredClassnames = ev.getClasses();
-        var classContext = declaredClassnames.get(objectClass.type);
+        var classContext = declaredClassnames.get(newObjectClass.type);
         var constructors = classContext.constructors;
         if(constructors.isEmpty()){
             ConstructorEnvironment constructorEnvironment = new ConstructorEnvironment(new Constructor()); //Automatisch Konstruktor einfügen wenn keiner vorhanden
@@ -69,6 +69,7 @@ public class CheckType {
         if(lExpr instanceof LocalOrFieldVar l && baseType) {
             String varName = ((LocalOrFieldVar) lExpr).name;
             if (!SemanticCheck.getFields.contains(varName)) {
+
                 var scope = currentScope.getLocalVar(varName);
                 if (scope == null) {
                     SemanticCheck.errors.add(new Exception("Error in line " + l.startLine + ": variable " + varName + " doesn't exist"));

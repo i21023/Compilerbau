@@ -119,7 +119,7 @@ Implementiert von Hannes Kollert und Nina Schmid.
 
 ### Semantik Check + Typisierung
 
-Implementiert von Emma Weiß, Julian Schmidt
+Implementiert von Emma Weiß und Julian Schmidt
 
 * Der [Semantik-Check](./src/main/java/mmc/semantikcheck) übersetzt die abstrakte Syntax in eine getypte abstrakte Syntax.
 * Der Semantik-Check verwendet Regeln aus der Vorlesung, um zu prüfen, ob der Code konsistent typisiert ist.

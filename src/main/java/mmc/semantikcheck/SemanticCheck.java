@@ -91,11 +91,11 @@ public class SemanticCheck implements SemanticVisitor {
             }
         }
 
-        if (toCheck.constructors.isEmpty()) { //leeren Konstruktor erstellen
+        if(toCheck.constructors.isEmpty()){
             new Constructor().accept(this);
-        } else {
-            for (Constructor constructor : toCheck.constructors) { //Für jede Klasse Konstruktor überprüfen
-                valid = constructor.accept(this).isValid() && valid;
+        }else{
+            for(var constructor : toCheck.constructors){
+                valid = valid && constructor.accept(this).isValid();
             }
         }
 
@@ -227,12 +227,6 @@ public class SemanticCheck implements SemanticVisitor {
 
         var lExpr = toCheck.leftExpr;
         var rExpr = toCheck.rightExpr;
-
-/*        //a = a;
-        if (lExpr.equals(rExpr)) {
-            errors.add(new Exception("Cannot assign to self"));
-            valid = false;
-        }*/
 
         assign = true;
         var leftExpr = lExpr.accept(this);
@@ -472,12 +466,10 @@ public class SemanticCheck implements SemanticVisitor {
                 //Falls if keinen return Typ nehmen wir den Typ von else
                 toCheck.type = elseBlockType;
                 return new TypeCheckResult(true, null);
-                //toCheck.type = elseBlockType;
             } else if (ifBlockType != null && elseBlockType == null) {
                 //Falls else keinen return Typ nehmen wir den Typ von if
                 toCheck.type = ifBlockType;
                 return new TypeCheckResult(true, null);
-                //toCheck.type = ifResult.getType();
 
             } /*else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
                 if(valid){
@@ -497,9 +489,8 @@ public class SemanticCheck implements SemanticVisitor {
                     return new TypeCheckResult(valid, ifBlockType);
                 }
         } else {
-            toCheck.type = ifBlockType;
+            toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
             return new TypeCheckResult(valid, null);
-            //toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
         }
 
         //return new TypeCheckResult(valid, toCheck.getType());
@@ -671,18 +662,9 @@ public class SemanticCheck implements SemanticVisitor {
         var typeCheckResult = toCheck.expression.accept(this);
         Type expressionType = toCheck.expression.getType();
 
-        if(!typeCheckResult.isValid()) return new TypeCheckResult(false, null);
-
-/*        if(toCheck.expression instanceof LocalOrFieldVar){
-            String varName = ((LocalOrFieldVar) toCheck.expression).name;
-            var scope = currentScope.getLocalVar(varName);
-            if(scope == null){
-                errors.add(new Exception("Error in line " + toCheck.getStartLine() + ": local variable " + varName + " doesn't exist"));
-                valid = false;
-            }else if(scope.isInitialized == false){
-                valid = false;
-            }
-        }*/
+        if(!typeCheckResult.isValid()){
+            return new TypeCheckResult(false, null);
+        }
 
         if (expressionType instanceof BasicType && (((BasicType) expressionType) == INT
                 || ((BasicType) expressionType) == CHAR)) {
@@ -703,32 +685,32 @@ public class SemanticCheck implements SemanticVisitor {
 
         valid = valid && toCheck.expression.accept(this).isValid();
 
-        var thrownError = new Exception("Error in line " + toCheck.getStartLine() + ": the operator: " + toCheck.operator
+        var error = new Exception("Error in line " + toCheck.getStartLine() + ": the operator: " + toCheck.operator
                 + " is not defined for the argument type: " + toCheck.expression.getType());
 
         boolean isBoolOperator = toCheck.operator == Operator.NOT;
         boolean isIntOperator = false;
         // schauen ob unary valid
         if (toCheck.expression.getType() instanceof ReferenceType) {
-            errors.add(thrownError);
+            errors.add(error);
             valid = false;
         } else {
             var expressionType = ((BasicType) toCheck.expression.getType());
             switch (expressionType) {
                 case BOOL -> {
                     if (!isBoolOperator) {
-                        errors.add(thrownError);
+                        errors.add(error);
                         valid = false;
                     }
                 }
                 case INT -> {
                     if (!isIntOperator) {
-                        errors.add(thrownError);
+                        errors.add(error);
                         valid = false;
                     }
                 }
                 default -> {
-                    errors.add(thrownError);
+                    errors.add(error);
                     valid = false;
                 }
             }
@@ -865,9 +847,6 @@ public class SemanticCheck implements SemanticVisitor {
                         new Exception("Error in line " + toCheck.startLine + ": non-static instance variable " + toCheck.name + " in class " + c.name + " cannot be referenced from a static context"));
                 return new TypeCheckResult(false, null);
             }
-
-
-
             toCheck.isStatic = nextInstVar.isStatic;
 
             valid = valid && checkResult.isValid();
@@ -876,7 +855,6 @@ public class SemanticCheck implements SemanticVisitor {
             return new TypeCheckResult(valid, newType);
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage()));
-            valid = false;
             return new TypeCheckResult(false, null);
         }
     }
@@ -971,8 +949,6 @@ public class SemanticCheck implements SemanticVisitor {
         valid = valid && lResult.isValid() && rResult.isValid();
 
         return new TypeCheckResult(valid, toCheck.getType());
-
-
     }
 
 
