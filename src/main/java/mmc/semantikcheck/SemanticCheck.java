@@ -599,6 +599,17 @@ public class SemanticCheck implements SemanticVisitor {
             }
         }
 
+        if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar l){
+            if(currentScope.getLocalVar(l.name) == null && !getFields.contains(l.name)){ //If LocalOrFieldVar is no fieldvar and no localvar it could be a class name
+                if(programEnvironment.getClasses().get(l.name) != null){
+                    toCheck.methodOwnerPrefix = new Class(l.name, new ReferenceType(l.name)); //Replace LocalOrFieldVar with Class in AST
+                }
+                else{ // The provided identifier is none of the above: wrong input
+                    errors.add(new Exception("Error in line " + toCheck.startLine + ": cannot find symbol " + l.name));
+                    return new TypeCheckResult(false, null);
+                }
+            }
+        }
 
         if(toCheck.methodOwnerPrefix == null){
             try {
@@ -628,15 +639,15 @@ public class SemanticCheck implements SemanticVisitor {
         valid = valid && receiver.isValid();
 
         try {
-            boolean isStatic = false;
-            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar l) {
+            boolean isStatic = toCheck.methodOwnerPrefix instanceof Class;
+/*            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar l) {
                 isStatic = l.isStatic;
-            }
+            }*/
             var method = CheckType.getMethodInType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
 
-            if(isStatic && methodIsStatic){
+/*            if(isStatic && methodIsStatic){
                 toCheck.methodOwnerPrefix = new Class(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name, new ReferenceType(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name));
-            }
+            }*/
 
             if(isStatic && !method.isStatic){
                 errors.add(
