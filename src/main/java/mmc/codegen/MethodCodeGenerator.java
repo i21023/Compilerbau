@@ -501,9 +501,15 @@ public class MethodCodeGenerator implements IMethodCodeVisitor {
     @Override
     public void visit(InstVar instVar) {
         boolean pushOnStackState = pushOnStack;
-        if(instVar.isStatic) pushOnStack = false;
-        else pushOnStack = true;
+/*        if(instVar.isStatic){
+            pushOnStack = false;
+        }*/
+        pushOnStack = true;
         instVar.expression.accept(this);
+        if(instVar.isStatic){
+            if(!(instVar.expression instanceof Class)) methodVisitor.visitInsn(Opcodes.POP);
+        }
+
         pushOnStack = pushOnStackState;
         String owner = ((ReferenceType) instVar.expression.getType()).type;
 

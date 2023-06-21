@@ -80,14 +80,6 @@ public class SemanticCheck implements SemanticVisitor {
             //Dies machen wir um mehrere klassen untereinander zuschreiben welche als einzelne files angesehen werden
         }
 
-        if (toCheck.constructors.isEmpty()) { //leeren Konstruktor erstellen
-            new Constructor().accept(this);
-        } else {
-            for (Constructor constructor : toCheck.constructors) { //Für jede Klasse Konstruktor überprüfen
-                valid = constructor.accept(this).isValid() && valid;
-            }
-        }
-
         //Felder überprüfen
         List<String> fieldNames = new ArrayList<>();
         getFields.clear(); //Einmal Liste leeren das für jede klasse neue felder gemacht werden
@@ -96,6 +88,14 @@ public class SemanticCheck implements SemanticVisitor {
             valid = valid && checkResult.isValid();
             if (valid) {
                 fieldNames.add(field.name); //Wenn feld valid in identifier speichern
+            }
+        }
+
+        if (toCheck.constructors.isEmpty()) { //leeren Konstruktor erstellen
+            new Constructor().accept(this);
+        } else {
+            for (Constructor constructor : toCheck.constructors) { //Für jede Klasse Konstruktor überprüfen
+                valid = constructor.accept(this).isValid() && valid;
             }
         }
 
@@ -245,6 +245,7 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         valid = CheckType.isInitalised(currentScope,rExpr,lExpr);
+
         //---Info: deprecated!---
         //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
         if(toCheck.operator != Operator.ASSIGN){
@@ -661,7 +662,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         if(!typeCheckResult.isValid()) return new TypeCheckResult(false, null);
 
-        if(toCheck.expression instanceof LocalOrFieldVar){
+/*        if(toCheck.expression instanceof LocalOrFieldVar){
             String varName = ((LocalOrFieldVar) toCheck.expression).name;
             var scope = currentScope.getLocalVar(varName);
             if(scope == null){
@@ -670,7 +671,7 @@ public class SemanticCheck implements SemanticVisitor {
             }else if(scope.isInitialized == false){
                 valid = false;
             }
-        }
+        }*/
 
         if (expressionType instanceof BasicType && (((BasicType) expressionType) == INT
                 || ((BasicType) expressionType) == CHAR)) {
