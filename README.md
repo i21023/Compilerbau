@@ -1,6 +1,6 @@
 # MachMalCompiler
 
-Herzlich willkommen bei unserem Mini-Java Compiler vom 4. Semester.
+Herzlich Willkommen bei unserem Mini-Java Compiler vom 4. Semester.
 
 ## Unterstützte Java-Syntax
 
@@ -30,7 +30,27 @@ NOT("!"), SINGLEAND("&"), SINGLEOR("|"), AND("&&"), OR("||");
 if...else, while, for (auch inline-Schreibweise)
 
 //Andere Keywörter:
-class, new, this, null, static        
+class, new, this, null, static
+
+//Implementierte Funktionen
+
+- java.lang.String
+    - concat() :: String
+    - charAt(int) :: char
+    - length() :: int
+    - isEmpty() :: boolean
+    - indexOf(String) :: int    
+
+- java.io.PrintStream
+    - println(String)
+    - println(char)
+    - println(boolean)
+    - println(int)
+    
+    - print(String)
+    - print(char)
+    - print(boolean)
+    - print(int)    
 ```
 ## Besonderheiten
 
