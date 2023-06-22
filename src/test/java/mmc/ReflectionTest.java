@@ -2,29 +2,43 @@ package mmc;
 
 import mmc.ast.AccessModifier;
 import mmc.ast.BasicType;
-
 import mmc.ast.Operator;
 import mmc.ast.ReferenceType;
-import mmc.ast.expressions.*;
-import mmc.ast.main.*;
+import mmc.ast.expressions.Binary;
+import mmc.ast.expressions.BoolExpr;
+import mmc.ast.expressions.CharExpr;
+import mmc.ast.expressions.IExpression;
+import mmc.ast.expressions.IntExpr;
+import mmc.ast.expressions.LocalOrFieldVar;
+import mmc.ast.expressions.This;
+import mmc.ast.main.ClassDecl;
+import mmc.ast.main.Constructor;
+import mmc.ast.main.Field;
+import mmc.ast.main.Method;
+import mmc.ast.main.Parameter;
+import mmc.ast.main.Program;
 import mmc.ast.statementexpression.Assign;
 import mmc.ast.statementexpression.Crement;
 import mmc.ast.statementexpression.MethodCall;
-import mmc.ast.statements.*;
+import mmc.ast.statements.Block;
+import mmc.ast.statements.For;
+import mmc.ast.statements.IStatement;
+import mmc.ast.statements.If;
+import mmc.ast.statements.LocalVarDecl;
+import mmc.ast.statements.Return;
 import mmc.codegen.ProgramCodeGenerator;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
+import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import ressources.helpers.Classwriter;
 import ressources.helpers.ReflectionHelper;
 import ressources.helpers.Resources;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.Class;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -32,9 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-
-import static mmc.semantikcheck.SemanticCheck.generateTypedast;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReflectionTest {
 
@@ -220,7 +232,8 @@ class ReflectionTest {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 

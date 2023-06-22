@@ -9,6 +9,7 @@ import mmc.ast.statementexpression.MethodCall;
 import mmc.ast.statements.*;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
+import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +18,6 @@ import ressources.helpers.Resources;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -37,8 +36,8 @@ public class TastTests {
         classDecls.add(classDecl);
         Program prog = new Program(classDecls);
         //generate Tast
-        Program genTast = generateTypedast(prog);
-
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
         //selfmade Tast
         ClassDecl classDecl2 = new ClassDecl("EmptyClass", new ArrayList<Field>(),
                 new ArrayList<Method>(), new ArrayList<Constructor>());
@@ -58,7 +57,8 @@ public class TastTests {
                 ))), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classDecl));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ClassDecl classDecl2 = new ClassDecl("ClassMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(
                 new Method(BasicType.VOID, "testMethod", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false
@@ -79,7 +79,8 @@ public class TastTests {
                 new Method(BasicType.VOID, "paramMethod", MethodParam, new Block(), AccessModifier.PUBLIC, false))), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classDecl));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Parameter> MethodParam2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b")));
@@ -105,7 +106,8 @@ public class TastTests {
                 con);
         Program prog = new Program(Arrays.asList(classDecl));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Constructor> con2 = new ArrayList<Constructor>(Arrays.asList(new Constructor(new Block(
                 new ArrayList<IStatement>(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(5))))),
@@ -131,7 +133,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("ClassIf", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Parameter> MethodParam2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b")));
@@ -165,7 +168,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("ClassWhile", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Parameter> MethodParam2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"),
                 new Parameter(BasicType.INT, "b")));
@@ -201,7 +205,8 @@ public class TastTests {
 
         Program prog = new Program(Arrays.asList(classDecl));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         Method method2 = new Method(BasicType.VOID, "changeX", new ArrayList<Parameter>(), new Block(new ArrayList<IStatement>(
                 Arrays.asList(new Assign(new LocalOrFieldVar("x", BasicType.INT),
@@ -237,7 +242,8 @@ public class TastTests {
         classDecls.add(classDecl);
         Program prog = new Program(classDecls);
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Method> methods2 = new ArrayList<Method>();
         Method method1_2 = new Method(BasicType.VOID, "method1", new ArrayList<Parameter>(), new Block(), AccessModifier.PUBLIC, false);
@@ -277,7 +283,8 @@ public class TastTests {
 
         Program prog = new Program(classes);
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Parameter> params2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
         Method method2 = new Method(BasicType.INT, "testFor", params2, new Block(Arrays.asList(
@@ -312,7 +319,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("ClassIfLokalVar", new ArrayList<Field>(), new ArrayList<Method>(methods), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         Block MethodBody2 = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(3)),
                 new LocalVarDecl("b", BasicType.INT, new IntExpr(3)),
@@ -339,7 +347,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("MethodCall", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         Block Method1Body2 = new Block(Arrays.asList(new LocalVarDecl("a", BasicType.INT, new IntExpr(1)), new Return(BasicType.INT, new LocalOrFieldVar("a", BasicType.INT))), BasicType.INT);
         Block Method2Body2 = new Block(Arrays.asList(new Return(BasicType.INT, new Binary(Operator.PLUS, new LocalOrFieldVar("b", BasicType.INT), new MethodCall(new This(new ReferenceType("MethodCall")), "getA", new ArrayList<>(), BasicType.INT), BasicType.INT))), BasicType.INT);
@@ -369,7 +378,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("Rekursion", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Parameter> params2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
         Block Method1Body2 = new Block(Arrays.asList(
@@ -409,7 +419,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("BooleanOperator", Fields, new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Field> Fields2 = new ArrayList<Field>(Arrays.asList(
                 new Field(BasicType.BOOL, "bool1", AccessModifier.DEFAULT, new BoolExpr(true), false),
@@ -444,7 +455,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("ReturnMethod", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         Block MethodBody2 = new Block(Arrays.asList(new Return(BasicType.INT, new Binary(Operator.PLUS, new LocalOrFieldVar("a", BasicType.INT), new LocalOrFieldVar("b", BasicType.INT), BasicType.INT))), BasicType.INT);
 
@@ -464,7 +476,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("LocalVarGet", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         Block MethodBody2 = new Block(Arrays.asList(new LocalVarDecl("y", BasicType.INT, new IntExpr(30)), new Return(BasicType.INT, new LocalOrFieldVar("y", BasicType.INT))), BasicType.INT);
         Method method2 = new Method(BasicType.INT, "getY", new ArrayList<Parameter>(), MethodBody2, AccessModifier.PUBLIC, false);
@@ -482,7 +495,8 @@ public class TastTests {
                 new ArrayList<Method>(), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ClassDecl classes2 = new ClassDecl("FieldVarClass", new ArrayList<Field>(Arrays.asList(
                 new Field(BasicType.INT, "x", AccessModifier.DEFAULT, new IntExpr(5), false))),
@@ -511,7 +525,8 @@ public class TastTests {
         ClassDecl classes = new ClassDecl("ArithmetikClass", new ArrayList<Field>(), new ArrayList<Method>(Arrays.asList(method1, method2)), new ArrayList<Constructor>());
         Program prog = new Program(Arrays.asList(classes));
 
-        Program genTast = generateTypedast(prog);
+        SemanticCheck tAst = new SemanticCheck();
+        Program genTast = tAst.generateTypedast(prog);
 
         ArrayList<Parameter> params2 = new ArrayList<Parameter>(Arrays.asList(new Parameter(BasicType.INT, "a"), new Parameter(BasicType.INT, "b")));
         Method method12 = new Method(BasicType.INT, "add", params2, new Block(Arrays.asList(
@@ -542,8 +557,8 @@ public class TastTests {
 
             Program program = astGenerator.generateSyntaxTree(file);
 
-            Program prog = generateTypedast(program);
-
+            SemanticCheck tAst = new SemanticCheck();
+            Program prog = tAst.generateTypedast(program);
 
             assertEquals(prog, program);
         } catch (IOException e) {
@@ -562,8 +577,8 @@ public class TastTests {
 
             Program program = astGenerator.generateSyntaxTree(file);
 
-            Program prog = generateTypedast(program);
-
+            SemanticCheck tAst = new SemanticCheck();
+            Program prog = tAst.generateTypedast(program);
 
             assertEquals(prog, program);
         } catch (IOException e) {

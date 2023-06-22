@@ -20,7 +20,7 @@ public class ProgramEnvironment {
     public HashMap<String, ClassEnvironment> classes;
     public ArrayList<String> mains;
 
-    public ProgramEnvironment(Program program) {
+    public ProgramEnvironment(Program program, SemanticCheck semanticCheck) {
         classes = new HashMap<>();
         mains = new ArrayList<>();
 
@@ -29,7 +29,7 @@ public class ProgramEnvironment {
         program.classes.forEach(clazz -> {
 
             if (classes.containsKey(clazz.name)) {
-                SemanticCheck.errors.add(new Exception("Error: Duplicate classes found: " + clazz.name));
+                semanticCheck.errors.add(new Exception("Error: Duplicate classes found: " + clazz.name));
             }
 
             ClassEnvironment cc = new ClassEnvironment(clazz);

@@ -9,6 +9,7 @@ import mmc.semantikcheck.Exception;
 import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStreams;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,8 +19,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 
 ;
@@ -64,7 +63,7 @@ public class Compiler implements ICompiler {
             if (files != null) {
                 for (File f : files) {
                     try {
-                        Files.move(f.toPath(), new File(f.getParentFile(), "$Recycle.Bin").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        moveToTrash(f);
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Fehler beim Löschen der alten Dateien.");
@@ -127,4 +126,14 @@ public class Compiler implements ICompiler {
         }
         return false;
     }
+
+    public static void moveToTrash(File file) throws IOException {
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.MOVE_TO_TRASH)) {
+            // Plattformspezifische Implementierung, wenn moveToTrash unterstützt wird
+            Desktop.getDesktop().moveToTrash(file);
+        } else {
+            System.out.println("Verschieben alter Dateien des gen-Ordners durch System nicht unterstützt.");
+        }
+    }
 }
+

@@ -27,6 +27,10 @@ public class Main {
                 return;
             }
         }
+        if (args.length > 2) {
+            System.out.println("Es dürfen maximal 2 Argumente übergeben werden.");
+            return;
+        }
 
         if (fileName.startsWith("\"") && fileName.endsWith("\"")) {
             fileName = fileName.substring(1, fileName.length() - 1);

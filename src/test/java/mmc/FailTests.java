@@ -7,16 +7,24 @@ import mmc.ast.expressions.Binary;
 import mmc.ast.expressions.BoolExpr;
 import mmc.ast.expressions.IntExpr;
 import mmc.ast.expressions.StringExpr;
-import mmc.ast.main.*;
-import mmc.ast.statements.*;
+import mmc.ast.main.ClassDecl;
+import mmc.ast.main.Constructor;
+import mmc.ast.main.Field;
+import mmc.ast.main.Method;
+import mmc.ast.main.Parameter;
+import mmc.ast.main.Program;
+import mmc.ast.statements.Block;
+import mmc.ast.statements.If;
+import mmc.ast.statements.LocalVarDecl;
+import mmc.ast.statements.Return;
+import mmc.ast.statements.While;
 import mmc.codegen.ProgramCodeGenerator;
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
+import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStream;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ressources.helpers.Classwriter;
 import ressources.helpers.ReflectionHelper;
 import ressources.helpers.Resources;
 
@@ -25,8 +33,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,7 +48,9 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
+
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -90,7 +98,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -138,7 +147,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -190,7 +200,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -235,7 +246,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -277,7 +289,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -319,7 +332,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -364,7 +378,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -410,7 +425,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -456,7 +472,8 @@ public class FailTests {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
             ProgramCodeGenerator codeGen = new ProgramCodeGenerator();
             HashMap<String, byte[]> code = codeGen.getBytecode(genTast);
 
@@ -507,8 +524,9 @@ public class FailTests {
         Program prog = new Program(Arrays.asList(classDecl));
 
         try {
-            Program tast = generateTypedast(prog);
-            assertEquals(prog, tast);
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(prog);
+            assertEquals(prog, genTast);
         } catch (Exception e) {
             e.printStackTrace();
             HasFailed = true;
@@ -530,7 +548,8 @@ public class FailTests {
         Program prog = new Program(Arrays.asList(classDecl));
 
         try {
-            Program tast = generateTypedast(prog);
+            SemanticCheck tAst = new SemanticCheck();
+            Program tast = tAst.generateTypedast(prog);
         } catch (Exception e) {
             e.printStackTrace();
             HasFailed = true;

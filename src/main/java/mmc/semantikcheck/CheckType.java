@@ -16,7 +16,13 @@ import java.util.stream.Collectors;
 
 public class CheckType {
 
-    public static FieldEnvironment getFieldType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, int line) {
+    private SemanticCheck semanticCheck;
+
+    public CheckType (SemanticCheck semanticCheck) {
+        this.semanticCheck = semanticCheck;
+    }
+
+    public FieldEnvironment getFieldType(String identifier, Type type, ProgramEnvironment context, ClassDecl currentClass, int line) {
         if (type instanceof ReferenceType) {
             var objectClass = (ReferenceType) type;
             var declaredClassnames = context.getClasses();
@@ -32,7 +38,7 @@ public class CheckType {
         }
     }
 
-    public static ConstructorEnvironment getConstructor(New newDecl, ProgramEnvironment ev) {
+    public ConstructorEnvironment getConstructor(New newDecl, ProgramEnvironment ev) {
         var newObjectClass = (ReferenceType) newDecl.getType();
         var declaredClassnames = ev.getClasses();
         var classContext = declaredClassnames.get(newObjectClass.type);
@@ -60,7 +66,7 @@ public class CheckType {
         throw new Exception("Error in line " + newDecl.startLine + ": no declared constructor " + generateConstructorCallString(newDecl) + " in class " + newDecl.getType());
     }
 
-    public static boolean isInitalised(ScopeEnvironment currentScope, IExpression rExpr,IExpression lExpr ){
+    public boolean isInitalised(ScopeEnvironment currentScope, IExpression rExpr,IExpression lExpr ){
         boolean valid = true;
 
         boolean baseType = (rExpr instanceof IntExpr || rExpr instanceof StringExpr
@@ -68,11 +74,11 @@ public class CheckType {
 
         if(lExpr instanceof LocalOrFieldVar l && baseType) {
             String varName = ((LocalOrFieldVar) lExpr).name;
-            if (!SemanticCheck.getFields.contains(varName)) {
+            if (!semanticCheck.getFields.contains(varName)) {
 
                 var scope = currentScope.getLocalVar(varName);
                 if (scope == null) {
-                    SemanticCheck.errors.add(new Exception("Error in line " + l.startLine + ": variable " + varName + " doesn't exist"));
+                    semanticCheck.errors.add(new Exception("Error in line " + l.startLine + ": variable " + varName + " doesn't exist"));
                     valid = false;
                 } else {
                     scope.isInitialized = true;
@@ -80,10 +86,10 @@ public class CheckType {
             }
         }else if (lExpr instanceof LocalOrFieldVar l && rExpr instanceof Binary){
             String varName = ((LocalOrFieldVar) lExpr).name;
-            if (!SemanticCheck.getFields.contains(varName)) {
+            if (!semanticCheck.getFields.contains(varName)) {
                 var scope = currentScope.getLocalVar(varName);
-                if (scope == null && !SemanticCheck.getFields.contains(varName)) {
-                    SemanticCheck.errors.add(new Exception("Error in line " + l.startLine + ": variable " + varName + " doesn't exist"));
+                if (scope == null && !semanticCheck.getFields.contains(varName)) {
+                    semanticCheck.errors.add(new Exception("Error in line " + l.startLine + ": variable " + varName + " doesn't exist"));
                     valid = false;
                 } else if (!scope.isInitialized) {
                     valid = false;
@@ -93,7 +99,7 @@ public class CheckType {
         return valid;
     }
 
-    public static ClassEnvironment getClassType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
+    public ClassEnvironment getClassType(LocalVarDecl localVarDecl, ProgramEnvironment ev){
         var objectClass = (ReferenceType) localVarDecl.type;
         var declaredClassnames = ev.getClasses(); //Alle Klassen holen
 
@@ -105,7 +111,7 @@ public class CheckType {
         return classContext;
     }
 
-    public static MethodEnvironment getMethodType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
+    public MethodEnvironment getMethodType(MethodCall toCheck, Type type, ProgramEnvironment ev, ClassDecl currentClass) {
         boolean notVisible = false;
         //Möchte schauen ob Methode visible
         //Und Polymorphie, Methoden ohne Parameter können nicht gleich heißen mit unterschiedlichen schon
@@ -173,7 +179,7 @@ public class CheckType {
         }
     }
 
-    private static String generateMethodCallString(MethodCall methodcall){
+    private String generateMethodCallString(MethodCall methodcall){
         StringBuilder s = new StringBuilder();
         s.append(methodcall.name);
         s.append("(");
@@ -189,7 +195,7 @@ public class CheckType {
         return s.toString();
     }
 
-    private static String generateConstructorCallString(New constructor){
+    private String generateConstructorCallString(New constructor){
         StringBuilder s = new StringBuilder();
         s.append(constructor.name);
         s.append("(");
@@ -205,7 +211,7 @@ public class CheckType {
         return s.toString();
     }
 
-    public static String generateMethodString(Method method){
+    public String generateMethodString(Method method){
         StringBuilder s = new StringBuilder();
         s.append(method.type);
         s.append(" ");

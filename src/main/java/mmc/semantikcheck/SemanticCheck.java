@@ -25,19 +25,15 @@ public class SemanticCheck implements SemanticVisitor {
     public Type currentMethodReturnType;
     private Type currentNullType;
     private ScopeEnvironment currentScope;
-    public static ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
-    public static ArrayList<String> getFields = new ArrayList<>();
-    public static boolean methodIsStatic;
+    public ArrayList<Exception> errors = new ArrayList<>(); //Alle errors in einer Liste sammeln und am schluss raus geben
+    public ArrayList<String> getFields = new ArrayList<>();
+    public boolean methodIsStatic;
+    public CheckType checkType;
     private boolean assign = false;
 
-
-    public static void main(String[] args) {
-
-    }
-
-    public static Program generateTypedast(Program program) { //Erstelle getypter Baum
-        SemanticCheck semanticCheck = new SemanticCheck();
-        var result = program.accept(semanticCheck);
+    public Program generateTypedast(Program program) { //Erstelle getypter Baum
+        checkType = new CheckType(this);
+        var result = program.accept(this);
         if (result.isValid()) {
             return program; //Programm an ByteCode weitergeben
         } else { //Wenn nicht valide dann alle error Messages zurückgeben
@@ -52,7 +48,7 @@ public class SemanticCheck implements SemanticVisitor {
     @Override
     public TypeCheckResult typeCheck(Program toCheck) { //Type Check für Program
         boolean valid = true;
-        programEnvironment = new ProgramEnvironment(toCheck);
+        programEnvironment = new ProgramEnvironment(toCheck, this);
         toCheck.programEnvironment = programEnvironment; //für programm speicherung
 
         if(!errors.isEmpty()){
@@ -209,7 +205,7 @@ public class SemanticCheck implements SemanticVisitor {
             return new TypeCheckResult(valid, resultType);
         }
         else if(resultType == null){ //not all paths return a value
-            errors.add(new Exception("Error in line " + toCheck.startLine + ": not all paths of method " + CheckType.generateMethodString(toCheck) + " return a value"));
+            errors.add(new Exception("Error in line " + toCheck.startLine + ": not all paths of method " + checkType.generateMethodString(toCheck) + " return a value"));
             return new TypeCheckResult(false, null);
         }
         else if (!resultType.equals(toCheck.getType())) { //Error wenn statement und Method nicht gleiche Typen haben
@@ -241,7 +237,7 @@ public class SemanticCheck implements SemanticVisitor {
             return new TypeCheckResult(false, null);
         }
 
-        valid = CheckType.isInitalised(currentScope,rExpr,lExpr);
+        valid = checkType.isInitalised(currentScope,rExpr,lExpr);
 
         //---Info: deprecated!---
         //int a += a; a -= a; a *= a; a /= a, nur auf Integer anwenden
@@ -422,7 +418,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         try {
             if(toCheck.type instanceof ReferenceType) {
-                CheckType.getClassType(toCheck, programEnvironment); //schauen ob es den Typ überhaupt gibt
+                checkType.getClassType(toCheck, programEnvironment); //schauen ob es den Typ überhaupt gibt
             }
             currentScope.addLocalVar(toCheck, isInitialized);
         } catch (java.lang.Exception e) {
@@ -554,7 +550,7 @@ public class SemanticCheck implements SemanticVisitor {
         }
 
         try {
-            CheckType.getConstructor(toCheck, programEnvironment);
+            checkType.getConstructor(toCheck, programEnvironment);
         } catch (java.lang.Exception e) {
             errors.add(new Exception(e.getMessage()));
             valid = false;
@@ -607,7 +603,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         if(toCheck.methodOwnerPrefix == null){
             try {
-                var method = CheckType.getMethodType(toCheck, new ReferenceType(getClass.name), programEnvironment, getClass);
+                var method = checkType.getMethodType(toCheck, new ReferenceType(getClass.name), programEnvironment, getClass);
 
                 if(method.isStatic){
                     toCheck.methodOwnerPrefix = new Class(getClass.name, new ReferenceType(getClass.name));
@@ -641,7 +637,7 @@ public class SemanticCheck implements SemanticVisitor {
 /*            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar l) {
                 isStatic = l.isStatic;
             }*/
-            var method = CheckType.getMethodType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
+            var method = checkType.getMethodType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
 
 /*            if(isStatic && methodIsStatic){
                 toCheck.methodOwnerPrefix = new Class(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name, new ReferenceType(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name));
@@ -766,7 +762,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         // Schauen ob sie in der Klasse deklariert ist, Feld bekommen welches aufgerufen wird
         try {
-            var fieldVar = CheckType.getFieldType(toCheck.name,
+            var fieldVar = checkType.getFieldType(toCheck.name,
                     new ReferenceType(getClass.name), programEnvironment, getClass, toCheck.startLine);
 
             if (fieldVar != null) {
@@ -832,7 +828,7 @@ public class SemanticCheck implements SemanticVisitor {
             valid = false;
         }
         try {
-            var nextInstVar = CheckType.getFieldType(toCheck.name, type,programEnvironment, this.getClass, toCheck.startLine);
+            var nextInstVar = checkType.getFieldType(toCheck.name, type,programEnvironment, this.getClass, toCheck.startLine);
 
             // Schauen ob es den Typ als Klasse gibt
             if (nextInstVar == null) {

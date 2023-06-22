@@ -16,6 +16,7 @@ import mmc.codegen.ProgramCodeGenerator;
 
 import mmc.compiler.ISyntaxTreeGenerator;
 import mmc.compiler.SyntaxTreeGenerator;
+import mmc.semantikcheck.SemanticCheck;
 import org.antlr.v4.runtime.CharStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static mmc.semantikcheck.SemanticCheck.generateTypedast;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -980,8 +980,9 @@ public class ByteCodeTest {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
 
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
 
             Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
 
@@ -1059,7 +1060,9 @@ public class ByteCodeTest {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
 
 
             Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
@@ -1216,7 +1219,9 @@ public class ByteCodeTest {
             ISyntaxTreeGenerator astGenerator = new SyntaxTreeGenerator();
 
             Program program = astGenerator.generateSyntaxTree(file);
-            Program genTast = generateTypedast(program);
+
+            SemanticCheck tAst = new SemanticCheck();
+            Program genTast = tAst.generateTypedast(program);
 
 
             Program prog = new Program(new ArrayList<>(Arrays.asList(classDecl)));
