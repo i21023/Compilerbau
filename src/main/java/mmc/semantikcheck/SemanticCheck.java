@@ -470,20 +470,7 @@ public class SemanticCheck implements SemanticVisitor {
                 toCheck.type = ifBlockType;
                 return new TypeCheckResult(true, null);
 
-            } /*else if (ifBlockType != null || !ifResult.isValid() || !elseBlockResult.isValid()) {
-                if(valid){
-                    // Typen müssen übereinstimmen
-                    if (!Objects.equals(elseBlockType, ifBlockType)) {
-                        errors.add(new Exception(
-                                "Error in line "+ toCheck.startLine + " Type mismatch: cannot convert from " + elseBlockType + " to " + ifBlockType));
-                        valid = false;
-                    } else {
-                        toCheck.type = ifBlockType;
-                        //Falls der Typ gleich ist, wählt er den Typ vom if Block
-                    }
-                }
-            }*/
-                else{
+            } else{
                     toCheck.type = ifBlockType;
                     return new TypeCheckResult(valid, ifBlockType);
                 }
@@ -491,8 +478,6 @@ public class SemanticCheck implements SemanticVisitor {
             toCheck.type = ifBlockType; //Wenn kein else ist if der Typ der weitergegeben wird
             return new TypeCheckResult(valid, null);
         }
-
-        //return new TypeCheckResult(valid, toCheck.getType());
     }
 
     @Override
@@ -634,14 +619,7 @@ public class SemanticCheck implements SemanticVisitor {
 
         try {
             boolean isStatic = toCheck.methodOwnerPrefix instanceof Class;
-/*            if(toCheck.methodOwnerPrefix instanceof LocalOrFieldVar l) {
-                isStatic = l.isStatic;
-            }*/
             var method = checkType.getMethodType(toCheck, toCheck.methodOwnerPrefix.getType(), programEnvironment, getClass);
-
-/*            if(isStatic && methodIsStatic){
-                toCheck.methodOwnerPrefix = new Class(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name, new ReferenceType(((LocalOrFieldVar) toCheck.methodOwnerPrefix).name));
-            }*/
 
             if(isStatic && !method.isStatic){
                 errors.add(
