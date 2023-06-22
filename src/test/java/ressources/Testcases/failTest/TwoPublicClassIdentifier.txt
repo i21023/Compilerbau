@@ -5,7 +5,7 @@ public class MyClass{
  }
 }
 
-class MyClass{
+public class MyClass{
  public MyClass()
  {
  System.out.println("Hey");
